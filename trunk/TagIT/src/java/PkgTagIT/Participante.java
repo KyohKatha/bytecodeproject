@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Participante {
     private double id;
     private String email;
+    private String nome;
     private String senha;
     private double cpf;
     private boolean upgrade;
@@ -21,9 +22,10 @@ public class Participante {
     private ArrayList<Evento> evento;
     private ArrayList<RedeSocial> redeSocial; //Os tokens do usuario
 
-    public Participante(double id, String email, String senha, double cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
+    public Participante(double id, String email, String nome, String senha, double cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
         this.id = id;
         this.email = email;
+        this.nome = nome;
         this.senha = senha;
         this.cpf = cpf;
         this.upgrade = upgrade;
@@ -31,8 +33,23 @@ public class Participante {
         this.evento = evento;
         this.redeSocial = redeSocial;
     }
-    
 
+    // Construtor utilizado apenas no cadastro
+    public Participante(String email, String nome, String senha, double cpf ) {
+        this.email = email;
+        this.nome = nome;
+        this.senha = senha;
+        this.cpf = cpf;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+    
     public double getCpf() {
         return cpf;
     }

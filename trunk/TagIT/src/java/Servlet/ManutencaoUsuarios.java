@@ -5,8 +5,10 @@
 
 package Servlet;
 
+import PkgTagIT.Participante;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,16 +32,19 @@ public class ManutencaoUsuarios extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /* TODO output your page here
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManutencaoUsuarios</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManutencaoUsuarios at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            */
+            Participante p;
+            
+            String email = request.getParameter("email");
+            String nome = request.getParameter("nome");
+            String senha = request.getParameter("senha");
+            double cpf = Double.parseDouble(request.getParameter("cpf"));
+
+            p = new Participante(email, nome, senha, cpf);
+
+            RequestDispatcher rd=null;
+            rd=request.getRequestDispatcher("/confirmacaoCadastroParticipante.jsp");
+            rd.forward(request, response);
+
         } finally { 
             out.close();
         }
