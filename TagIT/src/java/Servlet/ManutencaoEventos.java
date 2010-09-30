@@ -5,8 +5,12 @@
 
 package Servlet;
 
+import PkgTagIT.Categoria;
+import PkgTagIT.Evento;
+import PkgTagIT.Organizador;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,19 +31,51 @@ public class ManutencaoEventos extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String nome;
+        double vagasPrincipal;
+        double vagasEspera;
+        String inscInicio;
+        String inscTermino;
+        String rua;
+        String cidade;
+        String numeroRua;
+        String dataEvento;
+        String contato;
+        Organizador organizador;
+        ArrayList<Categoria> categoria;
+
+        Evento evento;
+
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /* TODO output your page here
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ManutencaoEventos</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ManutencaoEventos at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            */
+            nome = request.getParameter("nome");
+            vagasPrincipal = Double.parseDouble(request.getParameter("vagasPrincipal"));
+            vagasEspera = Double.parseDouble(request.getParameter("vagasEspera"));
+            inscInicio = request.getParameter("inscInicio");
+            inscTermino = request.getParameter("inscTermino");
+            rua = request.getParameter("rua");
+            numeroRua = request.getParameter("numeroRua");
+            rua += ", " + numeroRua;
+            cidade = request.getParameter("cidade");
+            dataEvento = request.getParameter("dataEvento");
+            contato = request.getParameter("contato");
+            //falta organizador e categorias
+
+
+
+            out.println(nome + "<br>");
+            out.println(vagasPrincipal + "<br>");
+            out.println(vagasEspera + "<br>");
+            out.println(inscInicio + "<br>");
+            out.println(inscTermino + "<br>");
+            out.println(rua + "<br>");
+            out.println(cidade + "<br>");
+            out.println(dataEvento + "<br>");
+            out.println(contato + "<br>");
+
+
+
         } finally { 
             out.close();
         }

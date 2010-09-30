@@ -25,6 +25,20 @@ public class Evento {
     private Organizador organizador;
     private ArrayList<Categoria> categoria;
 
+    public Evento(String nome, double vagasPrincipal, double vagasEspera, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Organizador organizador, ArrayList<Categoria> categoria) {
+        this.nome = nome;
+        this.vagasPrincipal = vagasPrincipal;
+        this.vagasEspera = vagasEspera;
+        this.inscInicio = inscInicio;
+        this.inscTermino = inscTermino;
+        this.rua = rua;
+        this.cidade = cidade;
+        this.dataEvento = dataEvento;
+        this.contato = contato;
+        this.organizador = organizador;
+        this.categoria = categoria;
+    }
+
     public Evento(double id, String nome, double vagasPrincipal, double vagasEspera, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Organizador organizador, ArrayList<Categoria> categoria) {
         this.id = id;
         this.nome = nome;

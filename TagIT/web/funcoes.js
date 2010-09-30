@@ -53,8 +53,39 @@ function validaEmail(email) {
 }
 
 function validaNome(nome){
+    var expNome = /^[0-9a-zA-Zà-üÀ-Ü /.]*$/
     if ( nome == "" ){
         alert("Informe seu nome");
+        return false;
+    }
+    if(nome.match(expNome) == null) {
+        alert("Informe um nome correto");
+        return false;
+    }
+    return true;
+}
+
+function validaRua(rua){
+    var expRua = /^[0-9a-zA-Zà-üÀ-Ü /.]*$/
+    if ( rua == "" ){
+        alert("Informe a rua");
+        return false;
+    }
+    if(rua.match(expRua) == null) {
+        alert("Informe a rua corretamente");
+        return false;
+    }
+    return true;
+}
+
+function validaCidade(cidade){
+    var expCidade = /^[0-9a-zA-Zà-üÀ-Ü /.]*$/
+    if ( cidade == "" ){
+        alert("Informe a cidade");
+        return false;
+    }
+    if(cidade.match(expCidade) == null) {
+        alert("Informe a cidade corretamente");
         return false;
     }
     return true;
@@ -129,4 +160,91 @@ function validaSenha(senha, confSenha){
     }
 
     return true;
+}
+
+function ltrim(texto) {
+    return texto.replace(/^[ ]+/, "");
+}
+
+function rtrim(texto) {
+    return texto.replace(/[ ]+$/, "");
+}
+
+function trim(texto) {
+    return ltrim(rtrim(texto));
+}
+
+function validaNumero(numero) {
+    var expNumero = /^[0-9]*$/;
+    if(numero == "") {
+        alert("Informe um número");
+        return false;
+    }
+    if(numero.match(expNumero) == null) {
+        alert("Informe um número correto");
+        return false;
+    }
+    return true;
+}
+
+function validaContato(contato) {
+    var expContato = /^[0-9a-zA-Zà-üÀ-Ü .,-@]*$/;
+
+    if(contato == "") {
+        alert("Informe um contato");
+        return false;
+    }
+    if(contato.match(expContato) == null) {
+        alert("Informe um contato correto");
+        return false;
+    }
+    return true;
+}
+
+function validaEvento() {
+    var nome = trim(document.getElementById("nome").value);
+    var vagasPrincipal = trim(document.getElementById("vagasPrincipal").value);
+    var vagasEspera = trim(document.getElementById("vagasEspera").value);
+    var inscInicio = trim(document.getElementById("inscInicio").value);
+    var inscTermino = trim(document.getElementById("inscTermino").value);
+    var rua = trim(document.getElementById("rua").value);
+    var numeroRua = trim(document.getElementById("numeroRua").value);
+    var cidade = trim(document.getElementById("cidade").value);
+    var dataEvento = trim(document.getElementById("dataEvento").value);
+    var contato = trim(document.getElementById("contato").value);
+    var categoria = trim(document.getElementById("categoria").value);
+
+    var erro = false;
+
+    if(!validaNome(nome)) {
+        erro = true;
+        document.getElementById("nome").focus();
+    }
+    if(!validaNumero(vagasPrincipal)) {
+        erro = true;
+        document.getElementById("vagasPrincipal").focus();
+    }
+    if(!validaNumero(vagasEspera)) {
+        erro = true;
+        document.getElementById("vagasEspera").focus();
+    }
+    if(!validaRua(rua)) {
+        erro = true;
+        document.getElementById("rua").focus();
+    }
+    if(!validaNumero(numeroRua)) {
+        erro = true;
+        document.getElementById("numeroRua").focus();
+    }
+    if(!validaCidade(cidade)) {
+        erro = true;
+        document.getElementById("cidade").focus();
+    }
+    if(!validaContato(contato)) {
+        erro = true;
+        document.getElementById("contato").focus();
+    }
+
+    return !erro;
+    
 }
