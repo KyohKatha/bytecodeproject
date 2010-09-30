@@ -12,15 +12,15 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Cadastro de Participantes</title>
-        <script type="javascript" src="funcoes.js"/>
+        <script type="text/javascript" src="funcoes.js"></script>
     </head>
     <body>
-        <form action="ManutencaoUsuarios" onsubmit= return "validarUsuario">
-            <p>E-mail: <input type ="text" name="email" id="email"/></p>
-            <p>Nome: <input type ="text" name="nome" id="nome"/></p>
+        <form action="ManutencaoUsuarios" onsubmit="return validarUsuario()">
+            <p>E-mail: <input type ="text" name="email" id="email" maxlength="100"/></p>
+            <p>Nome: <input type ="text" name="nome" id="nome" maxlength="50"/></p>
             <p>CPF: <input type ="text" name="cpf" id="cpf"/></p>
-            <p>Senha: <input type ="password" name="senha" id="senha"/></p>
-            <p>Confirmar Senha: <input type ="password" id="confirmacao"/></p>
+            <p>Senha: <input type ="password" name="senha" id="senha" maxlength="30" /></p>
+            <p>Confirmar Senha: <input type ="password" id="confirmacao" maxlength="30"/></p>
             <p><input type="submit" value="Cadastrar"/>
                 <input type="reset" value="Limpar Campos"/></p>
         </form>
