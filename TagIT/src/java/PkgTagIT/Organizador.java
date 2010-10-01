@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class Organizador extends Participante{
 
-    public Organizador(double id, String email, String senha, double cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
-        super(id, email, senha, cpf, upgrade, tentivasUpgrade, evento, redeSocial);
+    public Organizador(double id,String nome, String email, String senha, double cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
+        super(id, email,nome, senha, cpf, upgrade, tentivasUpgrade, evento, redeSocial);
     }
     
 }
