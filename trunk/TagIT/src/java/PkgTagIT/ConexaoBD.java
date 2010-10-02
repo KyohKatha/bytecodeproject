@@ -17,7 +17,7 @@ public class ConexaoBD {
     private Connection con;
     private Statement stm;
 
-    public ConexaoBD() throws TagITDAOException {
+    private ConexaoBD() throws TagITDAOException {
         try {
             SQLServerDataSource ds = new SQLServerDataSource();
             ds.setUser("tagitdeveloper");
