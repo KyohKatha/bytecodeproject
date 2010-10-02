@@ -6,11 +6,14 @@
 package Servlet;
 
 import PkgTagIT.Categoria;
+import PkgTagIT.ConexaoBD;
 import PkgTagIT.Evento;
 import PkgTagIT.Organizador;
+import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -43,6 +46,8 @@ public class ManutencaoEventos extends HttpServlet {
         String contato;
         Organizador organizador; //organizador vai ser pego da sessão
         String[] categoria; //ver como fazer a categoria
+        ArrayList<Categoria> lstCategoria;
+        int i;
 
 
         Evento evento;
@@ -65,28 +70,19 @@ public class ManutencaoEventos extends HttpServlet {
             //falta organizador, que sera pego da sessao
             organizador = null;
 
-
-            //evento = new Evento(nome, vagasPrincipal, vagasEspera, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, categoria);
-
-
-            out.println("<h1>AE</h1>");
-            for(int i = 0; i < categoria.length; i++ ) {
-                out.println(categoria[i] + "<br>");
+            lstCategoria = new ArrayList<Categoria>();
+            for(i = 0; i < categoria.length; i++) {
+                lstCategoria.add(new Categoria(categoria[i]));
             }
 
+            evento = new Evento(nome, vagasPrincipal, vagasEspera, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);
 
-            out.println(nome + "<br>");
-            out.println(vagasPrincipal + "<br>");
-            out.println(vagasEspera + "<br>");
-            out.println(inscInicio + "<br>");
-            out.println(inscTermino + "<br>");
-            out.println(rua + "<br>");
-            out.println(cidade + "<br>");
-            out.println(dataEvento + "<br>");
-            out.println(contato + "<br>");
-
-
-
+            ConexaoBD.getInstance().insereEvento(evento);
+            out.println("Evento inserido com sucesso!");
+        } catch (TagITDAOException e) {
+            //Só pra ver o erro
+            out.println("Ocorreu um erro!");
+            //e.printStackTrace();
         } finally { 
             out.close();
         }
