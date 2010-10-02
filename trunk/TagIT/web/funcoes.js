@@ -301,7 +301,7 @@ function adicionaCategoria() {
         var filhoForm = document.createElement("input");
         filhoForm.type = "hidden";
         filhoForm.name = "categoria";
-        filhoForm.value = comboCategoria.value;
+        filhoForm.value = categoria;
 
         formEvento.appendChild(filhoForm);
     }
@@ -314,13 +314,14 @@ function removeCategoria() {
     var formEvento = document.getElementById("formEvento");
     var categorias = document.getElementsByTagName("input");
     var categoriasSelecionadas = document.getElementById("categoriasSelecionadas");
+    var categoria = categoriasSelecionadas.options[categoriasSelecionadas.selectedIndex].text
     var filhosCategorias = categoriasSelecionadas.childNodes;
     var atual = null;
 
     for(i = 0; i < categorias.length; i++) {
         atual = categorias[i];
         if(atual.name == "categoria") {
-            if(atual.value == categoriasSelecionadas.value) {
+            if(atual.value == categoria) {
                 formEvento.removeChild(atual);
             }
         }
