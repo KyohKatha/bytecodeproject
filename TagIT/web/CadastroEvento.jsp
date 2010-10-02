@@ -16,7 +16,7 @@
     </head>
     <body>
         <h1>Cadastro de Eventos</h1>
-        <form action="ManutencaoEventos" method="post" onsubmit="return validaEvento()">
+        <form action="ManutencaoEventos" id="formEvento" method="post" onsubmit="return validaEvento()">
             <p>Nome:<input type="text" name="nome" id="nome" /></p>
             <p>Número de vagas:<input type="text" name="vagasPrincipal" id="vagasPrincipal" /></p>
             <p>Número de vagas na lista de espera:<input type="text" name="vagasEspera" id="vagasEspera" /></p>
@@ -27,7 +27,21 @@
             <p>Cidade:<input type="text" name="cidade" id="cidade" /></p>
             <p>Data do evento:<input type="text" name="dataEvento" id="dataEvento" /></p>
             <p>Contato:<input type="text" name="contato" id="contato" /></p>
-            <p>Categoria:<input type="text" name="categoria" id="categoria" /></p>
+            <p>
+                Categoria:
+                <select name="selectCategoria" id="selectCategoria">
+                    <% //aqui vai ser preenchido conforme as categorias já cadastradas no bd %>
+                    <option value="1">Musica</option>
+                    <option value="2">Sexo</option>
+                </select>
+                <input type="button" value="Selecionar" onclick="adicionaCategoria()" />
+            </p>
+            <p>
+                Categorias selecionadas:
+                <select multiple name="categoriasSelecionadas" id="categoriasSelecionadas" size="3">
+                </select>
+                <input type="button" value="Remover" onclick="removeCategoria()" />
+            </p>
             <p><input type="submit" value="Enviar" /></p>
         </form>
     </body>

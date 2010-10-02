@@ -41,8 +41,9 @@ public class ManutencaoEventos extends HttpServlet {
         String numeroRua;
         String dataEvento;
         String contato;
-        Organizador organizador;
-        ArrayList<Categoria> categoria;
+        Organizador organizador; //organizador vai ser pego da sessão
+        String[] categoria; //ver como fazer a categoria
+
 
         Evento evento;
 
@@ -60,8 +61,18 @@ public class ManutencaoEventos extends HttpServlet {
             cidade = request.getParameter("cidade");
             dataEvento = request.getParameter("dataEvento");
             contato = request.getParameter("contato");
-            //falta organizador e categorias
+            categoria = request.getParameterValues("categoria");
+            //falta organizador, que sera pego da sessao
+            organizador = null;
 
+
+            //evento = new Evento(nome, vagasPrincipal, vagasEspera, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, categoria);
+
+
+            out.println("<h1>AE</h1>");
+            for(int i = 0; i < categoria.length; i++ ) {
+                out.println(categoria[i] + "<br>");
+            }
 
 
             out.println(nome + "<br>");

@@ -187,6 +187,19 @@ function validaNumero(numero) {
     return true;
 }
 
+function validaData(data) {
+    var expData = /^([0-9]|[0,1,2][0-9]|3[0,1])\/([0,1][0,1,2])\/\d{4}$/
+    if(data == "") {
+        alert("Preencha a data");
+        return false;
+    }
+    if(data.match(expData) == null) {
+        alert("Preencha a data corretamente");
+        return false
+    }
+    return true;
+}
+
 function validaContato(contato) {
     var expContato = /^[0-9a-zA-Zà-üÀ-Ü .,-@]*$/;
 
@@ -244,7 +257,80 @@ function validaEvento() {
         erro = true;
         document.getElementById("contato").focus();
     }
+    if(!validaData(inscInicio)) {
+        erro = true;
+        document.getElementById("inscInicio").focus();
+    }
+    if(!validaData(inscTermino)) {
+        erro = true;
+        document.getElementById("inscTermino").focus();
+    }
+    if(!validaData(dataEvento)) {
+        erro = true;
+        document.getElementById("dataEvento").focus();
+    }
 
     return !erro;
     
+}
+
+function adicionaCategoria() {
+    var formEvento = document.getElementById("formEvento");
+    var categoriasSelecionadas = document.getElementById("categoriasSelecionadas");
+    var comboCategoria = document.getElementById("selectCategoria");
+    var categoria = comboCategoria.options[comboCategoria.selectedIndex].text;
+    var filhosAtuais = categoriasSelecionadas.childNodes;
+    var jaExiste = false;
+
+    for(i = 0; i < filhosAtuais.length; i++) {
+        if(filhosAtuais.item(i).value == comboCategoria.value) {
+            jaExiste = true;
+        }
+    }
+
+    if(!jaExiste) {
+
+        //cria o elemento XML filho do select
+        var filhoCategoria = document.createElement("option");
+        filhoCategoria.appendChild(document.createTextNode(categoria));
+        filhoCategoria.value = comboCategoria.value;
+
+        categoriasSelecionadas.appendChild(filhoCategoria);
+
+        //cria o elemento XML input para adicionar os selecionados e pegar na servlet
+        var filhoForm = document.createElement("input");
+        filhoForm.type = "hidden";
+        filhoForm.name = "categoria";
+        filhoForm.value = comboCategoria.value;
+
+        formEvento.appendChild(filhoForm);
+    }
+    else {
+        alert("Categoria já adicionada");
+    }
+}
+
+function removeCategoria() {
+    var formEvento = document.getElementById("formEvento");
+    var categorias = document.getElementsByTagName("input");
+    var categoriasSelecionadas = document.getElementById("categoriasSelecionadas");
+    var filhosCategorias = categoriasSelecionadas.childNodes;
+    var atual = null;
+
+    for(i = 0; i < categorias.length; i++) {
+        atual = categorias[i];
+        if(atual.name == "categoria") {
+            if(atual.value == categoriasSelecionadas.value) {
+                formEvento.removeChild(atual);
+            }
+        }
+    }
+
+    for(i = 0; i < filhosCategorias.length; i++) {
+        atual = filhosCategorias.item(i);
+        if(atual.value == categoriasSelecionadas.value) {
+            categoriasSelecionadas.removeChild(atual);
+        }
+    }
+
 }
