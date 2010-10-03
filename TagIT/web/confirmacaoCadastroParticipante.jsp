@@ -11,6 +11,10 @@
 <%@ page import="PkgTagIT.Participante" %>
 
 <% Participante p;
+
+    p = (Participante) request.getAttribute("part");
+
+    if ( p != null ) {
    %>
 
 <html>
@@ -25,3 +29,5 @@
         <p>Senha: <%= p.getSenha() %> </p>
     </body>
 </html>
+
+<% } %>

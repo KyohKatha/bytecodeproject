@@ -16,13 +16,13 @@ public class Participante {
     private String email;
     private String nome;
     private String senha;
-    private double cpf;
+    private String cpf;
     private boolean upgrade;
     private int tentivasUpgrade;
     private ArrayList<Evento> evento;
     private ArrayList<RedeSocial> redeSocial; //Os tokens do usuario
 
-    public Participante(double id, String email, String nome, String senha, double cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
+    public Participante(double id, String email, String nome, String senha, String cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
         this.id = id;
         this.email = email;
         this.nome = nome;
@@ -35,7 +35,7 @@ public class Participante {
     }
 
     // Construtor utilizado apenas no cadastro
-    public Participante(String email, String nome, String senha, double cpf ) {
+    public Participante(String email, String nome, String senha, String cpf ) {
         this.email = email;
         this.nome = nome;
         this.senha = senha;
@@ -50,11 +50,11 @@ public class Participante {
         this.nome = nome;
     }
     
-    public double getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(double cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 

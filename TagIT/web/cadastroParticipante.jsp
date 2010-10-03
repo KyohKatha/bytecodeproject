@@ -23,6 +23,8 @@
             <p>Confirmar Senha: <input type ="password" id="confirmacao" maxlength="30"/></p>
             <p><input type="submit" value="Cadastrar"/>
                 <input type="reset" value="Limpar Campos"/></p>
+
+            <input type="hidden" name="tipo" value="0">
         </form>
     </body>
 </html>
