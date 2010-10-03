@@ -38,6 +38,7 @@ public class ManutencaoUsuarios extends HttpServlet {
              * 0 : cadastrar
              * 1 : atualizar
              * 2 : remover
+             * 3 : upgrade
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
@@ -79,6 +80,18 @@ public class ManutencaoUsuarios extends HttpServlet {
                         rd.forward(request, response);
                     }
                     break;
+                case 3:
+                    try {
+                        upgradeUsuario(request, response);
+                    } catch (Exception e) {
+
+                        request.setAttribute("erro", true);
+
+                        RequestDispatcher rd = null;
+                        rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
+                        rd.forward(request, response);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -105,15 +118,25 @@ public class ManutencaoUsuarios extends HttpServlet {
         p = new Participante(email, nome, senha, cpf);
 
         ConexaoBD con = ConexaoBD.getInstance();
-        // salvar no BD - gerar ID
-        // recuperar do BD - com ID, mas sem senha
+        // verificar se o email já não foi cadastrado
 
-        request.getSession().setAttribute("part", p);
-        request.setAttribute("erro", false);
+        if (true) {
+            // salvar no BD - gerar ID
+            // recuperar do BD - com ID, upgrade (T/F), tentativas, mas sem senha
 
-        RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("/confirmacaoCadastroUsuario.jsp");
-        rd.forward(request, response);
+            request.getSession().setAttribute("part", p);
+            request.setAttribute("erro", false);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/confirmacaoCadastroUsuario.jsp");
+            rd.forward(request, response);
+        } else {
+            request.setAttribute("erro", true);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/CadastrarUsuario.jsp");
+            rd.forward(request, response);
+        }
 
     }
 
@@ -182,6 +205,41 @@ public class ManutencaoUsuarios extends HttpServlet {
             // remover participante p.getId();
 
             request.getSession().removeAttribute("part");
+            request.setAttribute("erro", false);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
+        } else {
+            request.setAttribute("erro", true);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
+    /**
+     *
+     * Envia uma solicitação de upgrade. Equivalente a opcao 3.
+     */
+    private void upgradeUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, TagITDAOException {
+
+        String senha = request.getParameter("senha");
+
+        ConexaoBD con = ConexaoBD.getInstance();
+        // verificar senha no BD
+
+        if (true) {
+            Participante p = (Participante) request.getSession().getAttribute("part");
+            // modificar de participante para organizador
+
+            p.setTentivasUpgrade(p.getTentivasUpgrade()+1);
+
+            request.getSession().setAttribute("part", p);
+
             request.setAttribute("erro", false);
 
             RequestDispatcher rd = null;
