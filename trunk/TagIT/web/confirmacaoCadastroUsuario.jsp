@@ -12,7 +12,7 @@
 
 <% Participante p;
 
-    p = (Participante) request.getAttribute("part");
+    p = (Participante) request.getSession().getAttribute("part");
 
     if ( p != null ) {
    %>
@@ -27,6 +27,7 @@
         <p>Nome: <%= p.getNome() %> </p>
         <p>CPF: <%= p.getCpf() %> </p>
         <p>Senha: <%= p.getSenha() %> </p>
+        <p><a href="index.jsp">Voltar</a></p>
     </body>
 </html>
 

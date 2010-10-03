@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-function validarUsuario()
+function validarCadastroUsuario()
 {
     var email = document.getElementById("email").value;
     var nome = document.getElementById("nome").value;
@@ -33,6 +33,43 @@ function validarUsuario()
 
     return erro;
 }
+
+
+function validarAlteracaoUsuario()
+{
+    var nome = document.getElementById("nome").value;
+    var cpf = document.getElementById("cpf").value;
+    var atual = document.getElementById("atual").value;
+    var senha = document.getElementById("senha").value;
+    var confSenha = document.getElementById("confirmacao").value;
+
+    var erro = true;
+
+    if ( !validaNome(nome) ){
+        document.getElementById("nome").focus();
+        erro = false;
+    }
+    if ( !validaCPF(cpf) ){
+        document.getElementById("cpf").focus();
+        erro = false;
+    }
+    if ( atual == "" ){
+        document.getElementById("atual").focus();
+        alert("Informe a senha");
+        erro = false;
+    } else {
+        if ( senha != "" || confSenha != "" ){
+            if ( !validaSenha(senha, confSenha) ){
+                document.getElementById("senha").value = "";
+                document.getElementById("confirmacao").value = "";
+                erro = false;
+            }
+        }
+    }
+
+    return erro;
+}
+
 
 function validaEmail(email) {
     if ( email == "" ){

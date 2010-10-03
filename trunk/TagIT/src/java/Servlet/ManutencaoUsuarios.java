@@ -4,7 +4,9 @@
  */
 package Servlet;
 
+import PkgTagIT.ConexaoBD;
 import PkgTagIT.Participante;
+import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
@@ -36,7 +38,6 @@ public class ManutencaoUsuarios extends HttpServlet {
              * 0 : cadastrar
              * 1 : atualizar
              * 2 : remover
-             * 3 : buscar
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
@@ -50,15 +51,33 @@ public class ManutencaoUsuarios extends HttpServlet {
                         request.setAttribute("erro", true);
 
                         RequestDispatcher rd = null;
-                        rd = request.getRequestDispatcher("/confirmacaoCadastroParticipante.jsp");
+                        rd = request.getRequestDispatcher("/CadastrarUsuario.jsp");
                         rd.forward(request, response);
                     }
                     break;
                 case 1:
+                    try {
+                        alterarUsuario(request, response);
+                    } catch (Exception e) {
+
+                        request.setAttribute("erro", true);
+
+                        RequestDispatcher rd = null;
+                        rd = request.getRequestDispatcher("/AlterarUsuario.jsp");
+                        rd.forward(request, response);
+                    }
                     break;
                 case 2:
-                    break;
-                case 3:
+                    try {
+                        removerUsuario(request, response);
+                    } catch (Exception e) {
+
+                        request.setAttribute("erro", true);
+
+                        RequestDispatcher rd = null;
+                        rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
+                        rd.forward(request, response);
+                    }
                     break;
                 default:
                     break;
@@ -69,8 +88,12 @@ public class ManutencaoUsuarios extends HttpServlet {
         }
     }
 
+    /**
+     *
+     * Cadastra um usuario no site. Equivalente a opcao 0.
+     */
     private void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, TagITDAOException {
 
         Participante p;
 
@@ -81,12 +104,96 @@ public class ManutencaoUsuarios extends HttpServlet {
 
         p = new Participante(email, nome, senha, cpf);
 
-        request.setAttribute("part", p);
+        ConexaoBD con = ConexaoBD.getInstance();
+        // salvar no BD - gerar ID
+        // recuperar do BD - com ID, mas sem senha
+
+        request.getSession().setAttribute("part", p);
         request.setAttribute("erro", false);
 
         RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("/confirmacaoCadastroParticipante.jsp");
+        rd = request.getRequestDispatcher("/confirmacaoCadastroUsuario.jsp");
         rd.forward(request, response);
+
+    }
+
+    /**
+     *
+     * Altera as informacoes de um usuario no site. Equivalente a opcao 1.
+     */
+    private void alterarUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, TagITDAOException {
+
+        Participante p = (Participante) request.getSession().getAttribute("part");
+
+        String nome = request.getParameter("nome");
+        String senha = request.getParameter("atual");
+        String cpf = request.getParameter("cpf");
+        String novaSenha = request.getParameter("senha");
+
+        p.setNome(nome);
+        p.setCpf(cpf);
+
+        ConexaoBD con = ConexaoBD.getInstance();
+        // verificar senha no BD
+
+        if (true) {
+            if (!novaSenha.equals("") && novaSenha != null) {
+                p.setSenha(novaSenha);
+            }
+
+            // update no BD, com base no ID
+
+            p.setSenha("");
+            request.getSession().setAttribute("part", p);
+
+            request.setAttribute("erro", false);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/ConfirmacaoAlteracaoUsuario.jsp");
+            rd.forward(request, response);
+        } else {
+
+            request.getSession().setAttribute("part", p);
+
+            request.setAttribute("erro", true);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/AlterarUsuario.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
+    /**
+     *
+     * Remover um usuario no site. Equivalente a opcao 2.
+     */
+    private void removerUsuario(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, TagITDAOException {
+
+        String senha = request.getParameter("senha");
+
+        ConexaoBD con = ConexaoBD.getInstance();
+        // verificar senha no BD
+
+        if (true) {
+            Participante p = (Participante) request.getSession().getAttribute("part");
+            // remover participante p.getId();
+
+            request.getSession().removeAttribute("part");
+            request.setAttribute("erro", false);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
+        } else {
+            request.setAttribute("erro", true);
+
+            RequestDispatcher rd = null;
+            rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
+            rd.forward(request, response);
+        }
 
     }
 
