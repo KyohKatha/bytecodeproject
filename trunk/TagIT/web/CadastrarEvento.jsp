@@ -42,6 +42,7 @@
                 </select>
                 <input type="button" value="Remover" onclick="removeCategoria()" />
             </p>
+            <input type="hidden" name="tipo" value="0" />
             <p><input type="submit" value="Enviar" /></p>
         </form>
     </body>

@@ -18,5 +18,6 @@
         <h3><a href="AlterarUsuario.jsp">Alterar informações de usuários</a></h3>
         <h3><a href="RemoverUsuario.jsp">Cancelar conta</a></h3>
         <h3><a href="UpgradeOrganizador.jsp">Solicitar Upgrade</a></h3>
+        <h3><a href="CadastrarEvento.jsp">CadastrarEvento</a></h3>
     </body>
 </html>
