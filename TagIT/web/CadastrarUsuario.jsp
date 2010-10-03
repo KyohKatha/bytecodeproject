@@ -1,5 +1,5 @@
 <%-- 
-    Document   : cadastroParticipante
+    Document   : CadastrarUsuario
     Created on : 30/09/2010, 09:23:25
     Author     : 317586
 --%>
@@ -11,14 +11,14 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Cadastro de Participantes</title>
+        <title>Cadastro de Usuário</title>
         <script type="text/javascript" src="funcoes.js"></script>
     </head>
     <body>
-        <form action="ManutencaoUsuarios" onsubmit="return validarUsuario()">
+        <form action="ManutencaoUsuarios" onsubmit="return validarCadastroUsuario()">
             <p>E-mail: <input type ="text" name="email" id="email" maxlength="100"/></p>
             <p>Nome: <input type ="text" name="nome" id="nome" maxlength="50"/></p>
-            <p>CPF: <input type ="text" name="cpf" id="cpf"/></p>
+            <p>CPF: <input type ="text" name="cpf" id="cpf" maxlength="11"/></p>
             <p>Senha: <input type ="password" name="senha" id="senha" maxlength="30" /></p>
             <p>Confirmar Senha: <input type ="password" id="confirmacao" maxlength="30"/></p>
             <p><input type="submit" value="Cadastrar"/>

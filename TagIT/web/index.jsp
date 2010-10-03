@@ -11,9 +11,11 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Chamadas das funcionalidades</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h3><a href="CadastrarUsuario.jsp">Cadastro de usuários</a></h3>
+        <h3><a href="AlterarUsuario.jsp">Alterar informações de usuários</a></h3>
+        <h3><a href="RemoverUsuario.jsp">Cancelar conta</a></h3>
     </body>
 </html>
