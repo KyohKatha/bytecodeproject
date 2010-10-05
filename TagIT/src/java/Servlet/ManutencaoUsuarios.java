@@ -37,8 +37,7 @@ public class ManutencaoUsuarios extends HttpServlet {
             /*
              * 0 : cadastrar
              * 1 : atualizar
-             * 2 : remover
-             * 3 : upgrade
+             * 2 : upgrade
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
@@ -70,25 +69,13 @@ public class ManutencaoUsuarios extends HttpServlet {
                     break;
                 case 2:
                     try {
-                        removerUsuario(request, response);
-                    } catch (Exception e) {
-
-                        request.setAttribute("erro", true);
-
-                        RequestDispatcher rd = null;
-                        rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
-                        rd.forward(request, response);
-                    }
-                    break;
-                case 3:
-                    try {
                         upgradeUsuario(request, response);
                     } catch (Exception e) {
 
                         request.setAttribute("erro", true);
 
                         RequestDispatcher rd = null;
-                        rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
+                        rd = request.getRequestDispatcher("/UpgradeUsuario.jsp");
                         rd.forward(request, response);
                     }
                     break;
@@ -188,41 +175,10 @@ public class ManutencaoUsuarios extends HttpServlet {
 
     }
 
-    /**
-     *
-     * Remover um usuario no site. Equivalente a opcao 2.
-     */
-    private void removerUsuario(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, TagITDAOException {
-
-        String senha = request.getParameter("senha");
-
-        ConexaoBD con = ConexaoBD.getInstance();
-        // verificar senha no BD
-
-        if (true) {
-            Participante p = (Participante) request.getSession().getAttribute("part");
-            // remover participante p.getId();
-
-            request.getSession().removeAttribute("part");
-            request.setAttribute("erro", false);
-
-            RequestDispatcher rd = null;
-            rd = request.getRequestDispatcher("/index.jsp");
-            rd.forward(request, response);
-        } else {
-            request.setAttribute("erro", true);
-
-            RequestDispatcher rd = null;
-            rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
-            rd.forward(request, response);
-        }
-
-    }
 
     /**
      *
-     * Envia uma solicitação de upgrade. Equivalente a opcao 3.
+     * Envia uma solicitação de upgrade. Equivalente a opcao 2.
      */
     private void upgradeUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
