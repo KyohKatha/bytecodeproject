@@ -111,4 +111,52 @@ public class ConexaoBD {
 
     }
 
+    /*
+    public Participante validarLogin(String email, String senha) throws TagITDAOException {
+        CallableStatement cstm = null;
+        ResultSet rs = null;
+
+        try {
+            cstm = con.prepareCall("{call sp_retorna_dados_participante(" + email + ")}");
+            rs = cstm.executeQuery();
+
+            if (rs.next()) {
+                if (!rs.getString(3).equals(senha)) {
+                    return null;
+                } else {
+                    Participante part = new Participante(rs.getString(2), rs.getString(4), rs.getString(3), rs.getString(5));
+                    return part;
+                }
+            }
+
+            cstm.close();
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+        return null;
+    }
+    */
+        public boolean validarLogin(String email, String senha) throws TagITDAOException {
+        CallableStatement cstm = null;
+        ResultSet rs = null;
+
+        try {
+            cstm = con.prepareCall("{call sp_retorna_dados_participante(" + email + ")}");
+            rs = cstm.executeQuery();
+            
+            if (rs.next()) {
+                System.out.println("VOLTOU ALGO VÁLIDO DO BD");
+            }else{
+                System.out.println("NÃO VOLTOU PORRA NENHUMA");
+            }
+            
+            cstm.close();
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+        
+        return true;
+    }
+
+
 }
