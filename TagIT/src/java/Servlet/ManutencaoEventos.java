@@ -103,7 +103,7 @@ public class ManutencaoEventos extends HttpServlet {
         contato = request.getParameter("contato");
         categoria = request.getParameterValues("categoria");
         //falta organizador, que sera pego da sessao
-        organizador = null;
+        organizador = (Organizador) request.getSession().getAttribute("usuarioLogado");
 
         lstCategoria = new ArrayList<Categoria>();
         for(i = 0; i < categoria.length; i++) {

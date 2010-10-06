@@ -39,6 +39,7 @@ public class ManutencaoUsuarios extends HttpServlet {
              * 1 : atualizar
              * 2 : upgrade
              * 3 : login
+             * 4 : logoff
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
@@ -89,6 +90,12 @@ public class ManutencaoUsuarios extends HttpServlet {
                         rd = request.getRequestDispatcher("/Login.jsp");
                         rd.forward(request, response);
                     }
+                    break;
+                case 4:
+                    request.getSession().removeAttribute("usuarioLogado");
+                    RequestDispatcher rd = null;
+                    rd = request.getRequestDispatcher("/index.jsp");
+                    rd.forward(request, response);
                     break;
                 default:
                     break;
@@ -224,33 +231,27 @@ public class ManutencaoUsuarios extends HttpServlet {
 
     private void validarLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
-
-        ConexaoBD con = ConexaoBD.getInstance();
+        
         RequestDispatcher rd = null;
+        ConexaoBD con = ConexaoBD.getInstance();
+        Participante part = null;
 
         String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
-        System.out.println("DENTRO DO VALIDAR LOGIN");
-
         try{
-        if (con.validarLogin(email, senha)){
-            System.out.println("SENHA VÁLIDA");
-        }
+            part = con.validarLogin(email, senha);
+            if (part != null) {
+                request.getSession().setAttribute("usuarioLogado", part);
+                rd = request.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+            } else {
+                response.sendRedirect("ErroLogin.jsp");
+            }
+
         }catch(Exception e){
             e.printStackTrace();
         }
-        /*
-         Participante part = con.validarLogin(email, senha);
-        if (part != null) {
-            System.out.println("VOLTOU ALGO DO PARTICIPANTE");
-            rd = request.getRequestDispatcher("/index.jsp");
-            rd.forward(request, response);
-        } else {
-            System.out.println("NÃO VOLTOU NADA DO PARTICIPANTE");
-            response.sendRedirect("ErroLogin.jsp");
-        }
-        */
 
     }
 
