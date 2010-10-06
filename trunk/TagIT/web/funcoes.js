@@ -263,12 +263,14 @@ function validaEvento() {
     var contato = trim(document.getElementById("contato").value);
     var categoria = trim(document.getElementById("categoria").value);
 
-    var erro = false;
+    var erro = true;
 
     if(!validaNome(nome)) {
         erro = true;
         document.getElementById("nome").focus();
     }
+
+    /*
     if(!validaNumero(vagasPrincipal)) {
         erro = true;
         document.getElementById("vagasPrincipal").focus();
@@ -305,7 +307,7 @@ function validaEvento() {
         erro = true;
         document.getElementById("dataEvento").focus();
     }
-
+    */
     return !erro;
     
 }
@@ -385,10 +387,6 @@ function validarLogin(){
     if (!validaSenha(senha, senha)){
         erro = false;
         document.getElementById("senha").focus();
-    }
-
-    if (erro == true){
-        document.getElementById("formLogin").submit();
     }
 
     return erro;

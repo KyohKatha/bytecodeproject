@@ -16,10 +16,11 @@
     </head>
     <body>
         <!-- <form action="ManutencaoUsuarios" id="formLogin" method="post"> -->
-        <form action="ManutencaoUsuarios" method="post" onsubmit="return validarLogin()">
+        <!-- onsubmit="return validarLogin()" -->
+        <form action="ManutencaoUsuarios" method="post" >
             <div>
                 <p>E-mail:<input type="text" name="email" id="email" /></p>
-                <p>Senha:<input type="text" name="senha" id="senha" /></p>
+                <p>Senha:<input type="password" name="senha" id="senha" /></p>
 
                 <p><input type="submit" value="Acessar"/>
                 <input type="hidden" name="tipo" value="3"></p>
