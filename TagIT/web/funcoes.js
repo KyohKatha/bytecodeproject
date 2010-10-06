@@ -70,7 +70,6 @@ function validarAlteracaoUsuario()
     return erro;
 }
 
-
 function validaEmail(email) {
     if ( email == "" ){
         alert("Informe seu e-mail");
@@ -372,3 +371,27 @@ function removeCategoria() {
     }
 
 }
+
+function validarLogin(){
+    var email = document.getElementById("email").value;
+    var senha = document.getElementById("senha").value;
+    var erro = true;
+
+    if (!validaEmail(email)){
+        erro = false;
+        document.getElementById("email");
+    }
+    
+    if (!validaSenha(senha, senha)){
+        erro = false;
+        document.getElementById("senha").focus();
+    }
+
+    if (erro == true){
+        document.getElementById("formLogin").submit();
+    }
+
+    return erro;
+    
+}
+
