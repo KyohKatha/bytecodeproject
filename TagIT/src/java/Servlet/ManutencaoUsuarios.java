@@ -246,7 +246,8 @@ public class ManutencaoUsuarios extends HttpServlet {
                 rd = request.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             } else {
-                response.sendRedirect("ErroLogin.jsp");
+                rd = request.getRequestDispatcher("ErroLogin.jsp");
+                rd.forward(request, response);
             }
 
         }catch(Exception e){

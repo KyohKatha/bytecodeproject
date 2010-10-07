@@ -13,6 +13,8 @@
 Participante usuarioLogado = (Participante) session.getAttribute("usuarioLogado");
 if(usuarioLogado == null) {
     out.println("Realize o login para cadastrar um evento");
+} else if(usuarioLogado.getClass().equals(Participante.class)) {
+    out.println("Você necessita de uma conta de organizador para cadastrar um evento.");
 } else {
 
 %>

@@ -9,6 +9,7 @@ import PkgTagIT.Categoria;
 import PkgTagIT.ConexaoBD;
 import PkgTagIT.Evento;
 import PkgTagIT.Organizador;
+import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,6 +43,7 @@ public class ManutencaoEventos extends HttpServlet {
          * 1 : atualizar
          * 2 : remover
          * 3 : buscar
+         * 4 : buscar pelo organizador
          */
 
         int tipo;
@@ -63,6 +65,16 @@ public class ManutencaoEventos extends HttpServlet {
                 case 2:
                     break;
                 case 3:
+                    break;
+                case 4:
+                    //buscar pelo organizador
+                    try {
+                        out.println("entrei aqui");
+                        buscaEventosDoOrganizador(request, response);
+                    } catch(TagITDAOException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
             }
         } finally { 
@@ -115,6 +127,25 @@ public class ManutencaoEventos extends HttpServlet {
         ConexaoBD.getInstance().insereEvento(evento);
 
 
+    }
+
+    private void buscaEventosDoOrganizador(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, TagITDAOException {
+        Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
+        Organizador organizador = null;
+        ArrayList<Evento> lstEventos = null;
+
+
+        if(participante.getClass().equals(Organizador.class)) {
+            organizador = (Organizador) participante;
+            lstEventos = ConexaoBD.getInstance().buscaEventosDoOrganizador(organizador);
+
+            response.getWriter().println("Número de eventos do organizador: " + lstEventos.size());
+
+        }
+        else {
+            response.getWriter().println("Voce deve estar logado como participante");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="Métodos HttpServlet. Clique no sinal de + à esquerda para editar o código.">

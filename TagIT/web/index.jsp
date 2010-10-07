@@ -22,6 +22,13 @@
         if(usuarioLogado != null) {
             %>
             <h3>Seja bem-vindo <%= usuarioLogado.getNome() %></h3>
+            <p>Você é um: <%
+            if(usuarioLogado.getClass().equals(Participante.class)) {
+                out.println("Participante");
+            }
+            else {
+                out.println("Organizador");
+            } %></p>
             <p><a href="ManutencaoUsuarios?tipo=4">Logoff</a></p>
             <%
         }
@@ -32,6 +39,7 @@
         <h3><a href="RemoverUsuario.jsp">Cancelar conta</a></h3>
         <h3><a href="UpgradeOrganizador.jsp">Solicitar Upgrade</a></h3>
         <h3><a href="CadastrarEvento.jsp">CadastrarEvento</a></h3>
+        <h3><a href="ManutencaoEventos?tipo=4">PegaEventosDoOrganizador</a></h3>
         <h3><a href="Login.jsp">Login</a></h3>
     </body>
 </html>
