@@ -13,8 +13,13 @@ import java.util.ArrayList;
  */
 public class Organizador extends Participante{
 
-    public Organizador(double id,String nome, String email, String senha, String cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
+    public Organizador(double id, String email, String nome, String senha, String cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
         super(id, email,nome, senha, cpf, upgrade, tentivasUpgrade, evento, redeSocial);
+    }
+
+    // Construtor utilizado apenas no cadastro
+    public Organizador(String email, String nome, String senha, String cpf ) {
+        super(email, nome, senha, cpf);
     }
     
 }

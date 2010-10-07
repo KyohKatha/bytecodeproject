@@ -251,6 +251,7 @@ function validaContato(contato) {
 }
 
 function validaEvento() {
+
     var nome = trim(document.getElementById("nome").value);
     var vagasPrincipal = trim(document.getElementById("vagasPrincipal").value);
     var vagasEspera = trim(document.getElementById("vagasEspera").value);
@@ -261,16 +262,15 @@ function validaEvento() {
     var cidade = trim(document.getElementById("cidade").value);
     var dataEvento = trim(document.getElementById("dataEvento").value);
     var contato = trim(document.getElementById("contato").value);
-    var categoria = trim(document.getElementById("categoria").value);
 
-    var erro = true;
+
+    var erro = false;
 
     if(!validaNome(nome)) {
         erro = true;
         document.getElementById("nome").focus();
     }
 
-    /*
     if(!validaNumero(vagasPrincipal)) {
         erro = true;
         document.getElementById("vagasPrincipal").focus();
@@ -307,7 +307,7 @@ function validaEvento() {
         erro = true;
         document.getElementById("dataEvento").focus();
     }
-    */
+
     return !erro;
     
 }

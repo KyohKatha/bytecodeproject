@@ -8,6 +8,7 @@ package PkgTagIT;
 
 import java.sql.*;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import java.util.ArrayList;
 
  /*
  * @author Gustavo
@@ -115,17 +116,38 @@ public class ConexaoBD {
         CallableStatement cstm = null;
         ResultSet rs = null;
         Participante part = null;
+        int tipoParticipante;
+        String emailRecebido = null;
+        String nome = null;
+        String senhaRecebida = null;
+        String cpf = null;
+        int tentativasUpgrade = 0;
+        boolean upgrade = false;
+        double id = 0.0;
+
         try {
-            cstm = con.prepareCall("{call sp_retorna_dados_participante( ? )}");
+            cstm = con.prepareCall("{call sp_retorna_dados_participante( ?, ? )}");
+            cstm.registerOutParameter(2, java.sql.Types.INTEGER);
             cstm.setString(1, email);
-            cstm.executeQuery();
-            rs = cstm.getResultSet();
-
+            rs = cstm.executeQuery();
             if (rs.next()) {
-                String senhaRetornada = rs.getString(3);
+                emailRecebido = rs.getString(2);
+                nome = rs.getString(4);
+                senhaRecebida = rs.getString(3);
+                cpf = rs.getString(5);
+                tentativasUpgrade = rs.getInt(7);
+                id = rs.getDouble(1);
+                upgrade = rs.getBoolean(6);
 
-                if (senhaRetornada.equals(senha)) {
-                    part = new Participante(rs.getString(2), rs.getString(4), rs.getString(3), rs.getString(5));
+                tipoParticipante = cstm.getInt(2);
+
+                if (senhaRecebida.equals(senha)) {
+                    if(tipoParticipante == 0) {
+                        part = new Participante(id, emailRecebido, nome, senhaRecebida, cpf, upgrade, tentativasUpgrade, null, null);
+                    }
+                    else {
+                        part = new Organizador(id, emailRecebido, nome, senhaRecebida, cpf, upgrade, tentativasUpgrade, null, null);
+                    }
                 }
             }
 
@@ -135,5 +157,62 @@ public class ConexaoBD {
             e.printStackTrace();
             throw new TagITDAOException();
         }
+    }
+
+    public ArrayList<Evento> buscaEventosDoOrganizador(Organizador organizador) throws TagITDAOException {
+        CallableStatement cstm = null;
+        CallableStatement cstm2 = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+        ArrayList<Evento> lstEventos = new ArrayList<Evento>();
+        Evento evento = null;
+        Categoria categoria = null;
+        double id;
+        String nome;
+        double vagasPrincipal;
+        double vagasEspera;
+        String inscInicio;
+        String inscTermino;
+        String rua;
+        String cidade;
+        String dataEvento;
+        String contato;
+        //Organizador organizador;
+
+        try {
+            cstm = con.prepareCall("{call sp_retornar_eventos_organizador(?)}");
+            cstm.setString(1, organizador.getEmail());
+            rs = cstm.executeQuery();
+
+            while(rs.next()) {
+                id = rs.getDouble(1);
+                nome = rs.getString(2);
+                vagasPrincipal = rs.getDouble(3);
+                vagasEspera = rs.getDouble(4);
+                inscInicio = rs.getString(5);
+                inscTermino = rs.getString(6);
+                rua = rs.getString(7);
+                cidade = rs.getString(8);
+                dataEvento = rs.getString(9);
+                contato = rs.getString(10);
+                evento = new Evento(id, nome, vagasPrincipal, vagasEspera, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, (new ArrayList<Categoria>()));
+
+                /*cstm2 = con.prepareCall("{call sp_retorna_categorias_do_evento(?)}");
+                cstm2.setString(1, evento.getNome());
+                rs2 = cstm2.executeQuery();
+                while(rs2.next()) {
+                    id = rs2.getDouble(1);
+                    nome = rs2.getString(2);
+                    categoria = new Categoria(id, nome);
+                    evento.getCategoria().add(categoria);
+                }*/
+                lstEventos.add(evento);
+            }
+            return lstEventos;
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
