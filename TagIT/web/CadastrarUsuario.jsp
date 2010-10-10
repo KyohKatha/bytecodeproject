@@ -13,18 +13,43 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Cadastro de Usuário</title>
         <script type="text/javascript" src="funcoes.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <form action="ManutencaoUsuarios" onsubmit="return validarCadastroUsuario()">
-            <p>E-mail: <input type ="text" name="email" id="email" maxlength="100"/></p>
-            <p>Nome: <input type ="text" name="nome" id="nome" maxlength="50"/></p>
-            <p>CPF: <input type ="text" name="cpf" id="cpf" maxlength="11"/></p>
-            <p>Senha: <input type ="password" name="senha" id="senha" maxlength="30" /></p>
-            <p>Confirmar Senha: <input type ="password" id="confirmacao" maxlength="30"/></p>
-            <p><input type="submit" value="Cadastrar"/>
-                <input type="reset" value="Limpar Campos"/></p>
+        <div class="meioContainer">
+            <div class = "cadParticipante">
+                <div class="erros">
+                    <fieldset class="information" onclick="closeMessageBox()">
+                        <legend>Information</legend>
+                        <p>- All fields with (*) are required.</p>
+                        <p>- Click on the box to close it.</p>
+                    </fieldset>
+                </div>
+                <form class="formParticipante" action="ManutencaoUsuarios" onsubmit="return validarCadastroUsuario()">
+                    <table>
+                        <tr>
+                            <td><label> E-mail(*): </label></td>
+                            <td><input type ="text" name="email" id="email" maxlength="100"/></td>
+                        </tr><tr>
+                            <td><label> Nome(*): </label></td>
+                            <td><input type ="text" name="nome" id="nome" maxlength="50"/></td>
+                        </tr><tr>
+                            <td><label> CPF(*): </label></td>
+                            <td><input type ="text" name="cpf" id="cpf" maxlength="11"/></td>
+                        </tr><tr>
+                            <td><label> Senha(*): </label></td>
+                            <td><input type ="password" name="senha" id="senha" maxlength="30" /></td>
+                        </tr><tr>
+                            <td><label> Confirmar Senha(*): </label></td>
+                            <td><input type ="password" id="confirmacao" maxlength="30"/></td>
+                        </tr><tr>
+                            <td><input class="botao" type="submit" value="Cadastrar"/></td>
+                            <td><input class="botao" type="reset" value="Limpar Campos"/></td>
 
-            <input type="hidden" name="tipo" value="0">
-        </form>
+                        <input type="hidden" name="tipo" value="0">
+                    </table>
+                </form>
+            </div>
+        </div>
     </body>
 </html>
