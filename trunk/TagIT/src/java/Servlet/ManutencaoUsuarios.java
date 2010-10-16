@@ -58,7 +58,7 @@ public class ManutencaoUsuarios extends HttpServlet {
                     break;
                 case 1:
                     try {
-                        alterarUsuario(request, response);
+                        //alterarUsuario(request, response);
                     } catch (Exception e) {
 
                         request.setAttribute("erro", true);
@@ -94,6 +94,7 @@ public class ManutencaoUsuarios extends HttpServlet {
         }
     }
 
+
     /**
      *
      * Cadastra um usuario no site. Equivalente a opcao 0.
@@ -101,25 +102,22 @@ public class ManutencaoUsuarios extends HttpServlet {
     private void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        Participante p;
+        Participante p = new Participante();
 
-        String email = request.getParameter("email");
-        String nome = request.getParameter("nome");
-        String senha = request.getParameter("senha");
         String cpf = request.getParameter("cpf");
-
-        p = new Participante(email, nome, senha, cpf);
 
         ConexaoBD con = ConexaoBD.getInstance();
 
+        /* api.cadastroUsuario();
+           p = api.GetUserInfo();
+           p.setCpf(CPF);
+           api.alterUser(p); */
 
         // verificar se o email ja foi cadastrado
-        if ( con.retornaDadosParticipante(email) == null ) {
+        if ( con.retornaDadosParticipante(p.getEmail()) == null ) {
             con.insereParticipante(p);
 
-            p.setSenha("");
-
-            request.getSession().setAttribute("usuarioLogado", p);
+            request.getSession().setAttribute("usuario", p);
             request.setAttribute("erro", false);
 
             RequestDispatcher rd = null;
@@ -139,10 +137,10 @@ public class ManutencaoUsuarios extends HttpServlet {
      *
      * Altera as informacoes de um usuario no site. Equivalente a opcao 1.
      */
-    private void alterarUsuario(HttpServletRequest request, HttpServletResponse response)
+    /*private void alterarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        Participante p = (Participante) request.getSession().getAttribute("usuarioLogado");
+        Participante p = (Participante) request.getSession().getAttribute("usuario");
 
         String nome = request.getParameter("nome");
         String senha = request.getParameter("atual");
@@ -150,13 +148,12 @@ public class ManutencaoUsuarios extends HttpServlet {
         String novaSenha = request.getParameter("senha");
 
         p.setNome(nome);
-        p.setCpf(cpf);
+        p.setCPF(cpf);
 
         ConexaoBD con = ConexaoBD.getInstance();
         // verificar senha do participante logado no BD
-        Participante p2 = con.retornaDadosParticipante(p.getEmail());
 
-        if ( senha.equals(p2.getSenha()) ) {
+        if ( con.verificarSenha(senha) ) {
             if (!novaSenha.equals("") && novaSenha != null) {
                 p.setSenha(novaSenha);
             }
@@ -182,35 +179,36 @@ public class ManutencaoUsuarios extends HttpServlet {
             rd.forward(request, response);
         }
 
-    }
+    }*/
 
 
     private void validarLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
-        
+
         RequestDispatcher rd = null;
         ConexaoBD con = ConexaoBD.getInstance();
         Participante part = null;
 
-        String email = request.getParameter("email");
+        /* api.fazerLoginNaAPI  */
+
+        /*String email = request.getParameter("email");
         String senha = request.getParameter("senha");
 
         try{
-            part = con.validarLogin(email, senha);
+
             if (part != null) {
                 request.getSession().setAttribute("usuarioLogado", part);
-                rd = request.getRequestDispatcher("homeLogada.jsp");
+                rd = request.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             } else {
-                request.getSession().setAttribute("type", "critical");
-                request.getSession().setAttribute("message", "<p>- Seu usuário ou senha estão incorretos!");
-                rd = request.getRequestDispatcher("Login.jsp");
+                rd = request.getRequestDispatcher("ErroLogin.jsp");
                 rd.forward(request, response);
             }
 
         }catch(Exception e){
             e.printStackTrace();
-        }
+        } */
+
 
     }
 

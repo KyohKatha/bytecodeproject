@@ -11,91 +11,19 @@ import java.util.ArrayList;
  *
  * @author 317624
  */
-public class Participante {
-    private double id;
-    private String email;
-    private String nome;
-    private String senha;
-    private String cpf;
-    private boolean upgrade;
-    private int tentivasUpgrade;
+public class Participante extends User {
+
     private ArrayList<Evento> evento;
     private ArrayList<RedeSocial> redeSocial; //Os tokens do usuario
 
-    public Participante(double id, String email, String nome, String senha, String cpf, boolean upgrade, int tentivasUpgrade, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial) {
-        this.id = id;
-        this.email = email;
-        this.nome = nome;
-        this.senha = senha;
-        this.cpf = cpf;
-        this.upgrade = upgrade;
-        this.tentivasUpgrade = tentivasUpgrade;
+    public Participante( String email, String nome, ArrayList<Evento> evento, ArrayList<RedeSocial> redeSocial ) {
+        super ( email, nome );
         this.evento = evento;
         this.redeSocial = redeSocial;
     }
 
-    // Construtor utilizado apenas no cadastro
-    public Participante(String email, String nome, String senha, String cpf ) {
-        this.email = email;
-        this.nome = nome;
-        this.senha = senha;
-        this.cpf = cpf;
-    }
+    public Participante(){
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-    
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public double getId() {
-        return id;
-    }
-
-    public void setId(double id) {
-        this.id = id;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public int getTentivasUpgrade() {
-        return tentivasUpgrade;
-    }
-
-    public void setTentivasUpgrade(int tentivasUpgrade) {
-        this.tentivasUpgrade = tentivasUpgrade;
-    }
-
-    public boolean getUpgrade() {
-        return upgrade;
-    }
-
-    public void setUpgrade(boolean upgrade) {
-        this.upgrade = upgrade;
     }
 
     public ArrayList<Evento> getEvento() {
@@ -114,5 +42,5 @@ public class Participante {
         this.redeSocial = redeSocial;
     }
 
-    
+
 }

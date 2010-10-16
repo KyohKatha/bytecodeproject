@@ -114,7 +114,7 @@ public class ConexaoBD {
 
     }
 
-    public Participante validarLogin(String email, String senha) throws TagITDAOException {
+    /*public Participante validarLogin(String email, String senha) throws TagITDAOException {
         CallableStatement cstm = null;
         ResultSet rs = null;
         Participante part = null;
@@ -154,7 +154,7 @@ public class ConexaoBD {
             e.printStackTrace();
             throw new TagITDAOException();
         }
-    }
+    } */
 
     public ArrayList<Evento> buscaEventosdoOrganizador(Participante organizador) throws TagITDAOException {
         CallableStatement cstm = null;
@@ -224,13 +224,9 @@ public class ConexaoBD {
 
 
         try {
-            cstm = con.prepareCall("{call sp_inserir_participante(?, ?, ?, ?, ?, ?)}");
+            cstm = con.prepareCall("{call sp_inserir_participante(?, ?)}");
             cstm.setString(1, p.getEmail());
-            cstm.setString(2, p.getSenha());
-            cstm.setString(3, p.getNome());
-            cstm.setString(4, p.getCpf());
-            cstm.setBoolean(5, p.getUpgrade());
-            cstm.setInt(6, p.getTentivasUpgrade());
+            cstm.setString(2, p.getNome());
             cstm.execute();
             cstm.close();
         } catch (SQLException e) {
@@ -248,11 +244,10 @@ public class ConexaoBD {
         CallableStatement cstm = null;
 
         try {
-            cstm = con.prepareCall("{call sp_atualizar_participante(?, ?, ?, ?)}");
+            cstm = con.prepareCall("{call sp_atualizar_participante(?, ?, ?)}");
             cstm.setString(1, p.getEmail());
-            cstm.setString(2, p.getSenha());
             cstm.setString(3, p.getNome());
-            cstm.setString(4, p.getCpf());
+            cstm.setString(4, p.getCPF());
             cstm.execute();
             cstm.close();
         } catch (SQLException e) {
@@ -274,22 +269,16 @@ public class ConexaoBD {
             cstm = con.prepareCall("{call sp_retorna_dados_participante(?, ?)}");
 
             cstm.setString(1, aEmail);
-            cstm.registerOutParameter(2, java.sql.Types.INTEGER);
 
             ResultSet rs = cstm.executeQuery();
 
             Participante p = null;
 
             if (rs.next()) {
-                double id = rs.getDouble(1);
-                String email = rs.getString(2);
-                String senha = rs.getString(3);
-                String nome = rs.getString(4);
-                String cpf = rs.getString(5);
-                boolean upgrade = rs.getBoolean(6);
-                int tentativas = rs.getInt(7);
+                String email = rs.getString(1);
+                String nome = rs.getString(2);
 
-                p = new Participante(id, email, nome, senha, cpf, upgrade, tentativas, null, null);
+                p = new Participante( email, nome, null, null);
                 
             }
 
