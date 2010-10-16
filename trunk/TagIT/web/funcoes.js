@@ -11,27 +11,17 @@ function validarCadastroUsuario()
     var senha = document.getElementById("senha").value;
     var confSenha = document.getElementById("confirmacao").value;
 
-    var erro = true;
-
-    if ( !validaEmail(email) ){
-        document.getElementById("email").focus();
-        erro = false;
+    var message = "";
+    message += validaEmail(email);
+    message += validaNome(nome);
+    message += validaCPF(cpf);
+    message += validaSenha(senha, confSenha);
+    if(message != ""){
+        message += "<p>- Clique na caixa para fechá-la.</p>";
+        mostrarMenssagem('critical', message);
+        return false;
     }
-    if ( !validaNome(nome) ){
-        document.getElementById("nome").focus();
-        erro = false;
-    }
-    if ( !validaCPF(cpf) ){
-        document.getElementById("cpf").focus();
-        erro = false;
-    }
-    if ( !validaSenha(senha, confSenha) ){
-        document.getElementById("senha").value = "";
-        document.getElementById("confirmacao").value = "";
-        erro = false;
-    }
-
-    return erro;
+    return true;
 }
 
 
@@ -43,37 +33,28 @@ function validarAlteracaoUsuario()
     var senha = document.getElementById("senha").value;
     var confSenha = document.getElementById("confirmacao").value;
 
-    var erro = true;
-
-    if ( !validaNome(nome) ){
-        document.getElementById("nome").focus();
-        erro = false;
-    }
-    if ( !validaCPF(cpf) ){
-        document.getElementById("cpf").focus();
-        erro = false;
-    }
+    
+    var message = "";
+    message += validaNome(nome);
+    message += validaCPF(cpf);
     if ( atual == "" ){
-        document.getElementById("atual").focus();
-        alert("Informe a senha");
-        erro = false;
+        message += "<p>- Informe a <strong>senha</strong>.</p>";
     } else {
         if ( senha != "" || confSenha != "" ){
-            if ( !validaSenha(senha, confSenha) ){
-                document.getElementById("senha").value = "";
-                document.getElementById("confirmacao").value = "";
-                erro = false;
+            message += validaSenha(senha, confSenha);
             }
         }
+    if(message != ""){
+        message += "<p>- Clique na caixa para fechá-la.</p>";
+        mostrarMenssagem('critical', message);
+        return false;
     }
-
-    return erro;
+    return true;
 }
 
 function validaEmail(email) {
     if ( email == "" ){
-        alert("Informe seu e-mail");
-        return false;
+        return "<p>- Informe o <strong>e-mail</strong>.</p>";
     }
 
     var exclude=/[^@\-\.\w]|^[_@\.\-]|[\._\-]{2}|[@\.]{2}|(@)[^@]*\1/;
@@ -81,56 +62,48 @@ function validaEmail(email) {
     var checkend=/\.[a-zA-Z]{2,3}$/;
     if(((email.search(exclude) != -1)||(email.search(check)) == -1)||
         (email.search(checkend) == -1)){
-        alert("e-mail inválido");
-        return false;
+        return "<p>- <strong>e-mail</strong> com formato incorreto.</p>";
     } else {
-        return true;
+        return "";
     }
 }
 
 function validaNome(nome){
     var expNome = /^[0-9a-zA-Zà-üÀ-Ü /.]*$/
     if ( nome == "" ){
-        alert("Informe seu nome");
-        return false;
+        return "<p>- Informe o <strong>nome</strong>.</p>";
     }
     if(nome.match(expNome) == null) {
-        alert("Informe um nome correto");
-        return false;
+        return "<p>- <strong>nome</strong> com formato incorreto.</p>";
     }
-    return true;
+    return "";
 }
 
 function validaRua(rua){
     var expRua = /^[0-9a-zA-Zà-üÀ-Ü /.]*$/
     if ( rua == "" ){
-        alert("Informe a rua");
-        return false;
+        return "<p>- Informe a <strong>rua</strong>.</p>";
     }
     if(rua.match(expRua) == null) {
-        alert("Informe a rua corretamente");
-        return false;
+        return "<p>- <strong>rua</strong> com formato incorreto.</p>";
     }
-    return true;
+    return "";
 }
 
 function validaCidade(cidade){
     var expCidade = /^[0-9a-zA-Zà-üÀ-Ü /.]*$/
     if ( cidade == "" ){
-        alert("Informe a cidade");
-        return false;
+        return "<p>- Informe a <strong>cidade</strong>.</p>";
     }
     if(cidade.match(expCidade) == null) {
-        alert("Informe a cidade corretamente");
-        return false;
+        return "<p>- <strong>cidade</strong> com formato incorreto.</p>";
     }
-    return true;
+    return "";
 }
 
 function validaCPF(cpf) {
     if ( cpf == "" ){
-        alert("Informe seu CPF");
-        return false;
+        return "<p>- Informe o <strong>CPF</strong>.</p>";
     }
 
     while (cpf.lenght < 11) {
@@ -139,8 +112,7 @@ function validaCPF(cpf) {
 
     var nonNumbers = /\D/;
     if (nonNumbers.test(cpf)) {
-        alert("Digite apenas números");
-        return false;
+        return "<p>- <strong>CPF</strong> deve conter apenas números.</p>";
     }
 
     if (cpf == "00000000000" || cpf == "11111111111" ||
@@ -148,8 +120,7 @@ function validaCPF(cpf) {
         cpf == "44444444444" || cpf == "55555555555" ||
         cpf == "66666666666" || cpf == "77777777777" ||
         cpf == "88888888888" || cpf == "99999999999"){
-        alert("CPF inválido");
-        return false;
+        return "<p>- <strong>CPF</strong> inválido.</p>";
     }
 
     var a = [];
@@ -173,29 +144,25 @@ function validaCPF(cpf) {
         a[10] = 11-x;
     }
     if ((cpf.charAt(9) != a[9]) || (cpf.charAt(10) != a[10])){
-        alert("CPF inválido");
-        return false;
+        return "<p>- <strong>CPF</strong> inválido.</p>";
     }
     
-    return true;
+    return "";
 }
 
 function validaSenha(senha, confSenha){
     if ( senha == "" ){
-        alert("Informe sua senha");
-        return false;
+        return "<p>- Informe a <strong>senha</strong>.</p>";
     }
     if ( senha.toString().length < 6 ){
-        alert("Sua senha deve ter no mínimo 6 dígitos");
-        return false;
+        return "<p>- Informe a <strong>senha</strong> com no mínimo<strong>6 dígitos</dtong.</p>";
     }
 
     if ( senha != confSenha ){
-        alert("As senhas informadas devem ser iguais");
-        return false;
+        return "<p>- <strong>senha</strong> e <strong>confirmação de senha</strong> devem ser iguais.</p>";
     }
 
-    return true;
+    return "";
 }
 
 function ltrim(texto) {
@@ -213,41 +180,35 @@ function trim(texto) {
 function validaNumero(numero) {
     var expNumero = /^[0-9]*$/;
     if(numero == "") {
-        alert("Informe um número");
-        return false;
+        return "<p>- Informe um <strong>número</strong>.</p>";
     }
     if(numero.match(expNumero) == null) {
-        alert("Informe um número correto");
-        return false;
+        return "<p>- <strong>número</strong> com formato incorreto.</p>";
     }
-    return true;
+    return "";
 }
 
 function validaData(data) {
     var expData = /^([0-9]|[0,1,2][0-9]|3[0,1])\/([0,1][0,1,2])\/\d{4}$/
     if(data == "") {
-        alert("Preencha a data");
-        return false;
+        return "<p>- Informe a <strong>data</strong>.</p>";;
     }
     if(data.match(expData) == null) {
-        alert("Preencha a data corretamente");
-        return false
+        return "<p>- <strong>data</strong> com formato incorreto.</p>";
     }
-    return true;
+    return "";
 }
 
 function validaContato(contato) {
     var expContato = /^[0-9a-zA-Zà-üÀ-Ü .,-@]*$/;
 
     if(contato == "") {
-        alert("Informe um contato");
-        return false;
+        return "<p>- Informe um <strong>contato</strong>.</p>";
     }
     if(contato.match(expContato) == null) {
-        alert("Informe um contato correto");
-        return false;
+        return "<p>- <strong>contato</strong> com formato incorreto.</p>";
     }
-    return true;
+    return "";
 }
 
 function validaEvento() {
@@ -263,52 +224,25 @@ function validaEvento() {
     var dataEvento = trim(document.getElementById("dataEvento").value);
     var contato = trim(document.getElementById("contato").value);
 
+    var message = "";
+    message += validaNome(nome);
+    message += validaNumero(vagasPrincipal);
+    message += validaNumero(vagasEspera);
+    message += validaRua(rua);
+    message += validaNumero(numeroRua);
+    message += validaCidade(cidade);
+    message += validaContato(contato);
+    message += validaData(inscInicio)
+    message += validaData(inscTermino);
+    message += validaData(dataEvento);
 
-    var erro = false;
-
-    if(!validaNome(nome)) {
-        erro = true;
-        document.getElementById("nome").focus();
-    }
-
-    if(!validaNumero(vagasPrincipal)) {
-        erro = true;
-        document.getElementById("vagasPrincipal").focus();
-    }
-    if(!validaNumero(vagasEspera)) {
-        erro = true;
-        document.getElementById("vagasEspera").focus();
-    }
-    if(!validaRua(rua)) {
-        erro = true;
-        document.getElementById("rua").focus();
-    }
-    if(!validaNumero(numeroRua)) {
-        erro = true;
-        document.getElementById("numeroRua").focus();
-    }
-    if(!validaCidade(cidade)) {
-        erro = true;
-        document.getElementById("cidade").focus();
-    }
-    if(!validaContato(contato)) {
-        erro = true;
-        document.getElementById("contato").focus();
-    }
-    if(!validaData(inscInicio)) {
-        erro = true;
-        document.getElementById("inscInicio").focus();
-    }
-    if(!validaData(inscTermino)) {
-        erro = true;
-        document.getElementById("inscTermino").focus();
-    }
-    if(!validaData(dataEvento)) {
-        erro = true;
-        document.getElementById("dataEvento").focus();
+    if(message != ""){
+        message += "<p>- Clique na caixa para fechá-la.</p>";
+        mostrarMenssagem('critical', message);
+        return false;
     }
 
-    return !erro;
+    return true;
     
 }
 
@@ -378,18 +312,41 @@ function validarLogin(){
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
     var erro = true;
-
-    if (!validaEmail(email)){
+       alert(erro);
+    if (validaEmail(email) != ""){
         erro = false;
+        
         document.getElementById("email");
     }
     
-    if (!validaSenha(senha, senha)){
+    if (!validaSenha(senha, senha) != ""){
         erro = false;
+        
         document.getElementById("senha").focus();
     }
-
-    return erro;
     
+    return erro;
+
 }
 
+function fecharCaixaMensagem(){
+    if (document.getElementById("erros") != null )
+        document.getElementById("erros").innerHTML="";
+}
+
+function mostrarMenssagem(type, message) {
+    switch (type) {
+        case 'information':
+            document.getElementById("erros").innerHTML = "<fieldset class=\"information\" onclick=\"fecharCaixaMensagem()\"><legend>Informação</legend>" + message + "</fieldset>";
+            break;
+        case 'critical':
+            document.getElementById("erros").innerHTML = "<fieldset class=\"critical\" onclick=\"fecharCaixaMensagem()\"><legend>Erro</legend>" + message + "</fieldset>";
+            break;
+        case 'success':
+            document.getElementById("erros").innerHTML = "<fieldset class=\"success\" onclick=\"fecharCaixaMensagem()\"><legend>Successo</legend>" + message + "</fieldset>";
+            break;
+        case 'warning':
+            document.getElementById("erros").innerHTML = "<fieldset class=\"warning\" onclick=\"fecharCaixaMensagem()\"><legend>Aviso</legend>" + message + "</fieldset>";
+            break;
+    }
+}
