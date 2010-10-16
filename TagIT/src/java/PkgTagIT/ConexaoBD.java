@@ -215,4 +215,103 @@ public class ConexaoBD {
         }
         return null;
     }
+
+
+
+    /**
+     *
+     * @param p Objeto do tipo participante que sera inserido no BD
+     */
+    public void insereParticipante(Participante p) throws TagITDAOException {
+        CallableStatement cstm = null;
+
+
+        try {
+            cstm = con.prepareCall("{call sp_inserir_participante(?, ?, ?, ?, ?, ?)}");
+            cstm.setString(1, p.getEmail());
+            cstm.setString(2, p.getSenha());
+            cstm.setString(3, p.getNome());
+            cstm.setString(4, p.getCpf());
+            cstm.setBoolean(5, p.getUpgrade());
+            cstm.setInt(6, p.getTentivasUpgrade());
+            cstm.execute();
+            cstm.close();
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+    }
+
+
+    /**
+     *
+     * @param p Objeto que contem dados de um participante que sera alterado no BD
+     */
+    public void alteraParticipante(Participante p) throws TagITDAOException {
+        CallableStatement cstm = null;
+
+
+        try {
+            cstm = con.prepareCall("{call sp_atualizar_participante(?, ?, ?, ?)}");
+            cstm.setString(1, p.getEmail());
+            cstm.setString(2, p.getSenha());
+            cstm.setString(3, p.getNome());
+            cstm.setString(4, p.getCpf());
+            cstm.execute();
+            cstm.close();
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+    }
+
+    /**
+     *
+     * @param aEmail email do participante que tera seus dados recuperados
+     * @return dados do participante
+     */
+    public Participante retornaDadosParticipante(String aEmail) throws TagITDAOException {
+        CallableStatement cstm = null;
+
+
+        try {
+            cstm = con.prepareCall("{call sp_retorna_dados_participante(?, ?)}");
+
+            cstm.setString(1, aEmail);
+            cstm.registerOutParameter(2, java.sql.Types.INTEGER);
+
+            ResultSet rs = cstm.executeQuery();
+
+            Participante p = null;
+
+            if (rs.next()) {
+                double id = rs.getDouble(1);
+                String email = rs.getString(2);
+                String senha = rs.getString(3);
+                String nome = rs.getString(4);
+                String cpf = rs.getString(5);
+                boolean upgrade = rs.getBoolean(6);
+                int tentativas = rs.getInt(7);
+
+                if (cstm.getInt(2) == 1) {
+
+                    // mudar!!
+                    p = new Organizador(id, nome, email, senha, cpf, upgrade, tentativas, null, null);
+                } else {
+
+                    // mudar!!
+                    p = new Participante(id, email, nome, senha, cpf, upgrade, tentativas, null, null);
+                }
+            }
+
+            cstm.close();
+
+            return p;
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+    }
+
 }

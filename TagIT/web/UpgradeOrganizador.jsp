@@ -10,7 +10,7 @@
 
 <%@page import="PkgTagIT.Participante" %>
 
-<% Participante p = (Participante) session.getAttribute("part");
+<% Participante p = (Participante) session.getAttribute("usuarioLogado");
    /*  Participante p = new Participante("aa@bb.cc", "aaa", "######", "38197921806");
      request.getSession().setAttribute("part", p);*/
 %>

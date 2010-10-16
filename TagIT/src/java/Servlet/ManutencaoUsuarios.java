@@ -123,13 +123,15 @@ public class ManutencaoUsuarios extends HttpServlet {
         p = new Participante(email, nome, senha, cpf);
 
         ConexaoBD con = ConexaoBD.getInstance();
-        // verificar se o email já não foi cadastrado
 
-        if (true) {
-            // salvar no BD - gerar ID
-            // recuperar do BD - com ID, upgrade (T/F), tentativas, mas sem senha
 
-            request.getSession().setAttribute("part", p);
+        // verificar se o email ja foi cadastrado
+        if ( con.retornaDadosParticipante(email) == null ) {
+            con.insereParticipante(p);
+
+            p.setSenha("");
+
+            request.getSession().setAttribute("usuarioLogado", p);
             request.setAttribute("erro", false);
 
             RequestDispatcher rd = null;
@@ -152,7 +154,7 @@ public class ManutencaoUsuarios extends HttpServlet {
     private void alterarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        Participante p = (Participante) request.getSession().getAttribute("part");
+        Participante p = (Participante) request.getSession().getAttribute("usuarioLogado");
 
         String nome = request.getParameter("nome");
         String senha = request.getParameter("atual");
@@ -163,17 +165,21 @@ public class ManutencaoUsuarios extends HttpServlet {
         p.setCpf(cpf);
 
         ConexaoBD con = ConexaoBD.getInstance();
-        // verificar senha no BD
+        // verificar senha do participante logado no BD
+        Participante p2 = con.retornaDadosParticipante(p.getEmail());
 
-        if (true) {
+        p.setCpf(p2.getSenha());
+
+        if ( p2 != null && senha.equals(p2.getSenha()) ) {
             if (!novaSenha.equals("") && novaSenha != null) {
                 p.setSenha(novaSenha);
             }
 
-            // update no BD, com base no ID
+            // update no BD
+            con.alteraParticipante(p);
 
             p.setSenha("");
-            request.getSession().setAttribute("part", p);
+            request.getSession().setAttribute("usuarioLogado", p);
 
             request.setAttribute("erro", false);
 
@@ -181,8 +187,7 @@ public class ManutencaoUsuarios extends HttpServlet {
             rd = request.getRequestDispatcher("/ConfirmacaoAlteracaoUsuario.jsp");
             rd.forward(request, response);
         } else {
-
-            request.getSession().setAttribute("part", p);
+            request.getSession().setAttribute("usuarioLogado", p);
 
             request.setAttribute("erro", true);
 
@@ -201,18 +206,22 @@ public class ManutencaoUsuarios extends HttpServlet {
     private void upgradeUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
+        Participante p = (Participante) request.getSession().getAttribute("usuarioLogado");
+
         String senha = request.getParameter("senha");
 
         ConexaoBD con = ConexaoBD.getInstance();
         // verificar senha no BD
 
-        if (true) {
-            Participante p = (Participante) request.getSession().getAttribute("part");
-            // modificar de participante para organizador
+        Participante p2 = con.retornaDadosParticipante(p.getEmail());
 
-            p.setTentivasUpgrade(p.getTentivasUpgrade()+1);
+        if ( p2 != null && senha.equals(p2.getSenha()) ) {
+            // modificar tentativas de upgrade
+            p.setTentivasUpgrade(p.getTentivasUpgrade() + 1);
+            con.alteraParticipante(p);
 
-            request.getSession().setAttribute("part", p);
+            request.getSession().setAttribute("usuarioLogado", p);
+
 
             request.setAttribute("erro", false);
 
