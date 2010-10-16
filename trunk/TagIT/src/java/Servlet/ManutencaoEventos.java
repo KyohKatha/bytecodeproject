@@ -56,7 +56,8 @@ public class ManutencaoEventos extends HttpServlet {
                         cadastraEvento(request, response);
                         out.println("Evento inserido com sucesso!");
                     } catch (TagITDAOException e) {
-                        out.println("Ja existe um evento com esse nome cadastrado!");
+                        //out.println("Ja existe um evento com esse nome cadastrado!");
+                        //System.out.println(e.printStackTrace());
                     }
                     break;
                 case 1:
@@ -86,12 +87,11 @@ public class ManutencaoEventos extends HttpServlet {
 
         String nome;
         double vagasPrincipal;
-        double vagasEspera;
         String inscInicio;
         String inscTermino;
         String rua;
-        String cidade;
         String numeroRua;
+        String cidade;
         String dataEvento;
         String contato;
         Participante organizador; //organizador vai ser pego da sessão
@@ -100,10 +100,8 @@ public class ManutencaoEventos extends HttpServlet {
         int i;
         Evento evento;
 
-
         nome = request.getParameter("nome");
         vagasPrincipal = Double.parseDouble(request.getParameter("vagasPrincipal"));
-        vagasEspera = Double.parseDouble(request.getParameter("vagasEspera"));
         inscInicio = request.getParameter("inscInicio");
         inscTermino = request.getParameter("inscTermino");
         rua = request.getParameter("rua");
@@ -113,15 +111,19 @@ public class ManutencaoEventos extends HttpServlet {
         dataEvento = request.getParameter("dataEvento");
         contato = request.getParameter("contato");
         categoria = request.getParameterValues("categoria");
+
         //falta organizador, que sera pego da sessao
         organizador = (Participante) request.getSession().getAttribute("usuarioLogado");
 
         lstCategoria = new ArrayList<Categoria>();
-        for(i = 0; i < categoria.length; i++) {
-            lstCategoria.add(new Categoria(categoria[i]));
-        }
+        System.out.println("TAMANHO DA CATEGORIA >> " + lstCategoria.size());
 
-        evento = new Evento(nome, vagasPrincipal, vagasEspera, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);
+        if (lstCategoria.size() > 0) {
+            for (i = 0; i < categoria.length; i++) {
+                lstCategoria.add(new Categoria(categoria[i]));
+            }
+        }
+        evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);
 
         ConexaoBD.getInstance().insereEvento(evento);
 

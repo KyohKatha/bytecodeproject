@@ -65,7 +65,7 @@ public class ConexaoBD {
         int i;
         CallableStatement cstm = null;
         ResultSet rs = null;
-
+        String sRetorno = "";
 
         try {
             cstm = con.prepareCall("{call sp_inserir_evento"
@@ -73,15 +73,17 @@ public class ConexaoBD {
 
             cstm.setString(1, evento.getNome());
             cstm.setDouble(2, evento.getVagasPrincipal());
-            cstm.setDouble(3, evento.getVagasEspera());
-            cstm.setString(4, evento.getInscInicio());
-            cstm.setString(5, evento.getInscTermino());
-            cstm.setString(6, evento.getRua());
-            cstm.setString(7, evento.getCidade());
-            cstm.setString(8, evento.getDataEvento());
-            cstm.setString(9, evento.getContato());
+            cstm.setString(3, evento.getInscInicio());
+            cstm.setString(4, evento.getInscTermino());
+            cstm.setString(5, evento.getRua());
+            cstm.setString(6, evento.getCidade());
+            cstm.setString(7, evento.getDataEvento());
+            cstm.setString(8, evento.getContato());
+            cstm.registerOutParameter(sRetorno, java.sql.Types.VARCHAR);
 
             rs = cstm.executeQuery();
+            System.out.println("Retornou >> " + sRetorno);
+            
             if(rs.next()) {
                 throw new TagITDAOException("Já existe um evento com esse nome!");
             }

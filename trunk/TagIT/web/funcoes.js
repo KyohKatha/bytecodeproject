@@ -215,7 +215,6 @@ function validaEvento() {
 
     var nome = trim(document.getElementById("nome").value);
     var vagasPrincipal = trim(document.getElementById("vagasPrincipal").value);
-    var vagasEspera = trim(document.getElementById("vagasEspera").value);
     var inscInicio = trim(document.getElementById("inscInicio").value);
     var inscTermino = trim(document.getElementById("inscTermino").value);
     var rua = trim(document.getElementById("rua").value);
@@ -224,26 +223,56 @@ function validaEvento() {
     var dataEvento = trim(document.getElementById("dataEvento").value);
     var contato = trim(document.getElementById("contato").value);
 
-    var message = "";
-    message += validaNome(nome);
-    message += validaNumero(vagasPrincipal);
-    message += validaNumero(vagasEspera);
-    message += validaRua(rua);
-    message += validaNumero(numeroRua);
-    message += validaCidade(cidade);
-    message += validaContato(contato);
-    message += validaData(inscInicio)
-    message += validaData(inscTermino);
-    message += validaData(dataEvento);
+    var erro = true;
+    
+    if (validaNome(nome) != ""){
+        erro = false;
+        document.getElementById("nome").focus();
+    }
+    
+    if (validaNumero(vagasPrincipal) != ""){
+        erro = false;
 
-    if(message != ""){
-        message += "<p>- Clique na caixa para fechá-la.</p>";
-        mostrarMenssagem('critical', message);
-        return false;
+        document.getElementById("vagasPrincipal").focus();
     }
 
-    return true;
+    if (validaData(inscInicio) != ""){
+        erro = false;
+
+        document.getElementById("inscInicio").focus();
+    }
+
+    if (validaData(inscTermino) != ""){
+        erro = false;
+
+        document.getElementById("inscTermino").focus();
+    }
     
+    if (validaRua(rua) != ""){
+        erro = false;
+
+        document.getElementById("rua").focus();
+    }
+    
+    if (validaNumero(numeroRua) != ""){
+        erro = false;
+
+        document.getElementById("numeroRua").focus();
+    }
+    
+    if (validaCidade(cidade) != ""){
+        erro = false;
+
+        document.getElementById("cidade").focus();
+    }
+    
+    if (validaData(dataEvento) != ""){
+        erro = false;
+
+        document.getElementById("dataEvento").focus();
+    }
+
+    return erro;
 }
 
 function adicionaCategoria() {
