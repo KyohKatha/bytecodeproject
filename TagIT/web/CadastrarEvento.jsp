@@ -30,47 +30,47 @@
 
         <div class="meioContainer">
             <div class = "cadEvento">
-                <div class="erros">
-                    <fieldset class="information" onclick="closeMessageBox()">
-                        <legend>Information</legend>
-                        <p>- All fields with (*) are required.</p>
-                        <p>- Click on the box to close it.</p>
+                <div class="erros" id="erros">
+                    <fieldset class="information" onclick="fecharCaixaMensagem()">
+                        <legend>Informação</legend>
+                        <p>- Todos os campos com (*) são obrigatórios.</p>
+                        <p>- Clique na caixa para fechá-la.</p>
                     </fieldset>
                 </div>
                 <form action="ManutencaoEventos" class="formEvento" id="formEvento" method="post" onsubmit="return validaEvento()">
                     <table>
                         <tr>
-                            <td><label>Nome:</label></td>
+                            <td><label>(*)Nome:</label></td>
                             <td><input type="text" name="nome" id="nome" /></td>
                         </tr><tr>
-                            <td><label>Número de vagas:</label></td>
+                            <td><label>(*)Número de vagas:</label></td>
                             <td><input type="text" name="vagasPrincipal" id="vagasPrincipal" /></td>
                         </tr><tr>
-                            <td><label>Número de vagas na lista de espera:</label></td>
+                            <td><label>(*)Número de vagas na lista de espera:</label></td>
                             <td><input type="text" name="vagasEspera" id="vagasEspera" /></td>
                         </tr><tr>
-                            <td><label>Data de início de inscrição:</label></td>
+                            <td><label>(*)Data de início de inscrição:</label></td>
                             <td><input type="text" name="inscInicio" id="inscInicio" /></td>
                         </tr><tr>
-                            <td><label>Data de término de inscrição:</label></td>
+                            <td><label>(*)Data de término de inscrição:</label></td>
                             <td><input type="text" name="inscTermino" id="inscTermino" /></td>
                         </tr><tr>
-                            <td><label>Rua:</label></td>
+                            <td><label>(*)Rua:</label></td>
                             <td><input type="text" name="rua" id="rua" /></td>
                         </tr><tr>
-                            <td><label>Número:</label></td>
+                            <td><label>(*)Número:</label></td>
                             <td><input type="text" name="numeroRua" id="numeroRua" /></td>
                         </tr><tr>
-                            <td><label>Cidade:</label></td>
+                            <td><label>(*)Cidade:</label></td>
                             <td><input type="text" name="cidade" id="cidade" /></td>
                         </tr><tr>
-                            <td><label>Data do evento:</label></td>
+                            <td><label>(*)Data do evento:</label></td>
                             <td><input type="text" name="dataEvento" id="dataEvento" /></td>
                         </tr><tr>
-                            <td><label>Contato:</label></td>
+                            <td><label>(*)Contato:</label></td>
                             <td><input type="text" name="contato" id="contato" /></td>
                         </tr><tr>
-                            <td><label> Categoria:</label></td>
+                            <td><label>Categoria:</label></td>
                             <td><select name="selectCategoria" id="selectCategoria">
                             <% //aqui vai ser preenchido conforme as categorias já cadastradas no bd %>
                             <option value="1">Musica</option>
@@ -78,7 +78,7 @@
                         </select></td>
                             <td><input class="botao" type="button" value="Selecionar" onclick="adicionaCategoria()" /></td>
                         </tr><tr>
-                           <td><label> Categorias selecionadas:</label></td>
+                           <td><label>Categorias selecionadas:</label></td>
                            <td><select multiple name="categoriasSelecionadas" id="categoriasSelecionadas" size="3">
                         </select></td>
                         <td><input class="botao" type="button" value="Remover" onclick="removeCategoria()" /></td>
