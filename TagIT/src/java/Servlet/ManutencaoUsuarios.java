@@ -168,9 +168,7 @@ public class ManutencaoUsuarios extends HttpServlet {
         // verificar senha do participante logado no BD
         Participante p2 = con.retornaDadosParticipante(p.getEmail());
 
-        p.setCpf(p2.getSenha());
-
-        if ( p2 != null && senha.equals(p2.getSenha()) ) {
+        if ( senha.equals(p2.getSenha()) ) {
             if (!novaSenha.equals("") && novaSenha != null) {
                 p.setSenha(novaSenha);
             }
