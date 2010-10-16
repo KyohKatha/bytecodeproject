@@ -12,7 +12,7 @@
 
 <% Participante p;
 
-    p = (Participante) request.getSession().getAttribute("part");
+    p = (Participante) request.getSession().getAttribute("usuarioLogado");
 
     if ( p != null ) {
    %>

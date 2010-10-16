@@ -49,10 +49,7 @@ function validarAlteracaoUsuario()
         document.getElementById("nome").focus();
         erro = false;
     }
-    if ( !validaCPF(cpf) ){
-        document.getElementById("cpf").focus();
-        erro = false;
-    }
+    
     if ( atual == "" ){
         document.getElementById("atual").focus();
         alert("Informe a senha");
