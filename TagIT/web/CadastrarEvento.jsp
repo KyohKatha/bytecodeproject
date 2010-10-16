@@ -8,9 +8,16 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="PkgTagIT.Participante" %>
-
+<% // @page import="PkgTagIT.Organizador" %>
 <%
-
+/*  Fazer com que só consiga cadastrar um evento se estiver logado
+            Participante usuarioLogado = (Participante) session.getAttribute("usuarioLogado");
+            if (usuarioLogado == null) {
+                out.println("Realize o login para cadastrar um evento");
+            } else if (usuarioLogado.getClass().equals(Participante.class)) {
+                out.println("Você necessita de uma conta de organizador para cadastrar um evento.");
+            } else {
+*/
 %>
 
 <html>
@@ -19,12 +26,6 @@
         <title>Cadastro de Eventos</title>
         <script type="text/javascript" src="funcoes.js"></script>
         <link rel="stylesheet" type="text/css" href="style.css" />
-        <link rel="stylesheet" type="text/css" href="calendar.css" />
-        <link type="text/css" href="jquery-ui-1.8.5.custom.css" rel="stylesheet" />
-		<script type="text/javascript" src="jquery-1.4.2.min.js"></script>
-		<script type="text/javascript" src="jquery-ui-1.8.5.custom.min.js"></script>
-		<script type="text/javascript" src="calendar.js"></script>
-		
     </head>
     <body>
 
@@ -47,7 +48,7 @@
                             <td><input type="text" name="vagasPrincipal" id="vagasPrincipal" /></td>
                         </tr><tr>
                             <td><label>(*)Data de início de inscrição:</label></td>
-                            <td><input type="text" name="inscInicio" id="inscInicio" /></td>
+                            <td><input type="text" name="inscInicio" id="inscInicio" /> Ex: dd/mm/aaaa</td>
                         </tr><tr>
                             <td><label>(*)Data de término de inscrição:</label></td>
                             <td><input type="text" name="inscTermino" id="inscTermino" /></td>
@@ -62,7 +63,7 @@
                             <td><input type="text" name="cidade" id="cidade" /></td>
                         </tr><tr>
                             <td><label>(*)Data do evento:</label></td>
-                            <td><input type="text" id="datepicker"  /></td>
+                            <td><input type="text" name="dataEvento" id="dataEvento" /></td>
                         </tr><tr>
                             <td><label>(*)Contato:</label></td>
                             <td><input type="text" name="contato" id="contato" /></td>
