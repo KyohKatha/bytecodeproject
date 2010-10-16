@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -85,49 +86,71 @@ public class ManutencaoEventos extends HttpServlet {
     private void cadastraEvento(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        String nome;
-        double vagasPrincipal;
-        String inscInicio;
-        String inscTermino;
-        String rua;
-        String numeroRua;
-        String cidade;
-        String dataEvento;
-        String contato;
-        Participante organizador; //organizador vai ser pego da sessão
-        String[] categoria; //ver como fazer a categoria
-        ArrayList<Categoria> lstCategoria;
-        int i;
-        Evento evento;
-
-        nome = request.getParameter("nome");
-        vagasPrincipal = Double.parseDouble(request.getParameter("vagasPrincipal"));
-        inscInicio = request.getParameter("inscInicio");
-        inscTermino = request.getParameter("inscTermino");
-        rua = request.getParameter("rua");
-        numeroRua = request.getParameter("numeroRua");
+        String nome = request.getParameter("nome");
+        double vagasPrincipal = Double.parseDouble(request.getParameter("vagasPrincipal"));
+        String inscInicio = request.getParameter("inscInicio");
+        String inscTermino = request.getParameter("inscTermino");
+        String rua = request.getParameter("rua");
+        String numeroRua = request.getParameter("numeroRua");
         rua += ", " + numeroRua;
-        cidade = request.getParameter("cidade");
-        dataEvento = request.getParameter("dataEvento");
-        contato = request.getParameter("contato");
-        categoria = request.getParameterValues("categoria");
+        String cidade = request.getParameter("cidade");
+        String dataEvento = request.getParameter("dataEvento");
+        String contato = request.getParameter("contato");
+        Participante organizador; //organizador vai ser pego da sessão
+        String[] categoria = request.getParameterValues("categoria"); //ver como fazer a categoria
+        ArrayList<Categoria> lstCategoria;
 
         //falta organizador, que sera pego da sessao
         organizador = (Participante) request.getSession().getAttribute("usuarioLogado");
 
         lstCategoria = new ArrayList<Categoria>();
-        System.out.println("TAMANHO DA CATEGORIA >> " + lstCategoria.size());
 
-        if (lstCategoria.size() > 0) {
-            for (i = 0; i < categoria.length; i++) {
-                lstCategoria.add(new Categoria(categoria[i]));
+        for (int i = 0; i < lstCategoria.size(); i++) {
+            lstCategoria.add(new Categoria(categoria[i]));
+        }
+
+        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);;
+        RequestDispatcher rd = null;
+        
+        if (statusMessage(request, ConexaoBD.getInstance().insereEvento(evento))){
+            rd = request.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
+        }else{
+            rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
+            rd.forward(request, response);
+        }
+
+    }
+
+    private boolean statusMessage(HttpServletRequest request, String message){
+        if (message.equals("0")) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
+        } else {
+            if (message.equals("1")) {
+                request.getSession().setAttribute("type", "sucess");
+                request.getSession().setAttribute("message", "<p>- Operação realizada com <strong>sucesso !</strong> </p><p>- Clique na caixa para fechar.</p>");
+
+                return true;
+            }else{
+                if (message.equals("2")) {
+                    request.getSession().setAttribute("type", "critical");
+                    request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
+                }else{
+                    if (message.equals("3")) {
+                        request.getSession().setAttribute("type", "critical");
+                        request.getSession().setAttribute("message", "<p>- Parâmetro <strong>não encontrado</strong>.</p><p>- Clique na caixa para fechar.</p>");
+                    }else{
+                        if (message.equals("4")) {
+                            request.getSession().setAttribute("type", "critical");
+                            request.getSession().setAttribute("message", "<p>-<strong>Falta</strong> de vagas para o cadastro do evento.</p><p>- Clique na caixa para fechar.</p>");
+                        }
+                    }
+
+                }
             }
         }
-        evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);
-
-        ConexaoBD.getInstance().insereEvento(evento);
-
-
+        return false;
     }
 
     private void buscaEventosDoOrganizador(HttpServletRequest request, HttpServletResponse response)

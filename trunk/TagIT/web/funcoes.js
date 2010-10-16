@@ -189,7 +189,8 @@ function validaNumero(numero) {
 }
 
 function validaData(data) {
-    var expData = /^([0-9]|[0,1,2][0-9]|3[0,1])\/([0,1][0,1,2])\/\d{4}$/
+    var expData = /^([0-9]|[0,1,2][0-9]|3[0,1]){2}\/([\d]|1[0,1,2]){2}\/\d{4}$/;
+
     if(data == "") {
         return "<p>- Informe a <strong>data</strong>.</p>";;
     }

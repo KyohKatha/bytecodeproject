@@ -61,46 +61,45 @@ public class ConexaoBD {
         return instance;
     }
 
-    public void insereEvento(Evento evento) throws TagITDAOException {
-        int i;
+    public String insereEvento(Evento evento) throws TagITDAOException {
         CallableStatement cstm = null;
-        ResultSet rs = null;
         String sRetorno = "";
 
         try {
-            cstm = con.prepareCall("{call sp_inserir_evento"
-                    + "(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+            cstm = con.prepareCall("{call sp_inserir_evento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
             cstm.setString(1, evento.getNome());
             cstm.setDouble(2, evento.getVagasPrincipal());
-            cstm.setString(3, evento.getInscInicio());
-            cstm.setString(4, evento.getInscTermino());
+            cstm.setDate(3,  converterData(evento.getInscInicio()));
+            cstm.setDate(4,  converterData(evento.getInscTermino()));
             cstm.setString(5, evento.getRua());
             cstm.setString(6, evento.getCidade());
-            cstm.setString(7, evento.getDataEvento());
+            cstm.setDate(7,  converterData(evento.getDataEvento()));
             cstm.setString(8, evento.getContato());
-            cstm.registerOutParameter(sRetorno, java.sql.Types.VARCHAR);
+            cstm.registerOutParameter(9, Types.VARCHAR);
 
-            rs = cstm.executeQuery();
-            System.out.println("Retornou >> " + sRetorno);
-            
-            if(rs.next()) {
-                throw new TagITDAOException("Já existe um evento com esse nome!");
-            }
-            cstm.close();
+            cstm.execute();
+            sRetorno = cstm.getString(9);
 
+            return sRetorno;
 
-            for(i = 0; i < evento.getCategoria().size(); i++) {
-                insereCategoriaNoEvento(evento.getCategoria().get(i), evento);
-            }
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
     }
 
+    public Date converterData(String data){
+        String sDia = data.substring(0, 2);
+        String sMes = data.substring(3, 5);
+        String sAno = data.substring(6, 10);
+
+        Date date = new Date(Integer.parseInt(sAno) - 1900, Integer.parseInt(sMes) - 1, Integer.parseInt(sDia));
+
+        return date;
+    }
+
     public void insereCategoriaNoEvento(Categoria categoria, Evento evento) throws TagITDAOException {
         CallableStatement cstm = null;
-
 
         try {
             cstm = con.prepareCall("{call sp_inserir_eventoCategoria(?, ?)}");
