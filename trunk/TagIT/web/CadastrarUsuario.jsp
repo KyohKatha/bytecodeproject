@@ -16,7 +16,7 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <div class="meioContainer">
+        
             <div class = "cadParticipante">
                 <div class="erros" id="erros">
                     <fieldset class="information" onclick="fecharCaixaMensagem()">
@@ -50,6 +50,7 @@
                     </table>
                 </form>
             </div>
-        </div>
+            <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+        
     </body>
 </html>

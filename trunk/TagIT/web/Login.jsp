@@ -18,24 +18,24 @@
     <body>
         <!-- <form action="ManutencaoUsuarios" id="formLogin" method="post"> -->
         <!-- onsubmit="return validarLogin()" -->
-        <div class="meioContainer">
-            <div class = "loginPagina">
-              <div class="erros" id="erros">
-                    <fieldset class="information" onclick="fecharCaixaMensagem()">
-                        <legend>Informação</legend>
-                        <p>- Clique no botão para realizar o login no site da aaTag.</p>
-                        <p>- Clique na caixa para fechá-la.</p>
-                    </fieldset>
-                </div> 
-                <form action="ManutencaoUsuarios" class="formLogin" method="post" >
-                    <table>
-                        <tr>
-                            <td><input class="botao" type="submit" value="Acessar aaTag"/></td>
-                            <td><input type="hidden" name="tipo" value="3"></td>
-                        </tr>
-                    </table>
-                </form>
+        <div class = "loginPagina">
+            <div class="erros" id="erros">
+                
+                <fieldset class="information" onclick="fecharCaixaMensagem()">
+                    <legend>Informação</legend>
+                    <p>- Clique no botão para realizar o login no site da aaTag.</p>
+                    <p>- Clique na caixa para fechá-la.</p>
+                </fieldset>
             </div>
+            <form action="ManutencaoUsuarios" class="formLogin" method="post" >
+                <table>
+                    <tr>
+                        <td><input class="botao" type="submit" value="Acessar aaTag"/></td>
+                        <td><input type="hidden" name="tipo" value="2"></td>
+                    </tr>
+                </table>
+            </form>
         </div>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     </body>
 </html>

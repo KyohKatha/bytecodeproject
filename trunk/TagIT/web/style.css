@@ -20,7 +20,7 @@ input{
 	border:none;
 	font-weight:bold;
 	text-align:center;
-	width:143px;
+	width:145px;
 	height:34px;
 	padding:4px;
 	color:#000;
@@ -57,28 +57,28 @@ fieldset.critical {
     border: solid 1px;
     border-color: #CC0000;
     background-color: #FFCCCC;
-    background-image: URL(Imagens/sign_error.png);
+    background-image: URL(images/sign_error.png);
 }
 
 fieldset.information {
     border: solid 1px;
     border-color: #003366;
     background-color: #CCCCFF;
-    background-image: URL(Imagens/sign_info.png);
+    background-image: URL(images/sign_info.png);
 }
 
 fieldset.success {
     border: solid 1px;
     border-color: #336600;
     background-color: #CCFF99;
-    background-image: URL(Imagens/sign_tick.png);
+    background-image: URL(images/sign_tick.png);
 }
 
 fieldset.warning {
     border: solid 1px;
     border-color: #FF9900;
     background-color: #FFE6BF;
-    background-image: URL(Imagens/sign_warning.png);
+    background-image: URL(images/sign_warning.png);
 }
 
 
@@ -157,16 +157,16 @@ fieldset.warning {
 	position:absolute;
 	background:url(images/fundoConteudo.png) repeat-y;
 	width: 1200px;
-	height:170%;
+	height:auto;
 	top: 268px;
 }
 
 
 .publicidadeContainer{
    padding-top:30px;
-   padding-left:145px;
+   padding-left:0px;
    height: 214px;
-   width: auto;
+   width: 400px;
 
 }
 
@@ -174,7 +174,7 @@ fieldset.warning {
 	background:url(images/propTag.png) no-repeat;
 	width: 915px;
 	height:214px;
-	text-align:right;
+	text-align:left;
 }
 
 .meioContainer{
@@ -253,10 +253,10 @@ fieldset.warning {
 	background: url(images/rodape.png)no-repeat;
 	text-align:center;
 	color:#D6D6D6;
-	position: absolute;
+	position:relative;
 	width: 902px;
 	height: 130px;
-	bottom: 0;
+        bottom: 0;
 	left:153px;
 }
 
