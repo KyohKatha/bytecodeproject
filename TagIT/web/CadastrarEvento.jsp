@@ -8,16 +8,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="PkgTagIT.Participante" %>
-<% // @page import="PkgTagIT.Organizador" %>
+
 <%
-/*  Fazer com que só consiga cadastrar um evento se estiver logado
-            Participante usuarioLogado = (Participante) session.getAttribute("usuarioLogado");
-            if (usuarioLogado == null) {
-                out.println("Realize o login para cadastrar um evento");
-            } else if (usuarioLogado.getClass().equals(Participante.class)) {
-                out.println("Você necessita de uma conta de organizador para cadastrar um evento.");
-            } else {
-*/
+
 %>
 
 <html>
