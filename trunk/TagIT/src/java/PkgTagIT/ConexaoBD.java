@@ -142,12 +142,7 @@ public class ConexaoBD {
                 tipoParticipante = cstm.getInt(2);
 
                 if (senhaRecebida.equals(senha)) {
-                    if(tipoParticipante == 0) {
-                        part = new Participante(id, emailRecebido, nome, senhaRecebida, cpf, upgrade, tentativasUpgrade, null, null);
-                    }
-                    else {
-                        part = new Organizador(id, emailRecebido, nome, senhaRecebida, cpf, upgrade, tentativasUpgrade, null, null);
-                    }
+                    part = new Participante(id, emailRecebido, nome, senhaRecebida, cpf, upgrade, tentativasUpgrade, null, null);
                 }
             }
 
@@ -159,7 +154,7 @@ public class ConexaoBD {
         }
     }
 
-    public ArrayList<Evento> buscaEventosDoOrganizador(Organizador organizador) throws TagITDAOException {
+    public ArrayList<Evento> buscaEventosdoOrganizador(Participante organizador) throws TagITDAOException {
         CallableStatement cstm = null;
         CallableStatement cstm2 = null;
         ResultSet rs = null;
@@ -292,15 +287,8 @@ public class ConexaoBD {
                 boolean upgrade = rs.getBoolean(6);
                 int tentativas = rs.getInt(7);
 
-                if (cstm.getInt(2) == 1) {
-
-                    // mudar!!
-                    p = new Organizador(id, nome, email, senha, cpf, upgrade, tentativas, null, null);
-                } else {
-
-                    // mudar!!
-                    p = new Participante(id, email, nome, senha, cpf, upgrade, tentativas, null, null);
-                }
+                p = new Participante(id, email, nome, senha, cpf, upgrade, tentativas, null, null);
+                
             }
 
             cstm.close();

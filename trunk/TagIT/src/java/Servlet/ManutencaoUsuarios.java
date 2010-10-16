@@ -37,9 +37,8 @@ public class ManutencaoUsuarios extends HttpServlet {
             /*
              * 0 : cadastrar
              * 1 : atualizar
-             * 2 : upgrade
-             * 3 : login
-             * 4 : logoff
+             * 2 : login
+             * 3 : logoff
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
@@ -70,17 +69,6 @@ public class ManutencaoUsuarios extends HttpServlet {
                     }
                     break;
                 case 2:
-                    try {
-                        upgradeUsuario(request, response);
-                    } catch (Exception e) {
-                        request.setAttribute("erro", true);
-
-                        RequestDispatcher rd = null;
-                        rd = request.getRequestDispatcher("/UpgradeUsuario.jsp");
-                        rd.forward(request, response);
-                    }
-                    break;
-                case 3:
                     try{
                         validarLogin(request, response);
                     }catch(Exception e){
@@ -91,7 +79,7 @@ public class ManutencaoUsuarios extends HttpServlet {
                         rd.forward(request, response);
                     }
                     break;
-                case 4:
+                case 3:
                     request.getSession().removeAttribute("usuarioLogado");
                     RequestDispatcher rd = null;
                     rd = request.getRequestDispatcher("/index.jsp");
@@ -196,45 +184,6 @@ public class ManutencaoUsuarios extends HttpServlet {
 
     }
 
-
-    /**
-     *
-     * Envia uma solicitação de upgrade. Equivalente a opcao 2.
-     */
-    private void upgradeUsuario(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, TagITDAOException {
-
-        Participante p = (Participante) request.getSession().getAttribute("usuarioLogado");
-
-        String senha = request.getParameter("senha");
-
-        ConexaoBD con = ConexaoBD.getInstance();
-        // verificar senha no BD
-
-        Participante p2 = con.retornaDadosParticipante(p.getEmail());
-
-        if ( p2 != null && senha.equals(p2.getSenha()) ) {
-            // modificar tentativas de upgrade
-            p.setTentivasUpgrade(p.getTentivasUpgrade() + 1);
-            con.alteraParticipante(p);
-
-            request.getSession().setAttribute("usuarioLogado", p);
-
-
-            request.setAttribute("erro", false);
-
-            RequestDispatcher rd = null;
-            rd = request.getRequestDispatcher("/index.jsp");
-            rd.forward(request, response);
-        } else {
-            request.setAttribute("erro", true);
-
-            RequestDispatcher rd = null;
-            rd = request.getRequestDispatcher("/RemoverUsuario.jsp");
-            rd.forward(request, response);
-        }
-
-    }
 
     private void validarLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {

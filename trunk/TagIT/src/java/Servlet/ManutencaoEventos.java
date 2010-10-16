@@ -8,7 +8,6 @@ package Servlet;
 import PkgTagIT.Categoria;
 import PkgTagIT.ConexaoBD;
 import PkgTagIT.Evento;
-import PkgTagIT.Organizador;
 import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import java.io.IOException;
@@ -95,7 +94,7 @@ public class ManutencaoEventos extends HttpServlet {
         String numeroRua;
         String dataEvento;
         String contato;
-        Organizador organizador; //organizador vai ser pego da sessão
+        Participante organizador; //organizador vai ser pego da sessão
         String[] categoria; //ver como fazer a categoria
         ArrayList<Categoria> lstCategoria;
         int i;
@@ -115,7 +114,7 @@ public class ManutencaoEventos extends HttpServlet {
         contato = request.getParameter("contato");
         categoria = request.getParameterValues("categoria");
         //falta organizador, que sera pego da sessao
-        organizador = (Organizador) request.getSession().getAttribute("usuarioLogado");
+        organizador = (Participante) request.getSession().getAttribute("usuarioLogado");
 
         lstCategoria = new ArrayList<Categoria>();
         for(i = 0; i < categoria.length; i++) {
@@ -131,21 +130,13 @@ public class ManutencaoEventos extends HttpServlet {
 
     private void buscaEventosDoOrganizador(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
-        Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
-        Organizador organizador = null;
+        Participante organizador = (Participante) request.getSession().getAttribute("usuarioLogado");
         ArrayList<Evento> lstEventos = null;
 
+        lstEventos = ConexaoBD.getInstance().buscaEventosdoOrganizador(organizador);
 
-        if(participante.getClass().equals(Organizador.class)) {
-            organizador = (Organizador) participante;
-            lstEventos = ConexaoBD.getInstance().buscaEventosDoOrganizador(organizador);
-
-            response.getWriter().println("Número de eventos do organizador: " + lstEventos.size());
-
-        }
-        else {
-            response.getWriter().println("Voce deve estar logado como participante");
-        }
+        response.getWriter().println("Número de eventos do organizador: " + lstEventos.size());
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="Métodos HttpServlet. Clique no sinal de + à esquerda para editar o código.">

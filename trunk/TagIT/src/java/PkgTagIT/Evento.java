@@ -22,10 +22,10 @@ public class Evento {
     private String cidade;
     private String dataEvento;
     private String contato;
-    private Organizador organizador;
+    private Participante participante;
     private ArrayList<Categoria> categoria;
 
-    public Evento(String nome, double vagasPrincipal, double vagasEspera, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Organizador organizador, ArrayList<Categoria> categoria) {
+    public Evento(String nome, double vagasPrincipal, double vagasEspera, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Participante participante, ArrayList<Categoria> categoria) {
         this.nome = nome;
         this.vagasPrincipal = vagasPrincipal;
         this.vagasEspera = vagasEspera;
@@ -35,11 +35,11 @@ public class Evento {
         this.cidade = cidade;
         this.dataEvento = dataEvento;
         this.contato = contato;
-        this.organizador = organizador;
+        this.participante = participante;
         this.categoria = categoria;
     }
 
-    public Evento(double id, String nome, double vagasPrincipal, double vagasEspera, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Organizador organizador, ArrayList<Categoria> categoria) {
+    public Evento(double id, String nome, double vagasPrincipal, double vagasEspera, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Participante participante, ArrayList<Categoria> categoria) {
         this.id = id;
         this.nome = nome;
         this.vagasPrincipal = vagasPrincipal;
@@ -50,7 +50,7 @@ public class Evento {
         this.cidade = cidade;
         this.dataEvento = dataEvento;
         this.contato = contato;
-        this.organizador = organizador;
+        this.participante = participante;
         this.categoria = categoria;
     }
 
@@ -142,12 +142,12 @@ public class Evento {
         this.categoria = categoria;
     }
 
-    public Organizador getOrganizador() {
-        return organizador;
+    public Participante getOrganizador() {
+        return participante;
     }
 
-    public void setOrganizador(Organizador organizador) {
-        this.organizador = organizador;
+    public void setOrganizador(Participante participante) {
+        this.participante = participante;
     }
 
     
