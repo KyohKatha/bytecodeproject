@@ -303,4 +303,26 @@ public class ConexaoBD {
 
     }
 
+    public String inscreverParticipanteEvento(Evento evento, Participante participante) throws TagITDAOException{
+        
+        CallableStatement cstm = null;
+        String i;
+         try {
+            cstm = con.prepareCall("{call sp_inserir_participanteEvento(?, ?)}");
+            cstm.setString(1, participante.getEmail());
+            cstm.setString(2, evento.getNome());
+            cstm.registerOutParameter(3, java.sql.Types.VARCHAR);
+            
+            cstm.executeQuery();
+
+            i = cstm.getString(3);
+
+            cstm.close();
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+        return i;
+    }
 }

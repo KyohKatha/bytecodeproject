@@ -8,6 +8,10 @@
         <servlet-name>ManutencaoEventos</servlet-name>
         <servlet-class>Servlet.ManutencaoEventos</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>IncricaoEvento</servlet-name>
+        <servlet-class>Servlet.IncricaoEvento</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ManutencaoUsuarios</servlet-name>
         <url-pattern>/ManutencaoUsuarios</url-pattern>
@@ -16,6 +20,10 @@
         <servlet-name>ManutencaoEventos</servlet-name>
         <url-pattern>/ManutencaoEventos</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>IncricaoEvento</servlet-name>
+        <url-pattern>/IncricaoEvento</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
@@ -23,5 +31,5 @@
     </session-config>
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
-        </welcome-file-list>
-    </web-app>
+    </welcome-file-list>
+</web-app>
