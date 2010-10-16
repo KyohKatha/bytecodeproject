@@ -250,7 +250,6 @@ public class ConexaoBD {
     public void alteraParticipante(Participante p) throws TagITDAOException {
         CallableStatement cstm = null;
 
-
         try {
             cstm = con.prepareCall("{call sp_atualizar_participante(?, ?, ?, ?)}");
             cstm.setString(1, p.getEmail());
