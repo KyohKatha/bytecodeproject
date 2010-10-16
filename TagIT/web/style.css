@@ -308,7 +308,31 @@ fieldset.warning {
     text-align: left;
 }
 
+
+
 /*FIM cadastro Evento*/
+/*Login pagina*/
+
+.loginPagina{
+	background:url(images/barraUltimosEventos.png) no-repeat;
+	height:54px;
+	width: 922px;
+	text-align:center;
+	padding-top: 80px;
+	padding-left: 300px;
+}
+
+.formLogin table{
+    margin-left: 70px;
+
+}
+
+
+.formLogin table td{
+    text-align: left;
+}
+
+
 /*Inscricao em evento*/
 
 .formInscreverParticipante label{
