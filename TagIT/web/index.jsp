@@ -1,43 +1,71 @@
 <%-- 
     Document   : index
-    Created on : 30/09/2010, 12:09:01
-    Author     : 317624
+    Created on : 16/10/2010, 13:42:31
+    Author     : Renato
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-   "http://www.w3.org/TR/html4/loose.dtd">
-<%@page import="PkgTagIT.Participante" %>
-<%
- Participante usuarioLogado = (Participante) request.getSession().getAttribute("usuarioLogado");
-%>
+    "http://www.w3.org/TR/html4/loose.dtd">
 
 <html>
     <head>
+        <script type="text/javascript" src="jquery.js"></script>
+        <script type="text/javascript" src="jquery.autoHeight.js"></script>
+
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Chamadas das funcionalidades</title>
+        <title>TagiT!</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <%
-        if(usuarioLogado != null) {
-            %>
-            <h3>Seja bem-vindo <%= usuarioLogado.getNome() %></h3>
-            <p>Você é um: <%
-            if(usuarioLogado.getClass().equals(Participante.class)) {
-                out.println("Participante");
-            }
-            else {
-                out.println("Organizador");
-            } %></p>
-            <p><a href="ManutencaoUsuarios?tipo=4">Logoff</a></p>
-            <%
-        }
+        <div class="topo">
+            <div class="logo"></div>
+            <div class="login">
 
-        %>
-        <h3><a href="CadastrarUsuario.jsp">Cadastro de usuários</a></h3>
-        <h3><a href="AlterarUsuario.jsp">Alterar informações de usuários</a></h3>
-        <h3><a href="CadastrarEvento.jsp">CadastrarEvento</a></h3>
-        <h3><a href="ManutencaoEventos?tipo=4">PegaEventosDoOrganizador</a></h3>
-        <h3><a href="Login.jsp">Login</a></h3>
+                <form id="eLogin" action="#">
+                    <table>
+                        <tr>
+                        <label id="titles"> </label>
+                        </tr>
+                        <td><p align="center">
+                            <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
+                            </p>
+                        </td>
+                    </table>
+
+                </form>
+            </div>
+        </div>
+        <div class="menuTopo">
+            <div class="menu">
+                <ul>
+                    <li> <a href="home.jsp" target="iframe"> Principal </a><li>
+                    <li> <a href="http://www.bytecodeufscar.blogspot.com" target="_blank"> Blog </a><li>
+                    <li> <a href="CadastrarUsuario.jsp" target="iframe"> Registrar-se </a></li>
+                    <li> <a href="www.google.com" target="iframe"> Faq </a></li>
+                    <li> <a href="www.google.com" target="iframe"> Sobre </a></li>
+                    <li> <a href="Login.jsp" target="iframe"> Link </a></li>
+                </ul>
+            </div></div>
+
+        <!-- INICIO CONTEUDO -->
+        <div class="conteudo">
+
+            <div class="meioContainer">
+                <iframe src="home.jsp" id="iframe" name="iframe" class="autoHeight" width="934" scrolling="no" border="0" frameborder="0">
+                </iframe>
+
+
+
+                <!-- Fim DIV MEIOCONTAINER -->
+            </div>
+            <div class="rodape"><BR /><br />
+                ByteCode - Ajuda - Tecnologia RFID - Contato
+                <br />
+                <hr />
+                Todos os direitos reservados<br />
+			Desenvolvidos por <a href="www.bytecodeufscar.blogspot.com">ByteCode</a></div>
+            <!-- Fim DIV CONTEUDO -->
+        </div>
     </body>
 </html>

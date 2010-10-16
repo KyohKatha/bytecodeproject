@@ -199,10 +199,12 @@ public class ManutencaoUsuarios extends HttpServlet {
             part = con.validarLogin(email, senha);
             if (part != null) {
                 request.getSession().setAttribute("usuarioLogado", part);
-                rd = request.getRequestDispatcher("/index.jsp");
+                rd = request.getRequestDispatcher("homeLogada.jsp");
                 rd.forward(request, response);
             } else {
-                rd = request.getRequestDispatcher("ErroLogin.jsp");
+                request.getSession().setAttribute("type", "critical");
+                request.getSession().setAttribute("message", "<p>- Seu usuário ou senha estão incorretos!");
+                rd = request.getRequestDispatcher("Login.jsp");
                 rd.forward(request, response);
             }
 
