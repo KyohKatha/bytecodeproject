@@ -268,7 +268,7 @@ fieldset.warning {
 /*Cadastro de participante*/
 
 .cadParticipante{
-	background:url(images/barraUltimosEventos.png) no-repeat;
+	background:url(images/barraAdicionarUsuario.png) no-repeat;
 	height:54px;
 	width: 922px;
 	text-align:center;
@@ -286,7 +286,7 @@ fieldset.warning {
 /*Cadastro de evento*/
 
 .cadEvento{
-	background:url(images/barraUltimosEventos.png) no-repeat;
+	background:url(images/barraAdicionarEvento.png) no-repeat;
 	height:54px;
 	width: 922px;
 	text-align:center;
@@ -314,7 +314,7 @@ fieldset.warning {
 /*Login pagina*/
 
 .loginPagina{
-	background:url(images/barraUltimosEventos.png) no-repeat;
+	background:url(images/barraLogin.png) no-repeat;
 	height:54px;
 	width: 922px;
 	text-align:center;
