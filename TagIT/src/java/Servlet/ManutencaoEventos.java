@@ -80,8 +80,8 @@ public class ManutencaoEventos extends HttpServlet {
                     //buscar pelo organizador
                     try {
                         out.println("entrei aqui");
-                        buscaEventosDoOrganizador(request, response);
-                    } catch (TagITDAOException e) {
+                        //buscaEventosDoOrganizador(request, response);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -150,26 +150,26 @@ public class ManutencaoEventos extends HttpServlet {
      * @param message O status que retornou no banco de dados
      * @return True se conseguiu realizar a operação com sucesso, false se não conseguiu realizar
      */
-    private boolean statusMessage(HttpServletRequest request, String message){
-        if (message.equals("0")) {
+    private boolean statusMessage(HttpServletRequest request, String[] message){
+        if (message[0].equals("0")) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
         } else {
-            if (message.equals("1")) {
-                request.getSession().setAttribute("type", "sucess");
+            if (message[0].equals("1")) {
+                request.getSession().setAttribute("type", "success");
                 request.getSession().setAttribute("message", "<p>- Operação realizada com <strong>sucesso !</strong> </p><p>- Clique na caixa para fechar.</p>");
 
                 return true;
             } else {
-                if (message.equals("2")) {
+                if (message[0].equals("2")) {
                     request.getSession().setAttribute("type", "critical");
                     request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
                 } else {
-                    if (message.equals("3")) {
+                    if (message[0].equals("3")) {
                         request.getSession().setAttribute("type", "critical");
                         request.getSession().setAttribute("message", "<p>- Parâmetro <strong>não encontrado</strong>.</p><p>- Clique na caixa para fechar.</p>");
                     } else {
-                        if (message.equals("4")) {
+                        if (message[0].equals("4")) {
                             request.getSession().setAttribute("type", "critical");
                             request.getSession().setAttribute("message", "<p>-<strong>Falta</strong> de vagas para o cadastro do evento.</p><p>- Clique na caixa para fechar.</p>");
                         }
@@ -181,23 +181,27 @@ public class ManutencaoEventos extends HttpServlet {
         return false;
     }
 
-    private void buscaEventosDoOrganizador(HttpServletRequest request, HttpServletResponse response)
+    /*private void buscaEventosDoOrganizador(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
         Participante organizador = (Participante) request.getSession().getAttribute("usuarioLogado");
         ArrayList<Evento> lstEventos = null;
 
-        lstEventos = ConexaoBD.getInstance().buscaEventosdoOrganizador(organizador);
+        lstEventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscaEventosdoOrganizador(organizador);
 
         response.getWriter().println("Número de eventos do organizador: " + lstEventos.size());
 
-    }
+    }*/
 
     private void buscaEventos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TagITDAOException {
         String parametro = request.getParameter("parametro");
 
-        ArrayList<Evento> eventos = ConexaoBD.getInstance().buscarEventos(parametro);
+        ArrayList<Evento> eventos = null;
+        String[] erros = null;
 
-        request.setAttribute("eventos", eventos);
+        
+            eventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscarEventos(parametro);
+            request.setAttribute("eventos", eventos);
+        
         request.setAttribute("parametro", parametro);
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("/buscarEvento.jsp");

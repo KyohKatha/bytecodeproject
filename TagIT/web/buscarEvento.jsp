@@ -37,13 +37,15 @@
                 </form>
                 <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getAttribute("eventos");
                    String parametro = (String) request.getAttribute("parametro");
+                   request.getSession().setAttribute("eventos", eventos);
+
                    if(eventos == null){
                         out.println("Nenhum resultado encontrado para <strong>" + parametro + "</strong>");
                     }else{
                        int i = 0;
-                       while(i < eventos.size()){
-                            out.println(eventos.get(i).getNome());
-                            i++;
+                       while(i < eventos.size()){%>
+                            <a href="IncricaoEvento.jsp" onclick="callServlet('IncricaoEvento?tipo=0&i=' + <%=i %> + '','iframe')"><%= eventos.get(i).getNome() %></a>
+                            <% i++;
                        }
                     }
                 %>

@@ -61,9 +61,9 @@ public class ConexaoBD {
         return instance;
     }
 
-    public String insereEvento(Evento evento) throws TagITDAOException {
+    public String[] insereEvento(Evento evento) throws TagITDAOException {
         CallableStatement cstm = null;
-        String sRetorno = "";
+        String[] sRetorno = null;
 
         try {
             cstm = con.prepareCall("{call sp_inserir_evento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
@@ -79,13 +79,15 @@ public class ConexaoBD {
             cstm.registerOutParameter(9, Types.VARCHAR);
 
             cstm.execute();
-            sRetorno = cstm.getString(9);
+            sRetorno = cstm.getString(9).split(";");
 
-            return sRetorno;
+            cstm.close();
 
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
+
+        return sRetorno;
     }
 
     public Date converterData(String data){
@@ -98,18 +100,26 @@ public class ConexaoBD {
         return date;
     }
 
-    public void insereCategoriaNoEvento(Categoria categoria, Evento evento) throws TagITDAOException {
+    public String[] insereCategoriaNoEvento(Categoria categoria, Evento evento) throws TagITDAOException {
         CallableStatement cstm = null;
+        String[] i = null;
 
         try {
-            cstm = con.prepareCall("{call sp_inserir_eventoCategoria(?, ?)}");
+            cstm = con.prepareCall("{call sp_inserir_eventoCategoria(?, ?, ?)}");
             cstm.setString(1, evento.getNome());
             cstm.setString(2, categoria.getNome());
+            cstm.registerOutParameter(3, java.sql.Types.VARCHAR);
             cstm.execute();
             cstm.close();
+
+            i = cstm.getString(3).split(";");
+            cstm.close();
+
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
+
+        return i;
 
     }
 
@@ -153,7 +163,8 @@ public class ConexaoBD {
             e.printStackTrace();
             throw new TagITDAOException();
         }
-    } */
+    } 
+
 
     public ArrayList<Evento> buscaEventosdoOrganizador(Participante organizador) throws TagITDAOException {
         CallableStatement cstm = null;
@@ -192,6 +203,10 @@ public class ConexaoBD {
                 dataEvento = rs.getString(9);
                 contato = rs.getString(10);
                 evento = new Evento(id, nome, vagasPrincipal, vagasEspera, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, (new ArrayList<Categoria>()));
+                lstEventos.add(evento);
+            }
+
+
 
                 /*cstm2 = con.prepareCall("{call sp_retorna_categorias_do_evento(?)}");
                 cstm2.setString(1, evento.getNome());
@@ -201,36 +216,43 @@ public class ConexaoBD {
                     nome = rs2.getString(2);
                     categoria = new Categoria(id, nome);
                     evento.getCategoria().add(categoria);
-                }*/
-                lstEventos.add(evento);
-            }
+                }
             return lstEventos;
+
 
         } catch(SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
-
+*/
 
 
     /**
      *
      * @param p Objeto do tipo participante que sera inserido no BD
      */
-    public void insereParticipante(Participante p) throws TagITDAOException {
+    public String[] insereParticipante(Participante p) throws TagITDAOException {
         CallableStatement cstm = null;
-
+        String[] i = null;
 
         try {
-            cstm = con.prepareCall("{call sp_inserir_participante(?, ?)}");
+            cstm = con.prepareCall("{call sp_inserir_participante(?, ?, ?, ?)}");
             cstm.setString(1, p.getEmail());
             cstm.setString(2, p.getNome());
+            cstm.setString(3, p.getCPF());
+            cstm.registerOutParameter(4, java.sql.Types.VARCHAR);
             cstm.execute();
             cstm.close();
+            
+            i = cstm.getString(4).split(";");
+            cstm.close();
+
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
+
+        return i;
 
     }
 
@@ -238,8 +260,10 @@ public class ConexaoBD {
     /**
      *
      * @param p Objeto que contem dados de um participante que sera alterado no BD
+     *
+     * Acho que não vai ser usado!!
      */
-    public void alteraParticipante(Participante p) throws TagITDAOException {
+    /*public void alteraParticipante(Participante p) throws TagITDAOException {
         CallableStatement cstm = null;
 
         try {
@@ -253,25 +277,26 @@ public class ConexaoBD {
             throw new TagITDAOException();
         }
 
-    }
+    }*/
 
     /**
      *
      * @param aEmail email do participante que tera seus dados recuperados
      * @return dados do participante
      */
-    public Participante retornaDadosParticipante(String aEmail) throws TagITDAOException {
+    public Object retornaDadosParticipante(String aEmail) throws TagITDAOException {
         CallableStatement cstm = null;
+        String[] i = null;
 
+        Participante p = null;
 
         try {
             cstm = con.prepareCall("{call sp_retorna_dados_participante(?, ?)}");
 
             cstm.setString(1, aEmail);
+            cstm.registerOutParameter(2, java.sql.Types.VARCHAR);
 
             ResultSet rs = cstm.executeQuery();
-
-            Participante p = null;
 
             if (rs.next()) {
                 String email = rs.getString(1);
@@ -281,29 +306,33 @@ public class ConexaoBD {
                 
             }
 
+            i = cstm.getString(2).split(";");
             cstm.close();
-
-            return p;
 
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
 
+        if (i[0].compareTo("1") == 0)
+            return p;
+
+        return i;
+
     }
 
-    public String inscreverParticipanteEvento(Evento evento, Participante participante) throws TagITDAOException{
+    public String[] inscreverParticipanteEvento(Evento evento, Participante participante) throws TagITDAOException{
         
         CallableStatement cstm = null;
-        String i;
+        String[] i;
          try {
-            cstm = con.prepareCall("{call sp_inserir_participanteEvento(?, ?)}");
+            cstm = con.prepareCall("{call sp_inserir_participanteEvento(?, ?, ?)}");
             cstm.setString(1, participante.getEmail());
             cstm.setString(2, evento.getNome());
             cstm.registerOutParameter(3, java.sql.Types.VARCHAR);
             
-            cstm.executeQuery();
+            cstm.execute();
 
-            i = cstm.getString(3);
+            i = cstm.getString(3).split(";");
 
             cstm.close();
 
@@ -314,34 +343,34 @@ public class ConexaoBD {
         return i;
     }
 
-    public ArrayList<Evento> buscarEventos(String parametro) throws TagITDAOException{
+    public Object buscarEventos(String parametro) throws TagITDAOException{
         CallableStatement cstm = null;
-        String i;
+        
         ArrayList<Evento> eventos = new ArrayList<Evento>();
          try {
+             
             cstm = con.prepareCall("{call sp_retornar_evento(?)}");
             cstm.setString(1, parametro);
-            //cstm.registerOutParameter(2, java.sql.Types.VARCHAR);
+            
             ResultSet rs = cstm.executeQuery();
             while(rs.next()){
                 Evento aux = new Evento(rs.getString("nome"),rs.getDouble("vagasPrincipal"),rs.getDate("inscInicio").toString(), rs.getDate("inscTermino").toString(), rs.getString("rua"), rs.getString("cidade"), rs.getDate("dataEvento").toString(), rs.getString("contato"));
                 eventos.add(aux);
             }
-            if (eventos.size() != 0)
-                System.out.println("Evento:" + eventos.get(0).getNome());
-            else
-                System.out.println("aaaaaaaaaaaaaaaaaaa");
-            //i = cstm.getString(2);
             cstm.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new TagITDAOException();
         }
+        
+            return eventos;
 
-        return eventos;
+        
     }
 
+    public ArrayList<Evento> buscarEventosParticipante(Participante participante){
+        return null;
+    }
     public void entradaEvento(String email, String evento) throws TagITDAOException {
         String stored = "{call sp_registrar_participanteEvento(?, ?, ?)}";
         String retorno = null;

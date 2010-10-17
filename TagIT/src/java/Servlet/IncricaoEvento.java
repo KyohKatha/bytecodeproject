@@ -11,6 +11,7 @@ import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -47,7 +48,16 @@ public class IncricaoEvento extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
             */
-            inscreverParticipanteEvento(request, response);
+
+            int tipo = Integer.parseInt(request.getParameter("tipo"));
+
+            System.out.println(tipo);
+
+            if (tipo == 0){
+                selecionarEvento(request, response);
+            } else {
+                inscreverParticipanteEvento(request, response);
+            }
         } finally { 
             out.close();
         }
@@ -56,14 +66,60 @@ public class IncricaoEvento extends HttpServlet {
     private void inscreverParticipanteEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException{
         Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
         Evento evento = (Evento) request.getSession().getAttribute("evento");
-
-        String retorno = ConexaoBD.getInstance().inscreverParticipanteEvento(evento, participante);
-
+        
+        String[] erros = ConexaoBD.getInstance().inscreverParticipanteEvento(evento, participante);
+        statusMessage(request, erros);
         RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("/index.jsp");
+
+        rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
         rd.forward(request, response);
     }
 
+
+    private void selecionarEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException{
+        ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
+        int i = Integer.parseInt(request.getParameter("i"));
+
+        System.out.println(i + eventos.get(i).getNome());
+
+        request.getSession().setAttribute("evento", eventos.get(i));
+
+        RequestDispatcher rd = null;
+        rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
+        rd.forward(request, response);
+    }
+
+
+    private boolean statusMessage(HttpServletRequest request, String[] message) {
+        if (message[0].equals("0")) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
+        } else {
+            if (message[0].equals("1")) {
+                request.getSession().setAttribute("type", "success");
+                request.getSession().setAttribute("message", "<p>- Operação realizada com <strong>sucesso !</strong> </p><p>- Clique na caixa para fechar.</p>");
+
+                return true;
+            } else {
+                if (message[0].equals("2")) {
+                    request.getSession().setAttribute("type", "critical");
+                    request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
+                } else {
+                    if (message[0].equals("3")) {
+                        request.getSession().setAttribute("type", "critical");
+                        request.getSession().setAttribute("message", "<p>- Parâmetro <strong>não encontrado</strong>.</p><p>- Clique na caixa para fechar.</p>");
+                    } else {
+                        if (message[0].equals("4")) {
+                            request.getSession().setAttribute("type", "critical");
+                            request.getSession().setAttribute("message", "<p>-<strong>Falta</strong> de vagas para o cadastro do evento.</p><p>- Clique na caixa para fechar.</p>");
+                        }
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 
