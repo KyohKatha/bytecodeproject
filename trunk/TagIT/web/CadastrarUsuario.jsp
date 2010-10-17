@@ -20,7 +20,7 @@
             <div class = "cadParticipante">
                 <div class="erros" id="erros">
                     <fieldset class="information" onclick="fecharCaixaMensagem()">
-                        <legend>Informção</legend>
+                        <legend>Informação</legend>
                         <p>- Todos os campos com (*) são obrigatórios.</p>
                         <p>- Clique na caixa para fechá-la.</p>
                     </fieldset>
@@ -28,23 +28,11 @@
                 <form class="formParticipante" action="ManutencaoUsuarios" onsubmit="return validarCadastroUsuario()">
                     <table>
                         <tr>
-                            <td><label>(*)E-mail: </label></td>
-                            <td><input type ="text" name="email" id="email" maxlength="100"/></td>
-                        </tr><tr>
-                            <td><label>(*)Nome: </label></td>
-                            <td><input type ="text" name="nome" id="nome" maxlength="50"/></td>
-                        </tr><tr>
                             <td><label>(*)CPF: </label></td>
                             <td><input type ="text" name="cpf" id="cpf" maxlength="11"/></td>
-                        </tr><tr>
-                            <td><label>(*)Senha: </label></td>
-                            <td><input type ="password" name="senha" id="senha" maxlength="30" /></td>
-                        </tr><tr>
-                            <td><label>(*)Confirmar Senha: </label></td>
-                            <td><input type ="password" id="confirmacao" maxlength="30"/></td>
-                        </tr><tr>
-                            <td><input class="botao" type="submit" value="Cadastrar"/></td>
-                            <td><input class="botao" type="reset" value="Limpar Campos"/></td>
+                        <tr>
+                            <td><input class="botao" type="submit" value="Acessar aaTag"/></td>
+                            <td><input class="botao" type="reset" value="Limpar"/></td>
 
                         <input type="hidden" name="tipo" value="0">
                     </table>

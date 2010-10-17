@@ -17,7 +17,7 @@
     <body>
         <div class="publicidadeContainer">
             <div class="publicidade">
-                <a href="www.google.com.br"><img align="right" src="images/btProp.png" width="169" height="213" /></a>
+                <a href="CadastrarEvento.jsp"><img align="right" src="images/btProp.png" width="169" height="213" /></a>
                 <!-- Fim DIV PUBLICIDADE -->
             </div>
             <!-- Fim DIV PUBLICIDADECONTAINER --></div><table width="928" height="674">

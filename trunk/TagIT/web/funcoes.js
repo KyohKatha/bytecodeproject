@@ -42,8 +42,8 @@ function validarAlteracaoUsuario()
     } else {
         if ( senha != "" || confSenha != "" ){
             message += validaSenha(senha, confSenha);
-            }
         }
+    }
     if(message != ""){
         message += "<p>- Clique na caixa para fechá-la.</p>";
         mostrarMenssagem('critical', message);
@@ -342,7 +342,7 @@ function validarLogin(){
     var email = document.getElementById("email").value;
     var senha = document.getElementById("senha").value;
     var erro = true;
-       alert(erro);
+    alert(erro);
     if (validaEmail(email) != ""){
         erro = false;
         
@@ -379,4 +379,33 @@ function mostrarMenssagem(type, message) {
             document.getElementById("erros").innerHTML = "<fieldset class=\"warning\" onclick=\"fecharCaixaMensagem()\"><legend>Aviso</legend>" + message + "</fieldset>";
             break;
     }
+}
+
+
+
+function callServlet(url,div){
+
+    HttpMethod = "POST";
+    var req = null;
+    req = getXMLHTTPRequest();
+
+    if (req){
+    req.open(HttpMethod,url,false);
+        req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        req.setRequestHeader('Connection', 'close');
+        req.send(null);
+        document.getElementById(div).target = req.responseText;
+    }
+
+
+function getXMLHTTPRequest(){
+    if (window.XMLHttpRequest){
+        xmlhttp=new XMLHttpRequest();
+    }
+    else {
+        xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    return xmlhttp;
+}
+
 }

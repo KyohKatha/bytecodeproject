@@ -1,4 +1,5 @@
 <%-- 
+   COLOCAR O JQUERY PARA AS DATAS!!!!!!!!!!
     Document   : CadastroEvento
     Created on : 30/09/2010, 09:24:07
     Author     : Tiago

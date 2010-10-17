@@ -12,16 +12,17 @@
 <%@page import="PkgTagIT.Participante" %>
 <%
         
-        Participante usuarioLogado = (Participante) session.getAttribute("usuarioLogado");
-            //if (usuarioLogado == null) {
+        Participante usuarioLogado = new Participante();
+        //apenas para teste
+        usuarioLogado.setEmail("a.nunc@aeneansed.org");
+        request.getSession().setAttribute("usuarioLogado", usuarioLogado);
+           //if (usuarioLogado == null) {
               //  out.println("Realize o login para se inscrever em um evento");
             //} else {
 
-        Evento evento = (Evento) session.getAttribute("evento");
+        Evento evento = (Evento) request.getSession().getAttribute("evento");
         //apenas para teste
-        
-        evento = new Evento("Teste", 60, 60, "lalala", "lalala", "aaa", "aaa", "bbb", "bbb", usuarioLogado, new ArrayList());
-        //fim teste
+                //fim teste
         if(evento != null){
 %>
 <html>
@@ -31,27 +32,57 @@
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
-        <div class="meioContainer">
             <div class = "cadEvento">
                 <div class="erros" id="erros">
-                    <fieldset class="information" onclick="fecharCaixaMensagem()">
-                        <legend>Informação</legend>
-                        <p>- Todos os campos com (*) são obrigatórios.</p>
-                        <p>- Clique na caixa para fechá-la.</p>
-                    </fieldset>
+                    <%
+                            String message, type;
+                            message = (String) session.getAttribute("message");
+                            type = (String) session.getAttribute("type");
+                            session.removeAttribute("message");
+                            session.removeAttribute("type");
+
+                            if (message != null) {
+                                out.println("<fieldset class=\"" + type + "\" onclick=\"closeMessageBox()\">");
+                                String legend = "Undefined";
+                                if (type == "information") {
+                                    legend = "Information";
+                                } else if (type == "critical") {
+                                    legend = "Error";
+                                } else if (type == "success") {
+                                    legend = "Success";
+                                } else if (type == "warning") {
+                                    legend = "Warning";
+                                }
+
+                                out.println("<legend>" + legend + "</legend>");
+                                out.println(message);
+                                out.println("</fieldset>");
+                            } else {
+                                out.println("<fieldset class=\"information\" onclick=\"closeMessageBox()\">");
+                                out.println("<legend>Informação</legend>");
+                                out.println("<p>- Clique no botão Inscreva-se para se inscrever no evento");
+                                out.println("</fieldset>");
+                            }
+
+                %>
+
                 </div>
-        <form action="InscricaoEvento" class="formInscricao" id="formInscricao" method="post">
+        <form action="IncricaoEvento" class="formInscricao" id="formInscricao" method="post">
         <table>
             <tr>
                 <td>Título: <%=evento.getNome()%></td>
+                <td><input type="hidden" value="1" name ="tipo" /></td>
+            
             </tr>
             <tr>
-                <td><input class="botao" type="submit" value="Inscrever"/></td>
+                <td><input action="IncricaoEvento" class="botao" type="submit" value="Inscrever"/></td>
             </tr>
         </table>
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         </form>
-            </div></div>
+            </div>
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     </body>
 </html>
-<%}
+<%} 
 //}%>
