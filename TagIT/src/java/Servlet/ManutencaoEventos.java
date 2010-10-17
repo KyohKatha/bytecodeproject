@@ -11,6 +11,8 @@ import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -20,7 +22,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import aaTag.*;
+import javax.servlet.ServletContext;
 /**
  *
  * @author 317586
@@ -56,10 +59,9 @@ public class ManutencaoEventos extends HttpServlet {
                 case 0:
                     try {
                         cadastraEvento(request, response);
-                        out.println("Evento inserido com sucesso!");
                     } catch (TagITDAOException e) {
-                        //out.println("Ja existe um evento com esse nome cadastrado!");
-                        //System.out.println(e.printStackTrace());
+                        out.println("Ja existe um evento com esse nome cadastrado!");
+                        e.printStackTrace();
                     }
                     break;
                 case 1:
@@ -93,36 +95,48 @@ public class ManutencaoEventos extends HttpServlet {
     private void cadastraEvento(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        String nome = request.getParameter("nome");
+        String nome = request.getParameter("nomeEvento");
         double vagasPrincipal = Double.parseDouble(request.getParameter("vagasPrincipal"));
         String inscInicio = request.getParameter("inscInicio");
         String inscTermino = request.getParameter("inscTermino");
         String rua = request.getParameter("rua");
-        String numeroRua = request.getParameter("numeroRua");
-        rua += ", " + numeroRua;
+        String numeroRua = request.getParameter("numeroRua"); rua += ", " + numeroRua;
         String cidade = request.getParameter("cidade");
         String dataEvento = request.getParameter("dataEvento");
         String contato = request.getParameter("contato");
-        Participante organizador; //organizador vai ser pego da sessão
         String[] categoria = request.getParameterValues("categoria"); //ver como fazer a categoria
-        ArrayList<Categoria> lstCategoria;
+        String descricao = request.getParameter("descricao");
+        ArrayList<Categoria> lstCategoria = new ArrayList<Categoria>();
 
-        //falta organizador, que sera pego da sessao
-        organizador = (Participante) request.getSession().getAttribute("usuarioLogado");
+        Participante usuarioLogado = (Participante) request.getSession().getAttribute("usuarioLogado");
+        ConexaoBD conexaoBD = ConexaoBD.getInstance();
 
-        lstCategoria = new ArrayList<Categoria>();
-
-        for (int i = 0; i < lstCategoria.size(); i++) {
-            lstCategoria.add(new Categoria(categoria[i]));
+        if (categoria != null){
+            for (int i = 0; i < categoria.length; i++) {
+                lstCategoria.add(new Categoria(categoria[i]));
+            }
         }
-
-        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);
-        ;
+        
+        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, usuarioLogado, lstCategoria);
         RequestDispatcher rd = null;
-
-        if (statusMessage(request, ConexaoBD.getInstance().insereEvento(evento))) {
-            rd = request.getRequestDispatcher("/index.jsp");
+        
+        boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
+        if (retornou){
+            rd = request.getRequestDispatcher("/ServletAcessaAPI");
             rd.forward(request, response);
+
+            String retorna = request.getSession().getAttribute("sucesso").toString();
+
+            System.out.println("RETORNOUUUUUUUUUUUUUUUUUUUUU >> " + retorna);
+
+            // aguardando o forward da parte do Gustavo
+            if (retorna.equals("true")){
+                //rd = request.getRequestDispatcher("/index.jsp");
+                //rd.forward(request, response);
+            }else{
+                rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
+                rd.forward(request, response);
+            }
         } else {
             rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
             rd.forward(request, response);
@@ -130,7 +144,13 @@ public class ManutencaoEventos extends HttpServlet {
 
     }
 
-    private boolean statusMessage(HttpServletRequest request, String message) {
+    /**
+     * Método que irá retorna true ou false se a operação foi efetuada com sucesso retornando true ou não conseguiu realizar a operação retornando false, neste método já estão as respostas das operações
+     * @param request Request para poder atribuir o status da operação realizada
+     * @param message O status que retornou no banco de dados
+     * @return True se conseguiu realizar a operação com sucesso, false se não conseguiu realizar
+     */
+    private boolean statusMessage(HttpServletRequest request, String message){
         if (message.equals("0")) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
