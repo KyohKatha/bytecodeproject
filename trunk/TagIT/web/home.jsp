@@ -34,8 +34,8 @@
             </tr>
             <tr>
                 <td align="center">
-                    <form id="busca" name="busca" action="#">
-                        <input name="busca" type="text" id="busca" value="Digite o termo da busca" /> <input class="botao" type="submit" value="Buscar" id="bBuscar" />
+                    <form id="busca" name="busca" action="ManutencaoEventos">
+                        <input name="parametro" type="text" id="parametro" value="Digite o termo da busca" /> <input class="botao" type="submit" value="Buscar" id="bBuscar" /><input type="hidden" name="tipo" value="1">
                     </form>
                     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                 </td>

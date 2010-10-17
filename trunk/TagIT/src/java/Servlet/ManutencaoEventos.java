@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Servlet;
 
 import PkgTagIT.Categoria;
@@ -14,6 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author 317586
  */
 public class ManutencaoEventos extends HttpServlet {
-   
+
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -34,7 +35,7 @@ public class ManutencaoEventos extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
 
@@ -51,7 +52,7 @@ public class ManutencaoEventos extends HttpServlet {
         try {
             tipo = Integer.parseInt(request.getParameter("tipo"));
 
-            switch(tipo) {
+            switch (tipo) {
                 case 0:
                     try {
                         cadastraEvento(request, response);
@@ -62,6 +63,12 @@ public class ManutencaoEventos extends HttpServlet {
                     }
                     break;
                 case 1:
+                    try {
+                        //busca de evento
+                        buscaEventos(request, response);
+                    } catch (TagITDAOException ex) {
+                        Logger.getLogger(ManutencaoEventos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     break;
                 case 2:
                     break;
@@ -72,13 +79,13 @@ public class ManutencaoEventos extends HttpServlet {
                     try {
                         out.println("entrei aqui");
                         buscaEventosDoOrganizador(request, response);
-                    } catch(TagITDAOException e) {
+                    } catch (TagITDAOException e) {
                         e.printStackTrace();
                     }
 
                     break;
             }
-        } finally { 
+        } finally {
             out.close();
         }
     }
@@ -109,20 +116,21 @@ public class ManutencaoEventos extends HttpServlet {
             lstCategoria.add(new Categoria(categoria[i]));
         }
 
-        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);;
+        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, organizador, lstCategoria);
+        ;
         RequestDispatcher rd = null;
-        
-        if (statusMessage(request, ConexaoBD.getInstance().insereEvento(evento))){
+
+        if (statusMessage(request, ConexaoBD.getInstance().insereEvento(evento))) {
             rd = request.getRequestDispatcher("/index.jsp");
             rd.forward(request, response);
-        }else{
+        } else {
             rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
             rd.forward(request, response);
         }
 
     }
 
-    private boolean statusMessage(HttpServletRequest request, String message){
+    private boolean statusMessage(HttpServletRequest request, String message) {
         if (message.equals("0")) {
             request.getSession().setAttribute("type", "critical");
             request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
@@ -132,15 +140,15 @@ public class ManutencaoEventos extends HttpServlet {
                 request.getSession().setAttribute("message", "<p>- Operação realizada com <strong>sucesso !</strong> </p><p>- Clique na caixa para fechar.</p>");
 
                 return true;
-            }else{
+            } else {
                 if (message.equals("2")) {
                     request.getSession().setAttribute("type", "critical");
                     request.getSession().setAttribute("message", "<p>- <strong>Erro</strong> na operação realizada .</p><p>- Clique na caixa para fechar.</p>");
-                }else{
+                } else {
                     if (message.equals("3")) {
                         request.getSession().setAttribute("type", "critical");
                         request.getSession().setAttribute("message", "<p>- Parâmetro <strong>não encontrado</strong>.</p><p>- Clique na caixa para fechar.</p>");
-                    }else{
+                    } else {
                         if (message.equals("4")) {
                             request.getSession().setAttribute("type", "critical");
                             request.getSession().setAttribute("message", "<p>-<strong>Falta</strong> de vagas para o cadastro do evento.</p><p>- Clique na caixa para fechar.</p>");
@@ -161,7 +169,21 @@ public class ManutencaoEventos extends HttpServlet {
         lstEventos = ConexaoBD.getInstance().buscaEventosdoOrganizador(organizador);
 
         response.getWriter().println("Número de eventos do organizador: " + lstEventos.size());
-        
+
+    }
+
+    private void buscaEventos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TagITDAOException {
+        String parametro = request.getParameter("parametro");
+
+        ArrayList<Evento> eventos = ConexaoBD.getInstance().buscarEventos(parametro);
+
+        request.setAttribute("eventos", eventos);
+        request.setAttribute("parametro", parametro);
+        RequestDispatcher rd = null;
+        rd = request.getRequestDispatcher("/buscarEvento.jsp");
+        rd.forward(request, response);
+
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="Métodos HttpServlet. Clique no sinal de + à esquerda para editar o código.">
@@ -174,9 +196,9 @@ public class ManutencaoEventos extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -187,7 +209,7 @@ public class ManutencaoEventos extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -199,5 +221,4 @@ public class ManutencaoEventos extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }
