@@ -10,15 +10,15 @@ package aaTag;
  * @author Gustavo Henrique
  */
 public class Tag {
-    private String privateCode;
+    private String PublicCode;
     private int AccessLevel;
-    private enmVisibility Visibility;
+    private int Visibility;
 
     // <editor-fold defaultstate="collapsed" desc="Construtores">
     public Tag(){ }
 
-    public Tag(String privateCode, int AccessLevel, enmVisibility Visibility) {
-        this.privateCode = privateCode;
+    public Tag(String privateCode, int AccessLevel, int Visibility) {
+        this.PublicCode = privateCode;
         this.AccessLevel = AccessLevel;
         this.Visibility = Visibility;
     }
@@ -33,20 +33,20 @@ public class Tag {
         this.AccessLevel = AccessLevel;
     }
 
-    public enmVisibility getVisibility() {
+    public int getVisibility() {
         return Visibility;
     }
 
-    public void setVisibility(enmVisibility Visibility) {
+    public void setVisibility(int Visibility) {
         this.Visibility = Visibility;
     }
 
-    public String getPrivateCode() {
-        return privateCode;
+    public String getPublicCode() {
+        return PublicCode;
     }
 
-    public void setPrivateCode(String privateCode) {
-        this.privateCode = privateCode;
+    public void setPublicCode(String privateCode) {
+        this.PublicCode = privateCode;
     }
     //</editor-fold>
     
