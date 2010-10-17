@@ -341,4 +341,31 @@ public class ConexaoBD {
 
         return eventos;
     }
+
+    public void entradaEvento(String email, String evento) throws TagITDAOException {
+        String stored = "{call sp_registrar_participanteEvento(?, ?, ?)}";
+        String retorno = null;
+        CallableStatement cstm = null;
+        
+
+        try {
+            cstm = con.prepareCall(stored);
+            cstm.setString(1, email);
+            cstm.setString(2, evento);
+            cstm.registerOutParameter(3, java.sql.Types.VARCHAR);
+
+            cstm.execute();
+            retorno = cstm.getString(3);
+            if(retorno.trim().compareTo("5") == 0) {
+                throw new TagITDAOException("Participante nao cadastrado no evento!");
+            }
+            else if(retorno.trim().compareTo("2") == 0) {
+                throw new TagITDAOException("Participante ja entrou no evento");
+            }
+
+
+        } catch (SQLException e) {
+            throw new TagITDAOException("BUNDA");
+        }
+    }
 }

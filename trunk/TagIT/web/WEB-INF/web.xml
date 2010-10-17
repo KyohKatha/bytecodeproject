@@ -16,6 +16,10 @@
         <servlet-name>ServletAcessaAPI</servlet-name>
         <servlet-class>aaTag.ServletAcessaAPI</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EntradaConsulta</servlet-name>
+        <servlet-class>Servlet.EntradaConsulta</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ManutencaoUsuarios</servlet-name>
         <url-pattern>/ManutencaoUsuarios</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>ServletAcessaAPI</servlet-name>
         <url-pattern>/ServletAcessaAPI</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EntradaConsulta</servlet-name>
+        <url-pattern>/EntradaConsulta</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
