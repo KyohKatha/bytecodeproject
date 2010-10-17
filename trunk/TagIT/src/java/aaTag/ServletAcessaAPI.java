@@ -341,9 +341,10 @@ public class ServletAcessaAPI extends HttpServlet {
             Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-       // request.getSession().setAttribute("sucesso", ret.getSuccess());
-        request.getSession().setAttribute("sucesso", "XULEHHH");
-        request.setAttribute("sucesso", "XUKEHHHHHHHHh");
+        request.getSession().setAttribute("sucesso", ret.getSuccess());
+        
+        //request.getSession().setAttribute("sucesso", "XULEHHH");
+        //request.setAttribute("sucesso", "XUKEHHHHHHHHh");
     }
 
     private void addRegister(HttpServletRequest request, HttpServletResponse response) {

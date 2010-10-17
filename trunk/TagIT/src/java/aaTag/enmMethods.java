@@ -27,6 +27,7 @@ public enum enmMethods {
     GetEvents,
     RemoveTag,
     RemoveEvent,
+    RemoveApplication,
     InactivateTag,
     GetUserRegisters,
     GetEventRegisters,
