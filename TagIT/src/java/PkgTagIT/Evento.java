@@ -25,7 +25,18 @@ public class Evento {
     private Participante participante;
     private ArrayList<Categoria> categoria;
 
-    // Valter: construtor para um evento sem lista de espera
+    
+    
+    public Evento(String nome, double vagasPrincipal, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato) {
+        this.nome = nome;
+        this.vagasPrincipal = vagasPrincipal;
+        this.inscInicio = inscInicio;
+        this.inscTermino = inscTermino;
+        this.rua = rua;
+        this.cidade = cidade;
+        this.dataEvento = dataEvento;
+        this.contato = contato;
+    }// Valter: construtor para um evento sem lista de espera
     public Evento(String nome, double vagasPrincipal, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Participante participante, ArrayList<Categoria> categoria) {
         this.nome = nome;
         this.vagasPrincipal = vagasPrincipal;

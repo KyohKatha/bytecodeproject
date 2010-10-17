@@ -313,4 +313,32 @@ public class ConexaoBD {
 
         return i;
     }
+
+    public ArrayList<Evento> buscarEventos(String parametro) throws TagITDAOException{
+        CallableStatement cstm = null;
+        String i;
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+         try {
+            cstm = con.prepareCall("{call sp_retornar_evento(?)}");
+            cstm.setString(1, parametro);
+            //cstm.registerOutParameter(2, java.sql.Types.VARCHAR);
+            ResultSet rs = cstm.executeQuery();
+            while(rs.next()){
+                Evento aux = new Evento(rs.getString("nome"),rs.getDouble("vagasPrincipal"),rs.getDate("inscInicio").toString(), rs.getDate("inscTermino").toString(), rs.getString("rua"), rs.getString("cidade"), rs.getDate("dataEvento").toString(), rs.getString("contato"));
+                eventos.add(aux);
+            }
+            if (eventos.size() != 0)
+                System.out.println("Evento:" + eventos.get(0).getNome());
+            else
+                System.out.println("aaaaaaaaaaaaaaaaaaa");
+            //i = cstm.getString(2);
+            cstm.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new TagITDAOException();
+        }
+
+        return eventos;
+    }
 }
