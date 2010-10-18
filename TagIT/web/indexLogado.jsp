@@ -37,8 +37,8 @@
                         <label id="titles"> </label>
                         </tr>
                         <td><p align="center">
-
-                               <a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','iframe')" target="iframe" >Minhas inscrições</a></p>
+                            Bem-vindo <%= usuarioLogado.getNome()%></p>
+                            <p><a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','iframe')" target="iframe" >Minhas inscrições</a></p>
                             <p><a href="ExibirMeusEventos.jsp" onclick="callServlet('','iframe')" target="iframe">Meus Eventos</a></p>
                             <p><a href="index.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=4','body')" >Logoff</a></p>
                             
@@ -71,11 +71,6 @@
             </div>
             <div class="rodape"><BR /><br />
                 ByteCode - Ajuda - Tecnologia RFID - Contato
-                <% if(usuarioLogado == null)
-                    out.println("MERDA EH NULLO");
-                    else
-                        out.println("EMAIL: " + usuarioLogado.getEmail());
-        %>
                 <br />
                 <hr />
                 Todos os direitos reservados<br />

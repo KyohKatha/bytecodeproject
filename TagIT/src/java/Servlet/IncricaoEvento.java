@@ -9,6 +9,7 @@ import PkgTagIT.ConexaoBD;
 import PkgTagIT.Evento;
 import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
+import aaTag.User;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -64,13 +65,16 @@ public class IncricaoEvento extends HttpServlet {
     }
 
     private void inscreverParticipanteEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException{
-        Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
+        System.out.println("INSCRICAO!!!!!!!!!!!");
+
+        User participante = (User) request.getSession().getAttribute("usuario");
         Evento evento = (Evento) request.getSession().getAttribute("evento");
-        
+
+        System.out.println("Evento:"+evento.getNome());
         String[] erros = ConexaoBD.getInstance().inscreverParticipanteEvento(evento, participante);
         statusMessage(request, erros);
         RequestDispatcher rd = null;
-
+        
         rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
         rd.forward(request, response);
     }

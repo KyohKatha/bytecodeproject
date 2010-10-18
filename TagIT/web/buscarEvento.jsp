@@ -44,7 +44,7 @@
                     }else{
                        int i = 0;
                        while(i < eventos.size()){%>
-                            <a href="IncricaoEvento.jsp" onclick="callServlet('IncricaoEvento?tipo=0&i=' + <%=i %> + '','iframe')"><%= eventos.get(i).getNome() %></a>
+                            <a href="IncricaoEvento.jsp" onclick="callServlet('IncricaoEvento?tipo=0&i=' + <%=i %> + '','iframe')" target="iframe"><%= eventos.get(i).getNome() %></a>
                             <% i++;
                        }
                     }

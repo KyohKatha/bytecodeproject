@@ -31,6 +31,10 @@ public class User {
     // <editor-fold defaultstate="collapsed" desc="Construtores">
     public User() { }
 
+    public User(String Email, String Nome){
+        this.Nome = Nome;
+        this.Email = Email;
+    }
     public User(String Nome, String Fantasia, String CPF, String RG, String CNPJ, String IE, String IM, String Logradouro, String NrEnd, String Complemento, String Bairro, String Cidade, String Estado, String Pais, String CEP, String Email, String Foto) {
         this.Nome = Nome;
         this.Fantasia = Fantasia;

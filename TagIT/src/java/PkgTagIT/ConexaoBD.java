@@ -6,6 +6,7 @@
 
 package PkgTagIT;
 
+import aaTag.User;
 import java.sql.*;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import java.util.ArrayList;
@@ -320,7 +321,7 @@ public class ConexaoBD {
 
     }
 
-    public String[] inscreverParticipanteEvento(Evento evento, Participante participante) throws TagITDAOException{
+    public String[] inscreverParticipanteEvento(Evento evento, User participante) throws TagITDAOException{
         
         CallableStatement cstm = null;
         String[] i;
