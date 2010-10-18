@@ -384,6 +384,7 @@ function mostrarMenssagem(type, message) {
 
 
 function callServlet(url,div){
+alert(url);
 alert(div);
     HttpMethod = "POST";
     var req = null;
@@ -397,6 +398,7 @@ alert(div);
         document.getElementById(div).target = req.responseText;
     }
 
+}
 
 function getXMLHTTPRequest(){
     if (window.XMLHttpRequest){
@@ -408,4 +410,3 @@ function getXMLHTTPRequest(){
     return xmlhttp;
 }
 
-}

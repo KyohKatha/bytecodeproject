@@ -4,18 +4,15 @@
     Author     : Mariana
 --%>
 
+<%@page import="PkgTagIT.Participante"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="PkgTagIT.Evento" %>
-<%@page import="PkgTagIT.Participante" %>
+
 <%
         
-        Participante usuarioLogado = new Participante();
-        //apenas para teste
-        usuarioLogado.setEmail("a.nunc@aeneansed.org");
-        request.getSession().setAttribute("usuarioLogado", usuarioLogado);
            //if (usuarioLogado == null) {
               //  out.println("Realize o login para se inscrever em um evento");
             //} else {
