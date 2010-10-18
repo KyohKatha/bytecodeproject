@@ -36,7 +36,8 @@
                         <label id="titles"> </label>
                         </tr>
                         <td><p align="center">
-                                <a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','iframe')" target="iframe" >Minhas inscrições</a></p>
+
+                               <a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','iframe')" target="iframe" >Minhas inscrições</a></p>
                             <p><a href="ExibirMeusEventos.jsp" onclick="callServlet('','iframe')" target="iframe">Meus Eventos</a></p>
                             <p><a href="home.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=4','iframe')" target="iframe">Logoff</a></p>
                             
