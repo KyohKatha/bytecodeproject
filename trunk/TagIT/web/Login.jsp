@@ -27,15 +27,15 @@
                     <p>- Clique na caixa para fechá-la.</p>
                 </fieldset>
             </div>
-            <form action="ManutencaoUsuarios" class="formLogin" method="post" >
+            <form action="EfetuarLogin" class="formLogin" method="post" >
                 <table>
                     <tr>
                         <td><input class="botao" type="submit" value="Acessar aaTag"/></td>
-                        <td><input type="hidden" name="tipo" value="2"></td>
                     </tr>
                 </table>
             </form>
         </div>
+        <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
         <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
     </body>
 </html>

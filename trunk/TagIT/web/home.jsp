@@ -4,6 +4,7 @@
     Author     : Renato
 --%>
 
+<%@page import="aaTag.User" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -50,6 +51,13 @@
                     <form id="caixaEvento" action="#" >
                         <p id="titles"> Nome do Evento </p>
                         <p > Lorem Ipsum ai di ti Lorem Ipsum ai di ti Lorem Ipsum ai di ti </p>
+                            TESTEE <% User u = (User) session.getAttribute("usuario");
+                    if(u == null)
+                        out.println("MERDA EH NULLOO");
+                    else
+                        out.println("Email:   " + u.getEmail());
+                %>
+                
                         <input type="submit" name="participar" value="Participe!" />
                     </form>
                 </td>

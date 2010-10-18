@@ -4,6 +4,7 @@
     Author     : Renato
 --%>
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -22,13 +23,13 @@
             <div class="logo"></div>
             <div class="login">
 
-                <form id="eLogin" action="#">
+                <form id="eLogin" action="Login.jsp" target="iframe">
                     <table>
                         <tr>
                         <label id="titles"> </label>
                         </tr>
                         <td><p align="center">
-                            <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
+                                <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
                             </p>
                         </td>
                     </table>
@@ -61,6 +62,7 @@
             </div>
             <div class="rodape"><BR /><br />
                 ByteCode - Ajuda - Tecnologia RFID - Contato
+
                 <br />
                 <hr />
                 Todos os direitos reservados<br />

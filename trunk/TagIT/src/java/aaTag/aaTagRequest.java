@@ -12,8 +12,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -71,7 +71,7 @@ public class aaTagRequest {
         return getResponse(Server + "access_token.aspx", oauth);
     }
 
-    public aaTagReturn getMethod(aaTagOAuth oauth, String objetoReturn) throws UnsupportedEncodingException, IOException {
+    public aaTagReturn getMethod(aaTagOAuth oauth, String objetoReturn, String tipoLista) throws UnsupportedEncodingException, IOException {
         String StrRet = getResponse(Server + "methods.aspx", oauth);
         String sub = StrRet.substring(0, StrRet.length() - 1);
         Object returnAtributo = null;
@@ -90,40 +90,42 @@ public class aaTagRequest {
         } else if (objetoReturn.equals("Application")) {
             sub += ",\"class\":\"aaTag.Application\"}";
             returnAtributo = (Application) JSON.Deserialize(sub, new Application());
-
-
-        }else if (objetoReturn.equals("ArrayListEvent")) {
-
-           // sub += "],\"class\":\"aaTag.EventList\"}";
-           // sub = "{" + sub;
+        }else if(objetoReturn.equals("UserRegister")){
             sub += "]";
-            //returnAtributo = (LinkedList) JSON.Deserialize(sub, new LinkedList());
+            returnAtributo = (Application) JSON.Deserialize(sub, new Register());
+            Register a = (Register) returnAtributo;
+            System.out.println("NOME DO EVENTO " + a.getEventName());
+        }else if (objetoReturn.equals("ArrayList")) {
+            sub += "]";
             ArrayList list = (ArrayList) JSON.Deserialize(sub, new LinkedList<Map>());
             System.out.println("VOLTOU DO JSONDESERIALIZE " + list.size());
-            
-            Event a = (Event) list.get(0);
 
+            ArrayList retorno = new ArrayList();
 
-            System.out.println("NOME DO EVENTO: " + a.getName());
+            for(int i = 0; i < list.size(); i++){
+                HashMap obj = (HashMap) list.get(i);
 
-            
-            /*for(int i = 0; i < list.size(); i++){
-                Event e = (Event) list.get(i);
-                System.out.println("NOME " + e.getName());
-                System.out.println("DESCRICAO " + e.getDescription());
-            }*/
-        }
+                if(tipoLista.equals("Event")){
+                    String nome = (String) obj.get("Name");
+                    String descricacao = (String) obj.get("Description");
+                    Event event = new Event(nome, descricacao);
+                    retorno.add(event);
+                }else if(tipoLista.equals("Tag")){
+                    int AccesLevel = Integer.parseInt( obj.get("AccessLevel").toString() );
+                    int Visibility = Integer.parseInt( obj.get("Visibility").toString() );
+                    String PublicCode = (String) obj.get("PublicCode");
+                    Tag tag = new Tag(PublicCode, AccesLevel, Visibility);
+                    retorno.add(tag);                    
+                }else if(tipoLista.equals("UserRegister")){
+                    System.out.println("USERRRRRR REGISTER!!! " + obj.toString());
+                }
+                System.out.println("VEIOO " + obj.keySet().toString());
+            }
+
+            returnAtributo = retorno;
+          }
 
         return new aaTagReturn(returnAtributo);
-
-    }
-
-    public aaTagReturn getMethod(aaTagOAuth oauth) throws UnsupportedEncodingException, IOException {
-        String StrRet = getResponse(Server + "methods.aspx", oauth);
-        String sub = StrRet.substring(0, StrRet.length() - 1);
-        Object returnAtributo = null;
-        System.out.println("METODO ERRADDDDDO");
-        return null;
 
     }
 

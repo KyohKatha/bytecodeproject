@@ -20,6 +20,10 @@
         <servlet-name>EntradaConsulta</servlet-name>
         <servlet-class>Servlet.EntradaConsulta</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>EfetuarLogin</servlet-name>
+        <servlet-class>Servlet.EfetuarLogin</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ManutencaoUsuarios</servlet-name>
         <url-pattern>/ManutencaoUsuarios</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>EntradaConsulta</servlet-name>
         <url-pattern>/EntradaConsulta</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EfetuarLogin</servlet-name>
+        <url-pattern>/EfetuarLogin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

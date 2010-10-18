@@ -108,6 +108,7 @@ public class aaTagOAuth {
     public void setJSON(String script) {
         String sub = script.substring(0, script.length() - 1);
         sub += ",\"class\":\"aaTag.OAuth\"}";
+        System.out.println("VAIII MANDDARR " + sub);
         this.oauth = (OAuth) JSON.Deserialize(sub, new OAuth());
     }
 
