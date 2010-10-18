@@ -22,9 +22,9 @@
                 <div class="erros" id="erros">
                 </div>
 
-                <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getAttribute("eventos");
-                   
-                   request.getSession().setAttribute("eventos", eventos);
+                <%
+                    ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
+                    
 
                    if(eventos == null){
                         out.println("Nenhum resultado encontrado para <strong></strong>");
