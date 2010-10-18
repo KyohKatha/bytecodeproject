@@ -35,9 +35,9 @@ public class aaTagRequest {
     }
 
     private String getResponse(String urlServidor, aaTagOAuth oauth) throws MalformedURLException, IOException {
-        System.out.println("SERVIDOR: " + urlServidor);
+        //System.out.println("SERVIDOR: " + urlServidor);
         String mensagem = oauth.getJSON();
-        System.out.println("MENSAGEmmm: " + mensagem);
+       // System.out.println("MENSAGEmmm: " + mensagem);
         String mensagemCodificada = aaTagFunctions.UrlEncode(mensagem);
         byte[] bytes = aaTagFunctions.ConvertTextToBytes(mensagemCodificada);
 
@@ -76,7 +76,7 @@ public class aaTagRequest {
         String sub = StrRet.substring(0, StrRet.length() - 1);
         Object returnAtributo = null;
 
-        System.out.println("RETORNO DO SERVIDOR: " + StrRet);
+      //  System.out.println("RETORNO DO SERVIDOR: " + StrRet);
 
         if (objetoReturn.equals("User")) { //Pegar um usuario
             sub += ",\"class\":\"aaTag.User\"}";
@@ -98,7 +98,7 @@ public class aaTagRequest {
         }else if (objetoReturn.equals("ArrayList")) {
             sub += "]";
             ArrayList list = (ArrayList) JSON.Deserialize(sub, new LinkedList<Map>());
-            System.out.println("VOLTOU DO JSONDESERIALIZE " + list.size());
+       //     System.out.println("VOLTOU DO JSONDESERIALIZE " + list.size());
 
             ArrayList retorno = new ArrayList();
 
@@ -119,7 +119,7 @@ public class aaTagRequest {
                 }else if(tipoLista.equals("UserRegister")){
                     System.out.println("USERRRRRR REGISTER!!! " + obj.toString());
                 }
-                System.out.println("VEIOO " + obj.keySet().toString());
+        //        System.out.println("VEIOO " + obj.keySet().toString());
             }
 
             returnAtributo = retorno;

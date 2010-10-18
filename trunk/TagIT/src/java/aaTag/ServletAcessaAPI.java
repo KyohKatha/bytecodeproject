@@ -102,8 +102,17 @@ public class ServletAcessaAPI extends HttpServlet {
         }
 
         if (redireciona != null && redireciona.equals("sim")) {
-            RequestDispatcher req = request.getRequestDispatcher(paginaRetorno);
-            req.forward(request, response);
+            User user = (User) request.getSession().getAttribute("usuario");
+            if(metodo.equals("realizarLogin") && user == null){
+                paginaRetorno = "home.jsp";
+            }/*else if(user != null){
+                System.out.println("EHH O TESTE");
+                response.sendRedirect("http://localhost:8080/TagIT/indexLogado.jsp");
+            }*/ else{
+                System.out.println("VAI MANDAR P PAGINA " + paginaRetorno);
+                RequestDispatcher req = request.getRequestDispatcher(paginaRetorno);
+                req.forward(request, response);
+            }
          }
     }
 

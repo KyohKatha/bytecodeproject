@@ -23,7 +23,7 @@
             <div class="logo"></div>
             <div class="login">
 
-                <form id="eLogin" action="Login.jsp" target="iframe">
+                <form id="eLogin" action="Login.jsp" >
                     <table>
                         <tr>
                         <label id="titles"> </label>
@@ -45,7 +45,7 @@
                     <li> <a href="CadastrarUsuario.jsp" target="iframe"> Registrar-se </a></li>
                     <li> <a href="www.google.com" target="iframe"> Faq </a></li>
                     <li> <a href="www.google.com" target="iframe"> Sobre </a></li>
-                    <li> <a href="Login.jsp" target="iframe"> Link </a></li>
+                    <li> <a href="Login.jsp" > Link </a></li>
                 </ul>
             </div></div>
 
