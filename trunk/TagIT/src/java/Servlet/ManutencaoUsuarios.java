@@ -89,6 +89,20 @@ public class ManutencaoUsuarios extends HttpServlet {
                     }
                     break;
                 case 3:
+                    try {
+                        buscarEventosParticipante(request, response);
+                    } catch (Exception e) {
+                        
+                        request.setAttribute("erro", true);
+                        RequestDispatcher rd = null;
+                        rd = request.getRequestDispatcher("/homeLogado.jsp");
+                        rd.forward(request, response);
+                    }
+
+
+                    break;
+                case 4:
+
                     request.getSession().removeAttribute("usuarioLogado");
                     RequestDispatcher rd = null;
                     rd = request.getRequestDispatcher("/index.jsp");
@@ -255,26 +269,27 @@ public class ManutencaoUsuarios extends HttpServlet {
 
     }*/
 
-    private void buscarEventosParticipante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
-       Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
+    private void buscarEventosParticipante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
 
         ArrayList<Evento> eventos = null;
         String[] erros = null;
         try {
-            eventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscarEventosParticipante(participante);
+            eventos = ConexaoBD.getInstance().buscarEventosParticipante(participante);
+            request.setAttribute("eventos", eventos);
         } catch (TagITDAOException ex) {
             Logger.getLogger(ManutencaoUsuarios.class.getName()).log(Level.SEVERE, null, ex);
         }
-            request.setAttribute("eventos", eventos);
-
         
+
         RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("/buscarEvento.jsp");
+        rd = request.getRequestDispatcher("/ExibirEventosParticipante.jsp");
         rd.forward(request, response);
 
     }
     // <editor-fold defaultstate="collapsed" desc="Métodos HttpServlet. Clique no sinal de + à esquerda para editar o código.">
-    /** 
+
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
