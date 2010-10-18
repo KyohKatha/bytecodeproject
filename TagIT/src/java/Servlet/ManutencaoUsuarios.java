@@ -79,7 +79,7 @@ public class ManutencaoUsuarios extends HttpServlet {
                     break;
                 case 2:
                     try {
-                        validarLogin(request, response);
+                      //  efetuarLogin(request, response);
                     } catch (Exception e) {
                         System.out.println("DEU ERRO NO LOGIN DO USUARIO");
                         request.setAttribute("erro", true);
@@ -254,41 +254,6 @@ public class ManutencaoUsuarios extends HttpServlet {
     }
 
     }*/
-    private void validarLogin(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, TagITDAOException {
-
-        RequestDispatcher rd = null;
-        ConexaoBD con = ConexaoBD.getInstance();
-        Participante part = null;
-
-        /* api.fazerLoginNaAPI  */
-        // login!!
-        StringBuilder sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?");
-        sbUrl.append("method=\"\"&parameter=\"\"");
-        URL url = new URL(sbUrl.toString());
-        HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
-        conexao.setRequestProperty("Request-Method", "POST");
-        conexao.setDoInput(true);
-        conexao.setDoOutput(true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-        // fim do login. vai ter um token e um email na session.
-
-        String token = in.readLine();
-
-
-        // retorno das informacoes do usuario a partir do token
-        sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?");
-        sbUrl.append("method=\"GetUserInfo\"&parameter=\"");
-        sbUrl.append(token);
-        sbUrl.append("\"");
-        url = new URL(sbUrl.toString());
-        conexao = (HttpURLConnection) url.openConnection();
-        conexao.setRequestProperty("Request-Method", "POST");
-        conexao.setDoInput(true);
-        conexao.setDoOutput(true);
-        // os dados do participante estarao na sessao
-
-    }
 
     private void buscarEventosParticipante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
        Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
