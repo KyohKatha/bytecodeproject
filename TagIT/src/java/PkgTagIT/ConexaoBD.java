@@ -368,8 +368,28 @@ public class ConexaoBD {
         
     }
 
-    public ArrayList<Evento> buscarEventosParticipante(Participante participante){
-        return null;
+    public ArrayList<Evento> buscarEventosParticipante(Participante participante) throws TagITDAOException{
+        CallableStatement cstm = null;
+        
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+         try {
+             
+            cstm = con.prepareCall("{call sp_retornar_eventosParticipante(?)}");
+            cstm.setString(1, participante.getEmail());
+            
+            ResultSet rs = cstm.executeQuery();
+            while(rs.next()){
+                Evento aux = new Evento(rs.getString("nome"),rs.getDouble("vagasPrincipal"),rs.getDate("inscInicio").toString(), rs.getDate("inscTermino").toString(), rs.getString("rua"), rs.getString("cidade"), rs.getDate("dataEvento").toString(), rs.getString("contato"));
+                eventos.add(aux);
+            }
+            cstm.close();
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+        
+            return eventos;
+
     }
     public void entradaEvento(String email, String evento) throws TagITDAOException {
         String stored = "{call sp_registrar_participanteEvento(?, ?, ?)}";
