@@ -95,7 +95,7 @@ public class ManutencaoUsuarios extends HttpServlet {
                         
                         request.setAttribute("erro", true);
                         RequestDispatcher rd = null;
-                        rd = request.getRequestDispatcher("/homeLogado.jsp");
+                        rd = request.getRequestDispatcher("/HomeLogado.jsp");
                         rd.forward(request, response);
                     }
 

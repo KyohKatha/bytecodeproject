@@ -78,7 +78,7 @@ public class EfetuarLogin extends HttpServlet {
     }// </editor-fold>
 
     private void inicializarUsuarioSessao(HttpServletRequest request, HttpServletResponse response, String token, String verifier) throws ServletException, IOException {
-        String paginaRetorno = "homeLogado.jsp";
+        String paginaRetorno = "indexLogado.jsp";
         String servlet = "ServletAcessaAPI?metodo=GetUserInfo&redireciona=sim&paginaRetorno=" + paginaRetorno + "&tokenAcesso=" + token + "&verifierAcesso=" + verifier;
         RequestDispatcher rd = request.getRequestDispatcher(servlet);
         rd.forward(request, response);
