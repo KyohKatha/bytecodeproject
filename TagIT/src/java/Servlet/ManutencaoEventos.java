@@ -92,10 +92,19 @@ public class ManutencaoEventos extends HttpServlet {
         }
     }
 
+    /**
+     * Método que realiza o cadastro do evento do usuário no sistema
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     * @throws TagITDAOException
+     */
     private void cadastraEvento(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        String nome = request.getParameter("nomeEvento");
+        String nome = request.getParameter("nome");
+        String descricao = request.getParameter("descricao");
         double vagasPrincipal = Double.parseDouble(request.getParameter("vagasPrincipal"));
         String inscInicio = request.getParameter("inscInicio");
         String inscTermino = request.getParameter("inscTermino");
@@ -105,7 +114,7 @@ public class ManutencaoEventos extends HttpServlet {
         String dataEvento = request.getParameter("dataEvento");
         String contato = request.getParameter("contato");
         String[] categoria = request.getParameterValues("categoria"); //ver como fazer a categoria
-        String descricao = request.getParameter("descricao");
+        
         ArrayList<Categoria> lstCategoria = new ArrayList<Categoria>();
 
         Participante usuarioLogado = (Participante) request.getSession().getAttribute("usuarioLogado");
@@ -122,22 +131,17 @@ public class ManutencaoEventos extends HttpServlet {
         
         boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
         if (retornou){
-            rd = request.getRequestDispatcher("/ServletAcessaAPI");
+            String paginaRetorno = "indexLogado.jsp";
+            String servlet = "ServletAcessaAPI?metodo=addEvent&redireciona=sim&paginaRetorno=" + paginaRetorno + "&nomeEvento=" + nome + "&descricaoEvento=" + descricao;
+            rd = request.getRequestDispatcher(servlet);
             rd.forward(request, response);
 
             String retorna = request.getSession().getAttribute("sucesso").toString();
 
-            System.out.println("RETORNOUUUUUUUUUUUUUUUUUUUUU >> " + retorna);
+            System.out.println("RETORNOU DA SERVLETACESSAAPI >> " + retorna);
 
-            // aguardando o forward da parte do Gustavo
-            if (retorna.equals("true")){
-                //rd = request.getRequestDispatcher("/index.jsp");
-                //rd.forward(request, response);
-            }else{
-                rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
-                rd.forward(request, response);
-            }
         } else {
+            System.out.println("Retornará o erro >> " + request.getSession().getAttribute("message").toString());
             rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
             rd.forward(request, response);
         }
