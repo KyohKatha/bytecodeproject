@@ -95,7 +95,7 @@ public class EntradaConsulta extends HttpServlet {
         HttpURLConnection conexao;
         BufferedReader in = null;
 
-        sbUrl = new StringBuilder("http://192.168.2.9:8080/Teste/ServletTeste?metodo=GetUser&codTag=");
+        sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?metodo=GetUser&codTag=");
         sbUrl.append(tag);
         sbUrl.append("&leitura=sim");
         sbUrl.append("&redireciona=nao");
