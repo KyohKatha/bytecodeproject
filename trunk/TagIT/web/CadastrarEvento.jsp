@@ -5,15 +5,13 @@
     Author     : Tiago
 --%>
 
+<%@page import="aaTag.User"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="PkgTagIT.Participante" %>
 <%
-/*  Fazer com que só consiga cadastrar um evento se estiver logado */
-        Participante usuarioLogado = new Participante();
-        session.setAttribute("usuarioLogado", usuarioLogado);
-        usuarioLogado = (Participante) session.getAttribute("usuarioLogado");
+    User usuarioLogado = (User) session.getAttribute("usuario");
 
         if (usuarioLogado == null) {
             out.println("Realize o login para cadastrar um evento");
@@ -41,11 +39,13 @@
                 <form action="ManutencaoEventos" class="formEvento" id="formEvento" method="post" onsubmit="return validaEvento()">
                     <table>
                         <tr>
+                            <td>Bem-vindo <%= usuarioLogado.getNome()%></td></tr>
+                        <tr>
                             <td><label>(*)Nome:</label></td>
-                            <td><input type="text" name="nomeEvento" id="nome" /></td>
+                            <td><input type="text" name="nome" id="nome" /></td>
                         </tr><tr>
                             <td><label>Descrição do evento:</label></td>
-                            <td><input type="text" name="descricaoEvento" id="descricao" /></td>
+                            <td><input type="text" name="descricao" id="descricao" /></td>
                         </tr><tr>
                             <td><label>(*)Número de vagas:</label></td>
                             <td><input type="text" name="vagasPrincipal" id="vagasPrincipal" /></td>
