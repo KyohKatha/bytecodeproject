@@ -9,10 +9,6 @@
         <servlet-class>Servlet.ManutencaoEventos</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>IncricaoEvento</servlet-name>
-        <servlet-class>Servlet.IncricaoEvento</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ServletAcessaAPI</servlet-name>
         <servlet-class>aaTag.ServletAcessaAPI</servlet-class>
     </servlet>
@@ -35,10 +31,6 @@
     <servlet-mapping>
         <servlet-name>ManutencaoEventos</servlet-name>
         <url-pattern>/ManutencaoEventos</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>IncricaoEvento</servlet-name>
-        <url-pattern>/IncricaoEvento</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ServletAcessaAPI</servlet-name>

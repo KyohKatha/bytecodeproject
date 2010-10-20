@@ -1,29 +1,35 @@
 body{
-	font-family:Arial;
-	font-size:16px;	
+    font-family:Arial;
+    font-size:16px;
 }
 
 hr{
-	size:10px;
+    size:10px;
 }
 
 input{
-	background-color: #E5E5E5;
-	color:#000;
-	font-family: Arial, Helvetica, sans-serif;
-	padding: 2px;
-	border:1px solid #999;
+    background-color: #E5E5E5;
+    color:#000;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 2px;
+    border:1px solid #999;
+}
+
+label{
+    color:#000;
+    font-weight:bold;	
+
 }
 
 .botao{
-	background:url(images/botao.png) no-repeat;
-	border:none;
-	font-weight:bold;
-	text-align:center;
-	width:145px;
-	height:34px;
-	padding:4px;
-	color:#000;
+    background:url(images/botao.png) no-repeat;
+    border:none;
+    font-weight:bold;
+    text-align:center;
+    width:145px;
+    height:34px;
+    padding:4px;
+    color:#000;
 }
 
 /*ERROS*/
@@ -42,6 +48,7 @@ fieldset {
     padding: .5em .5em .5em 20px;
     margin-left: -30em;
     margin-right: 1.2em;
+    margin-bottom: 10px;
     width:850px;
 }
 
@@ -85,200 +92,210 @@ fieldset.warning {
 
 /* div que contem o topo do site */
 .topo{
-	height:178px;
-	width:1000px;
-	left:50%; margin:0 0 0 -520px; 
-	position:absolute;
+    height:178px;
+    width:1000px;
+    left:50%; margin:0 0 0 -520px;
+    position:absolute;
 }
 
-	
+
 
 .logo{
-	text-align:left;
-	background:url(images/logoTop.png) no-repeat;
-	height:178px;
-	width:755px;
-	float:left;
-	margin-top:61px;
-	
+    text-align:left;
+    background:url(images/logoTop.png) no-repeat;
+    height:178px;
+    width:755px;
+    float:left;
+    margin-top:61px;
+
 }
 
 #titles{
-	font-size:22px;
+    font-size:22px;
 }
 
 .login{
-	padding: 100px 0 0 0;
-	left:50%; margin:0 0 0 280px; position:absolute;
+    padding: 100px 0 0 0;
+    left:50%; margin:-50px 0 0 280px; position:absolute;
 }
-	
+
 .menuTopo{
-	background:url(images/barraMenuPrincipal.png) repeat-x;
-	position:absolute;
-	top: 237px;
-	left:-1px;
-	width:100%;
-	height:100%;
+    background:url(images/barraMenuPrincipal.png) repeat-x;
+    position:absolute;
+    top: 237px;
+    left:-1px;
+    width:100%;
+    height:100%;
 }
 
 .menu{
-	text-align:center;
-	position:absolute;
-	top: -10px;
-	left:350px;
+    text-align:center;
+    position:absolute;
+    top: -10px;
+    left:350px;
 }
 
 .menuTopo ul{
-	list-style-type:none;
-	width:auto;
-	display:block;
+    list-style-type:none;
+    width:auto;
+    display:block;
 }
 
 .menuTopo ul li{
-	float:left;
-	display:block;
-	margin-left:20px;
+    float:left;
+    display:block;
+    margin-left:20px;
 }
 
 .menuTopo li a{
-	text-decoration:none;
-	text-shadow:#000 2px 2px 10px;
-	font-size: 20px;
-	color:#FFF;
+    text-decoration:none;
+    text-shadow:#000 2px 2px 10px;
+    font-size: 20px;
+    color:#FFF;
 }
 
 .menuTopo li a:hover {
-	text-decoration:underline;
+    text-decoration:underline;
 }
 
 .conteudo{
-	left:525px;
-	margin:0 0 0 -450px;
-	position:absolute;
-	background:url(images/fundoConteudo.png) repeat-y;
-	width: 1200px;
-	height:auto;
-	top: 268px;
+    left:525px;
+    margin:0 0 0 -450px;
+    position:absolute;
+    background:url(images/fundoConteudo.png) repeat-y;
+    width: 1200px;
+    height:auto;
+    top: 268px;
 }
 
 
 .publicidadeContainer{
-   padding-top:30px;
-   padding-left:0px;
-   height: 214px;
-   width: 400px;
+    padding-top:30px;
+    padding-left:0px;
+    height: 214px;
+    width: 400px;
 
 }
 
 .publicidade{
-	background:url(images/propTag.png) no-repeat;
-	width: 915px;
-	height:214px;
-	text-align:left;
+    background:url(images/propTag.png) no-repeat;
+    width: 915px;
+    height:214px;
+    text-align:left;
 }
 
 .meioContainer{
-   padding-left:145px;
+    padding-left:145px;
+    margin-top: 10px;
 }
 
 .buscaPrincipal{
-	background:url(images/barraBuscaEv.png) no-repeat;
-	width: 445px;
-	text-align:center;
-	height: 62px;
+    background:url(images/barraBuscaEv.png) no-repeat;
+    width: 445px;
+    text-align:center;
+    height: 62px;
+}
+
+.buscaNormal{
+    background:url(images/barraBuscarEventos.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
 }
 
 .twitterContainer{
-	background:url(images/barraFollow.png) no-repeat;
-	width: 445px;
-	height: 62px;
+    background:url(images/barraFollow.png) no-repeat;
+    width: 445px;
+    height: 62px;
 }
 
 .twitter{
-	background:url(images/teste.png) no-repeat;
-	height: 350px;
-	width:300px;
+    background:url(images/teste.png) no-repeat;
+    height: 350px;
+    width:300px;
 }
 
 .eventoPrincipal{
-	background:url(images/barraUltimosEventos.png) no-repeat;
-	height:54px;
-	width: 922px;
+    background:url(images/barraUltimosEventos.png) no-repeat;
+    height:54px;
+    width: 922px;
 }
 
 .eventoP1{
-	background:url(images/square.png) no-repeat;
-	height:196px;
-	width: 432px;
-	padding-left: 5px;
-	padding-right: 30px;
+    background:url(images/square.png) no-repeat;
+    height:196px;
+    width: 432px;
+    padding-left: 5px;
+    padding-right: 30px;
 }
 
 .eventoP2{
-	background:url(images/square.png) no-repeat;
-	height:196px;
-	width:432px;
-	padding-left: 5px;
+    background:url(images/square.png) no-repeat;
+    height:196px;
+    width:432px;
+    padding-left: 5px;
 }
 
 #caixaEvento{
-	text-align:justify;
-	margin-right: 90px;
-	margin-left: 10px;
-	color:#FFF;
+    text-align:justify;
+    margin-right: 90px;
+    margin-left: 10px;
+    color:#FFF;
 }
 
 .eventoP1 input{
-	background:url(images/btinscreva.png);
-	width:200px;
-	height:31px;	
-	color:#FFF;
-	font-weight:bold;
-	border:none;
-	margin-left: 120px;
+    background:url(images/btinscreva.png);
+    width:200px;
+    height:31px;
+    color:#FFF;
+    font-weight:bold;
+    border:none;
+    margin-left: 120px;
 }
 
 .eventoP2 input{
-	background:url(images/btinscreva.png);
-	width:200px;
-	height:31px;	
-	color:#FFF;
-	font-weight:bold;
-	border:none;
-	margin-left: 120px;
+    background:url(images/btinscreva.png);
+    width:200px;
+    height:31px;
+    color:#FFF;
+    font-weight:bold;
+    border:none;
+    margin-left: 120px;
 }
 
 
 .rodape{
-	background: url(images/rodape.png)no-repeat;
-	text-align:center;
-	color:#D6D6D6;
-	position:relative;
-	width: 902px;
-	height: 130px;
-        bottom: 0;
-	left:153px;
+    background: url(images/rodape.png)no-repeat;
+    text-align:center;
+    color:#D6D6D6;
+    position:relative;
+    width: 902px;
+    height: 130px;
+    bottom: 0;
+    left:153px;
 }
 
 .rodape a{
-	color:#FF5F00;
+    color:#FF5F00;
 }
 
 /*-------- FIM PAGINA INICIAL -----*/
 /*Cadastro de participante*/
 
 .cadParticipante{
-	background:url(images/barraAdicionarUsuario.png) no-repeat;
-	height:54px;
-	width: 922px;
-	text-align:center;
-	padding-top: 80px;
-	padding-left: 300px;
+    background:url(images/barraAdicionarUsuario.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
 }
 
 .formParticipante label{
-	color:#000;
-	font-weight:bold;	
+    color:#000;
+    font-weight:bold;
 }
 
 
@@ -286,17 +303,17 @@ fieldset.warning {
 /*Cadastro de evento*/
 
 .cadEvento{
-	background:url(images/barraAdicionarEvento.png) no-repeat;
-	height:54px;
-	width: 922px;
-	text-align:center;
-	padding-top: 80px;
-	padding-left: 300px;
+    background:url(images/barraAdicionarEvento.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
 }
 
 .formEvento label{
-	color:#000;
-	font-weight:bold;
+    color:#000;
+    font-weight:bold;
 }
 
 .formEvento table{
@@ -314,12 +331,12 @@ fieldset.warning {
 /*Login pagina*/
 
 .loginPagina{
-	background:url(images/barraLogin.png) no-repeat;
-	height:54px;
-	width: 922px;
-	text-align:center;
-	padding-top: 80px;
-	padding-left: 300px;
+    background:url(images/barraLogin.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
 }
 
 .formLogin table{
@@ -336,32 +353,111 @@ fieldset.warning {
 /*Inscricao em evento*/
 
 .formInscreverParticipante label{
-	color:#000;
-	font-weight:bold;
+    color:#000;
+    font-weight:bold;
 }	
 
 /*Fim inscricao em evento*/
 /*Relacionar participante evento*/
 
 .relEvento{
-	background:url(images/barraUltimosEventos.png) no-repeat;
-	height:54px;
-	width: 922px;
-	text-align:center;
-	padding-top: 80px;
+    background:url(images/barraUltimosEventos.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
 }
 
 .relEvento #tbRelEvento{
-	background:#E5E5E5;
-	width: 922px;
-	text-align:center;
+    background:#E5E5E5;
+    width: 922px;
+    text-align:center;
 }
 
 .relEvento table{
-	margin-left:350px;
+    margin-left:350px;
 }
 
 .loading{
-	top: 200px;
-	left:350px;
+    top: 200px;
+    left:350px;
+}
+
+.minhasInscricoes{
+    background:url(images/barraMinhasInscricoes.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
+}
+
+
+.meusEventos{
+    background:url(images/barraMeusEventos.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
+}
+
+.inscricao{
+    background:url(images/barraInscricao.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
+
+}
+
+.formBusca{
+    margin-left: -90px;
+}
+.faq{
+    background:url(images/barraFaq.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
+
+}
+
+.sobre{
+    background:url(images/barraSobre.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
+
+}
+
+.relatorio{
+    background:url(images/barraRelatorio.png) no-repeat;
+    height:54px;
+    width: 922px;
+    text-align:center;
+    padding-top: 80px;
+    padding-left: 300px;
+
+}
+
+.formInscricao table td{
+    text-align: left;
+}
+
+.minhasInscricoes li{
+    list-style: none;
+}
+
+.tabelaEventos{
+    margin-left:100px;
+    margin-top:10px;
+}
+
+.tabelaEventos td{
+    text-align: left;
 }
