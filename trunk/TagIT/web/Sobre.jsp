@@ -5,8 +5,6 @@
 --%>
 
 
-<%@page import="PkgTagIT.Evento"%>
-<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -25,7 +23,7 @@
         <script type="text/javascript" src="jquery.autoHeight.js"></script>
         <script type="text/javascript" src="funcoes.js"></script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>TagiT! - Minhas Inscrições</title>
+        <title>TagiT! - Sobre</title>
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
     <body>
@@ -72,43 +70,11 @@
         <div class="conteudo">
 
             <div class="meioContainer">
-                <div class = "minhasInscricoes">
-                    <form action="ManutencaoEventos" class="formBusca" id="formBusca" method="post" onsubmit="">
-                        <table>
-                            <tr>
-                                <td><label>Busca:</label></td>
-                                <td><input type="text" name="parametro" id="parametro" size="50" /></td>
-                                <td><input class="botao" type="submit" value="Buscar" /></td>
-                                <td><input type="hidden" name="tipo" value="1"></td>
-                            </tr>
-                        </table>
-                    </form>
-                    <div class="erros" id="erros">
-                    </div>
-                    <h3 style="margin-left: -600px">Eventos em que você está inscrito:</h3>
-                    <table class="tabelaEventos">
-                        
-                    <%
-                                ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
+                <div class="sobre"></div>
 
-
-                                if (eventos == null) {
-                                    out.println("<p>Você não está inscrito em nenhum evento</p>");
-                                } else {
-                                    out.println("<tr>");
-                                    int i = 0;
-                                    while (i < eventos.size()) {%>
-                                    <tr><td><a href="IncricaoEvento.jsp" onclick="callServlet('ManutencaoEventos?tipo=5&i=' + <%=i%> + '','body')"><strong><%= eventos.get(i).getNome()%></strong> </a>(<%=eventos.get(i).getDataEvento()%>)</td></tr>
-                    <% i++;
-                                    }
-                                    out.println("</tr>");
-                                }
-                    %>
-                    </table>
-                </div>
-                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 <!-- Fim DIV MEIOCONTAINER -->
             </div>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
             <div class="rodape"><BR /><br />
                 ByteCode - Ajuda - Tecnologia RFID - Contato
                 <br />

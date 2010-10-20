@@ -384,8 +384,6 @@ function mostrarMenssagem(type, message) {
 
 
 function callServlet(url,div){
-alert(url);
-alert(div);
     HttpMethod = "POST";
     var req = null;
     req = getXMLHTTPRequest();

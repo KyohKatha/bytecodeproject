@@ -369,7 +369,7 @@ public class ConexaoBD {
         
     }
 
-    public ArrayList<Evento> buscarEventosParticipante(Participante participante) throws TagITDAOException{
+    public ArrayList<Evento> buscarEventosParticipante(User participante) throws TagITDAOException{
         CallableStatement cstm = null;
         
         ArrayList<Evento> eventos = new ArrayList<Evento>();

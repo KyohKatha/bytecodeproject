@@ -8,6 +8,7 @@ import PkgTagIT.ConexaoBD;
 import PkgTagIT.Participante;
 import PkgTagIT.Evento;
 import PkgTagIT.TagITDAOException;
+import aaTag.User;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -95,7 +96,7 @@ public class ManutencaoUsuarios extends HttpServlet {
                         
                         request.setAttribute("erro", true);
                         RequestDispatcher rd = null;
-                        rd = request.getRequestDispatcher("/HomeLogado.jsp");
+                        rd = request.getRequestDispatcher("/index.jsp");
                         rd.forward(request, response);
                     }
 
@@ -103,7 +104,7 @@ public class ManutencaoUsuarios extends HttpServlet {
                     break;
                 case 4:
 
-                    request.getSession().removeAttribute("usuarioLogado");
+                    request.getSession().removeAttribute("usuario");
                     RequestDispatcher rd = null;
                     rd = request.getRequestDispatcher("/index.jsp");
                     rd.forward(request, response);
@@ -270,7 +271,7 @@ public class ManutencaoUsuarios extends HttpServlet {
     }*/
 
     private void buscarEventosParticipante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Participante participante = (Participante) request.getSession().getAttribute("usuarioLogado");
+        User participante = (User) request.getSession().getAttribute("usuario");
 
         ArrayList<Evento> eventos = null;
         String[] erros = null;
