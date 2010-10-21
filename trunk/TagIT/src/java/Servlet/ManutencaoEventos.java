@@ -49,6 +49,9 @@ public class ManutencaoEventos extends HttpServlet {
          * 2 : remover
          * 3 : buscar
          * 4 : buscar pelo organizador
+         * 5 : seleciona evento
+         * 6 : inscrever participante no evento
+         * 7 : buscar todos eventos do organizador
          */
 
         int tipo;
@@ -101,6 +104,13 @@ public class ManutencaoEventos extends HttpServlet {
                         Logger.getLogger(ManutencaoEventos.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     break;
+                case 7:
+                    try{
+                        buscarTodosEventosOrganizador(request, response);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                    break;
             }
         } finally {
             out.close();
@@ -128,6 +138,7 @@ public class ManutencaoEventos extends HttpServlet {
         rua += ", " + numeroRua;
         String cidade = request.getParameter("cidade");
         String dataEvento = request.getParameter("dataEvento");
+        String hora = request.getParameter("hora");
         String contato = request.getParameter("contato");
         String[] categoria = request.getParameterValues("categoria"); //ver como fazer a categoria
         
@@ -142,7 +153,7 @@ public class ManutencaoEventos extends HttpServlet {
             }
         }
 
-        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, contato, usuarioLogado, lstCategoria);
+        Evento evento = new Evento(nome, vagasPrincipal, inscInicio, inscTermino, rua, cidade, dataEvento, hora, contato, usuarioLogado, lstCategoria);
         RequestDispatcher rd = null;
 
         boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
@@ -152,7 +163,7 @@ public class ManutencaoEventos extends HttpServlet {
             request.setAttribute("nomeEvento", nome);
             request.setAttribute("descricaoEvento", descricao);
             request.setAttribute("metodo", "addEvent");
-            //request.setAttribute("redireciona", "sim");
+            request.setAttribute("redireciona", "sim");
             request.setAttribute("paginaRetorno", "home.jsp");
 
             rd.forward(request, response);
@@ -166,6 +177,7 @@ public class ManutencaoEventos extends HttpServlet {
             rd.forward(request, response);
         }
     }
+
 
     /**
      * Método que irá retorna true ou false se a operação foi efetuada com sucesso retornando true ou não conseguiu realizar a operação retornando false, neste método já estão as respostas das operações
@@ -202,6 +214,28 @@ public class ManutencaoEventos extends HttpServlet {
             }
         }
         return false;
+    }
+
+    private void buscarTodosEventosOrganizador(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, TagITDAOException {
+
+        System.out.println("BUSCANDO TODOS OS EVENTOS");
+        
+        RequestDispatcher rd = null;
+
+        //boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
+        //if (retornou) {
+            rd = request.getRequestDispatcher("/ServletAcessaAPI");
+
+            request.setAttribute("metodo", "getEvents");
+            request.setAttribute("redireciona", "sim");
+            request.setAttribute("paginaRetorno", "ExibirMeusEventos.jsp");
+
+            rd.forward(request, response);
+
+            String retorna = retorna = request.getSession().getAttribute("sucesso").toString();
+            System.out.println("RETORNOU DA SERVLET ACESS AAPI >> " + retorna);
+
     }
 
     /*private void buscaEventosDoOrganizador(HttpServletRequest request, HttpServletResponse response)

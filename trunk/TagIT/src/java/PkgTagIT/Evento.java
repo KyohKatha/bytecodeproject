@@ -21,6 +21,7 @@ public class Evento {
     private String rua;
     private String cidade;
     private String dataEvento;
+    private String hora;
     private String contato;
     private Participante participante;
     private ArrayList<Categoria> categoria;
@@ -36,8 +37,10 @@ public class Evento {
         this.cidade = cidade;
         this.dataEvento = dataEvento;
         this.contato = contato;
-    }// Valter: construtor para um evento sem lista de espera
-    public Evento(String nome, double vagasPrincipal, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String contato, Participante participante, ArrayList<Categoria> categoria) {
+    }
+
+    // Valter: construtor para um evento sem lista de espera
+    public Evento(String nome, double vagasPrincipal, String inscInicio, String inscTermino, String rua, String cidade, String dataEvento, String hora, String contato, Participante participante, ArrayList<Categoria> categoria) {
         this.nome = nome;
         this.vagasPrincipal = vagasPrincipal;
         this.inscInicio = inscInicio;
@@ -45,6 +48,7 @@ public class Evento {
         this.rua = rua;
         this.cidade = cidade;
         this.dataEvento = dataEvento;
+        this.hora = hora;
         this.contato = contato;
         this.participante = participante;
         this.categoria = categoria;
@@ -165,6 +169,14 @@ public class Evento {
 
     public void setCategoria(ArrayList<Categoria> categoria) {
         this.categoria = categoria;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 
     public Participante getOrganizador() {

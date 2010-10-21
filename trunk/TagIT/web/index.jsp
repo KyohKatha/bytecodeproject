@@ -39,7 +39,7 @@
                         </tr>
 
                         <tr><td><a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','body')">Minhas inscrições</a></td></tr>
-                            <tr><td><a href="ExibirMeusEventos.jsp" onclick="callServlet('','body')">Meus Eventos</a></td></tr>
+                            <tr><td><a href="ExibirMeusEventos.jsp" onclick="callServlet('ManutencaoEventos?tipo=7','body')">Meus Eventos</a></td></tr>
                             <tr><td><a href="index.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=4','body')" >Logoff</a></td></tr>
                         <%} else {%>
                         <tr>
