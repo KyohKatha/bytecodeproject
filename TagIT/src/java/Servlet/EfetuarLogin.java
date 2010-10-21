@@ -30,7 +30,7 @@ public class EfetuarLogin extends HttpServlet {
         String retorno = request.getParameter("retornoLog");
         String urlRetorno = "EfetuarLogin?retornoLog=Servidor";
         String servlet = "ServletAcessaAPI?metodo=realizarLogin&paginaRetorno=" + urlRetorno;
-
+        
         if (retorno == null || retorno.equals("")) {
             RequestDispatcher rd = request.getRequestDispatcher(servlet);
             rd.forward(request, response);

@@ -156,69 +156,14 @@ public class ManutencaoUsuarios extends HttpServlet {
     private void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        User p;
-
         String cpf = request.getParameter("cpf");
+        request.getSession().setAttribute("cpf", cpf);
 
-        ConexaoBD con = ConexaoBD.getInstance();
+        String callback = "http://localhost:8080/TagIT/EfetuarLogin";
+        String urlServidor = "http://app.aatag.com/aaTag_API/Registrar_Usuario.aspx?callback=" + callback;
+        response.sendRedirect(urlServidor);
 
-        /* api.cadastroUsuario();
-        p = api.GetUserInfo();
-        p.setCpf(CPF);
-        api.alterUser(p); */
-
-        // login!!
-        StringBuilder sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?");
-        sbUrl.append("method=\"\"&parameter=\"\"");
-        URL url = new URL(sbUrl.toString());
-        HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
-        conexao.setRequestProperty("Request-Method", "POST");
-        conexao.setDoInput(true);
-        conexao.setDoOutput(true);
-        BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-        // fim do login. vai ter um token e um email na session.
-
-        String token = in.readLine();
-
-
-        // retorno das informacoes do usuario a partir do token
-        sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?");
-        sbUrl.append("method=\"GetUserInfo\"&parameter=\"");
-        sbUrl.append(token);
-        sbUrl.append("\"");
-        url = new URL(sbUrl.toString());
-        conexao = (HttpURLConnection) url.openConnection();
-        conexao.setRequestProperty("Request-Method", "POST");
-        conexao.setDoInput(true);
-        conexao.setDoOutput(true);
-        // os dados do participante estarao na sessao
-
-        p = (User) request.getSession().getAttribute("usuario");
-        p.setCEP(cpf);
-
-
-        // colocar o cpf obrigatoriamente no bd deles
-        sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?");
-        sbUrl.append("method=\"AlterUser\"&parameter=\"");
-        sbUrl.append(p);
-        sbUrl.append("\"");
-        url = new URL(sbUrl.toString());
-        conexao = (HttpURLConnection) url.openConnection();
-        conexao.setRequestProperty("Request-Method", "POST");
-        conexao.setDoInput(true);
-        conexao.setDoOutput(true);
-
-
-        // verificar se o email ja foi cadastrado
-        String[] erros = con.insereParticipante(p);
-        statusMessage(request, erros);
-        request.getSession().setAttribute("usuario", p);
-
-
-
-        RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("/confirmacaoCadastroUsuario.jsp");
-        rd.forward(request, response);
+        
 
     }
 

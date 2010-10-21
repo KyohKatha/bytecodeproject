@@ -81,7 +81,7 @@
                         </fieldset>
 
                     </div>
-                    <form action="EfetuarLogin" target="iframe" class="formLogin" method="post" >
+                    <form action="EfetuarLogin" class="formLogin" method="post" >
                         <table>
                             <tr>
                                 <td><input class="botao" type="submit" value="Acessar aaTag"/></td>

@@ -11,10 +11,7 @@ import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -23,7 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import aaTag.*;
-import javax.servlet.ServletContext;
+
 
 /**
  *
@@ -158,19 +155,14 @@ public class ManutencaoEventos extends HttpServlet {
 
         boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
         if (retornou) {
-            rd = request.getRequestDispatcher("/ServletAcessaAPI");
 
-            request.setAttribute("nomeEvento", nome);
-            request.setAttribute("descricaoEvento", descricao);
-            request.setAttribute("metodo", "addEvent");
-            request.setAttribute("redireciona", "sim");
-            request.setAttribute("paginaRetorno", "home.jsp");
+            String urlServidor = "ServletAcessaAPI?nomeEvento=" + nome + "&descricaoEvento=" + descricao +
+                    "&metodo=AddEvent&redireciona=sim&paginaRetorno=index.jsp";
 
+            rd = request.getRequestDispatcher(urlServidor);
             rd.forward(request, response);
 
             String retorna = retorna = request.getSession().getAttribute("sucesso").toString();
-            System.out.println("RETORNOU DA SERVLET ACESS AAPI >> " + retorna);
-
         } else {
             System.out.println("Retornará o erro >> " + request.getSession().getAttribute("message").toString());
             rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
@@ -254,7 +246,6 @@ public class ManutencaoEventos extends HttpServlet {
         ArrayList<Evento> eventos = null;
         String[] erros = null;
 
-
         eventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscarEventos(parametro);
         request.setAttribute("eventos", eventos);
 
@@ -262,17 +253,12 @@ public class ManutencaoEventos extends HttpServlet {
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("/buscarEvento.jsp");
         rd.forward(request, response);
-
-
     }
 
     private void inscreverParticipanteEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
-        System.out.println("INSCRICAO!!!!!!!!!!!");
-
         User participante = (User) request.getSession().getAttribute("usuario");
         Evento evento = (Evento) request.getSession().getAttribute("evento");
 
-        System.out.println("Evento:" + evento.getNome());
         String[] erros = ConexaoBD.getInstance().inscreverParticipanteEvento(evento, participante);
         if (erros[0].equals("2")){
             request.getSession().setAttribute("type", "critical");
@@ -293,8 +279,6 @@ public class ManutencaoEventos extends HttpServlet {
         ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
         int i = Integer.parseInt(request.getParameter("i"));
         String ins = request.getParameter("insc");
-
-        System.out.println(i + eventos.get(i).getNome());
 
         request.getSession().setAttribute("evento", eventos.get(i));
         request.getSession().setAttribute("ins", ins);

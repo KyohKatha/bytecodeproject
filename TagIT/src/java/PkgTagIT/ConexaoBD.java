@@ -244,11 +244,9 @@ public class ConexaoBD {
             cstm.setString(3, p.getCPF());
             cstm.registerOutParameter(4, java.sql.Types.VARCHAR);
             cstm.execute();
-            cstm.close();
-            
             i = cstm.getString(4).split(";");
             cstm.close();
-
+            
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
