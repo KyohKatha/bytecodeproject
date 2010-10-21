@@ -75,7 +75,7 @@ public class ConexaoBD {
             cstm.setDate(4,  converterData(evento.getInscTermino()));
             cstm.setString(5, evento.getRua());
             cstm.setString(6, evento.getCidade());
-            cstm.setDate(7,  converterData(evento.getDataEvento()));
+            cstm.setDate(7,  converterData(evento.getDataEvento() + " " + evento.getHora()));
             cstm.setString(8, evento.getContato());
             cstm.registerOutParameter(9, Types.VARCHAR);
 

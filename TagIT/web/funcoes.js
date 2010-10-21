@@ -212,6 +212,19 @@ function validaContato(contato) {
     return "";
 }
 
+function validaHora(hora){
+    var expHora = /^([0-1][0-9]|[2][0-3])(:([0-5][0-9])){1,2}$/;
+
+    if (hora == ""){
+        return "<p>- Informe a <strong>hora do evento</strong>.</p>";
+    }
+    if(hora.match(expHora) == null) {
+        return "<p>- <strong>Hora</strong> do evento com formato incorreto.</p>";
+    }
+    return "";
+}
+
+
 function validaEvento() {
 
     var nome = trim(document.getElementById("nome").value);
@@ -223,7 +236,7 @@ function validaEvento() {
     var cidade = trim(document.getElementById("cidade").value);
     var dataEvento = trim(document.getElementById("dataEvento").value);
     var contato = trim(document.getElementById("contato").value);
-
+    var hora = trim(document.getElementById("hora").value);
     var erro = true;
     
     if (validaNome(nome) != ""){
@@ -271,6 +284,12 @@ function validaEvento() {
         erro = false;
 
         document.getElementById("dataEvento").focus();
+    }
+
+    if (validaHora(hora) != ""){
+        erro = false;
+
+        document.getElementById("hora").focus();
     }
 
     return erro;

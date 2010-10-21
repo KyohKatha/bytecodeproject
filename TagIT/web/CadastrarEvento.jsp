@@ -110,6 +110,9 @@
                                 <td><label>(*)Data do evento:</label></td>
                                 <td><input type="text" name="dataEvento" id="dataEvento" /></td>
                             </tr><tr>
+                                <td><label>(*)Hora do evento:</label></td>
+                                <td><input type="text" name="hora" id="hora" /></td>
+                            </tr><tr>
                                 <td><label>(*)Contato:</label></td>
                                 <td><input type="text" name="contato" id="contato" /></td>
                             </tr><tr>

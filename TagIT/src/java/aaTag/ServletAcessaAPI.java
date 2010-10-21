@@ -514,6 +514,8 @@ public class ServletAcessaAPI extends HttpServlet {
         if (ret.getSuccess()) {
             ArrayList arrayListEventos = (ArrayList) ret.getReturn();
             request.getSession().setAttribute("arrayListEventos", arrayListEventos);
+            // Valter: apenas para saber se deu certo ou não a operação
+            request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
         }
     }
 
