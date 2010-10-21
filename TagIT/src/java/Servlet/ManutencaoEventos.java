@@ -240,7 +240,15 @@ public class ManutencaoEventos extends HttpServlet {
 
         System.out.println("Evento:" + evento.getNome());
         String[] erros = ConexaoBD.getInstance().inscreverParticipanteEvento(evento, participante);
-        statusMessage(request, erros);
+        if (erros[0].equals("2")){
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>- Você já está inscrito neste evento .</p><p>- Clique na caixa para fechar.</p>");
+        } else
+            statusMessage(request, erros);
+
+        request.getSession().removeAttribute("ins");
+        request.getSession().removeAttribute("evento");
+
         RequestDispatcher rd = null;
 
         rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
@@ -250,10 +258,14 @@ public class ManutencaoEventos extends HttpServlet {
     private void selecionarEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
         ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
         int i = Integer.parseInt(request.getParameter("i"));
+        String ins = request.getParameter("insc");
 
         System.out.println(i + eventos.get(i).getNome());
 
         request.getSession().setAttribute("evento", eventos.get(i));
+        request.getSession().setAttribute("ins", ins);
+
+        request.getSession().removeAttribute("eventos");
 
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("/IncricaoEvento.jsp");

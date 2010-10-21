@@ -11,13 +11,23 @@
     "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="aaTag.User" %>
 
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Inscrever em Evento - TagiT!</title>
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body>
+
+
 <%
 
             User usuarioLogado = (User) request.getSession().getAttribute("usuario");
             //Para teste
             //usuarioLogado = new User();
 
-
+            String insc = (String) request.getSession().getAttribute("ins");
+            
 
 %>
 <html>
@@ -88,12 +98,12 @@
                     <div class="erros" id="erros">
                         <%
                                     Evento evento = (Evento) request.getSession().getAttribute("evento");
-                                    if (evento == null) {
+                                    /*if (evento == null) {
                                         out.println("<fieldset class=\"critical\" >");
                                         out.println("<legend>Erro</legend>");
                                         out.println("<p>- Falha ao carregar evento. Por favor, tente novamente.</p>");
                                         out.println("</fieldset>");
-                                    } else {
+                                    } else {*/
 
                                         String message, type;
                                         message = (String) session.getAttribute("message");
@@ -118,11 +128,13 @@
                                             out.println(message);
                                             out.println("</fieldset>");
                                         } else if (usuarioLogado != null) {
-                                            out.println("<fieldset class=\"information\" onclick=\"fecharCaixaMensagem()\">");
-                                            out.println("<legend>Informação</legend>");
-                                            out.println("<p>- Clique no botão Inscreva-se para se inscrever no evento</p>");
-                                            out.println("<p>- Clique na caixa para fechá-la.</p>");
-                                            out.println("</fieldset>");
+                                            if (insc.compareTo("0") != 0){
+                                                out.println("<fieldset class=\"information\" onclick=\"fecharCaixaMensagem()\">");
+                                                out.println("<legend>Informação</legend>");
+                                                out.println("<p>- Clique no botão Inscreva-se para se inscrever no evento</p>");
+                                                out.println("<p>- Clique na caixa para fechá-la.</p>");
+                                                out.println("</fieldset>");
+                                            }
                                         } else {
                                             out.println("<fieldset class=\"warning\" onclick=\"fecharCaixaMensagem()\">");
                                             out.println("<legend>Aviso</legend>");
@@ -130,12 +142,12 @@
                                             out.println("<p>- Clique na caixa para fechá-la.</p>");
                                             out.println("</fieldset>");
                                         }
-                                    }
+                                   // }
                         %>
 
                     </div>
                     <%if (evento != null) {%>
-                    <form action="IncricaoEvento" class="formInscricao" id="formInscricao" method="post">
+                    <form action="ManutencaoEventos" class="formInscricao" id="formInscricao" method="post">
                         <table>
                             <tr>
                                 <td><label>Nome:</label></td><td> <%=evento.getNome()%></td>
@@ -155,9 +167,9 @@
                             </tr><tr>
                                 <td><label>Contato: </label> </td><td><%=evento.getContato()%></td>
                             </tr>
-                            <%if (usuarioLogado != null) {%>
+                            <%if (usuarioLogado != null && insc.compareTo("0") != 0) {%>
                             <tr>
-                                <td><input action="ManutencaoEventos" class="botao" type="submit" value="Inscrever"/>
+                                <td><input class="botao" type="submit" value="Inscrever"/>
                                 </td>
                             </tr><%}%>
 
