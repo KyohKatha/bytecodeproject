@@ -156,7 +156,7 @@ public class ManutencaoUsuarios extends HttpServlet {
     private void cadastrarUsuario(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
-        Participante p;
+        User p;
 
         String cpf = request.getParameter("cpf");
 
@@ -193,7 +193,7 @@ public class ManutencaoUsuarios extends HttpServlet {
         conexao.setDoOutput(true);
         // os dados do participante estarao na sessao
 
-        p = (Participante) request.getSession().getAttribute("usuario");
+        p = (User) request.getSession().getAttribute("usuario");
         p.setCEP(cpf);
 
 

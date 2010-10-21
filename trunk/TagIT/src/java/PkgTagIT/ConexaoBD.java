@@ -233,7 +233,7 @@ public class ConexaoBD {
      *
      * @param p Objeto do tipo participante que sera inserido no BD
      */
-    public String[] insereParticipante(Participante p) throws TagITDAOException {
+    public String[] insereParticipante(User p) throws TagITDAOException {
         CallableStatement cstm = null;
         String[] i = null;
 
@@ -289,7 +289,7 @@ public class ConexaoBD {
         CallableStatement cstm = null;
         String[] i = null;
 
-        Participante p = null;
+        User p = null;
 
         try {
             cstm = con.prepareCall("{call sp_retorna_dados_participante(?, ?)}");
@@ -303,7 +303,7 @@ public class ConexaoBD {
                 String email = rs.getString(1);
                 String nome = rs.getString(2);
 
-                p = new Participante( email, nome, null, null);
+                p = new User( email, nome );
                 
             }
 
@@ -374,9 +374,13 @@ public class ConexaoBD {
         
         ArrayList<Evento> eventos = new ArrayList<Evento>();
          try {
+
+             System.out.println("aaaaaaaaaa");
              
             cstm = con.prepareCall("{call sp_retornar_eventosParticipante(?)}");
             cstm.setString(1, participante.getEmail());
+
+            System.out.println("aaaaaaaaaa");
             
             ResultSet rs = cstm.executeQuery();
             while(rs.next()){

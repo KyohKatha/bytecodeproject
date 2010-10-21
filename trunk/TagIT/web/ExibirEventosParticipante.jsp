@@ -98,7 +98,7 @@
                                     out.println("<tr>");
                                     int i = 0;
                                     while (i < eventos.size()) {%>
-                                    <tr><td><a href="IncricaoEvento.jsp" onclick="callServlet('ManutencaoEventos?tipo=5&i=' + <%=i%> + '','body')"><strong><%= eventos.get(i).getNome()%></strong> </a>(<%=eventos.get(i).getDataEvento()%>)</td></tr>
+                                    <tr><td><a href="IncricaoEvento.jsp" onclick="callServlet('ManutencaoEventos?tipo=5&insc=0&i=' + <%=i%> + '','body')"><strong><%= eventos.get(i).getNome()%></strong> </a>(<%=eventos.get(i).getDataEvento()%>)</td></tr>
                     <% i++;
                                     }
                                     out.println("</tr>");

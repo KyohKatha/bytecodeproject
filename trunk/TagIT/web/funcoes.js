@@ -5,17 +5,17 @@
 
 function validarCadastroUsuario()
 {
-    var email = document.getElementById("email").value;
-    var nome = document.getElementById("nome").value;
+    /*var email = document.getElementById("email").value;
+    var nome = document.getElementById("nome").value;*/
     var cpf = document.getElementById("cpf").value;
-    var senha = document.getElementById("senha").value;
-    var confSenha = document.getElementById("confirmacao").value;
+    /*var senha = document.getElementById("senha").value;
+    var confSenha = document.getElementById("confirmacao").value;*/
 
     var message = "";
-    message += validaEmail(email);
-    message += validaNome(nome);
+    /*message += validaEmail(email);
+    message += validaNome(nome);*/
     message += validaCPF(cpf);
-    message += validaSenha(senha, confSenha);
+    //message += validaSenha(senha, confSenha);
     if(message != ""){
         message += "<p>- Clique na caixa para fechá-la.</p>";
         mostrarMenssagem('critical', message);
