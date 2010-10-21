@@ -4,8 +4,9 @@
  */
 package aaTag;
 
-//TRATAR TODAS AS POSSIVEIS EXCECOES DE MANEIRA DIFERENTE
 //PAREI NO ALTER EVENT
+import PkgTagIT.ConexaoBD;
+import PkgTagIT.TagITDAOException;
 import com.sun.jndi.toolkit.url.Uri;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,9 +29,8 @@ public class ServletAcessaAPI extends HttpServlet {
 
     private String server = "http://app.aatag.com/aatag_api/api";
     private String consumerSecret = "102199176251671921271547424441971801362061712351484185";
-    private String tokenAcessoByteCode = "25111622064120161101717512381671709015522819995215198";
-    private String verifierAcessoByteCode = "22725227161542127816923921511514516324458993110816193";
-    private String tokenAcessarAPI, verifierAcessoAPI, tokenAcesso, verifierAcesso;
+    private String tokenAcessarAPI, verifierAcessoAPI;
+    private String paginaRetorno;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -46,9 +46,8 @@ public class ServletAcessaAPI extends HttpServlet {
         String retornoServer = "http://localhost:8080/TagIT/ServletAcessaAPI?metodo=realizarLogin&retorno=Servidor";
         String metodo = request.getParameter("metodo");
         String redireciona = request.getParameter("redireciona");
-        String paginaRetorno = request.getParameter("paginaRetorno");
-
-        System.out.println("DENTRO DA SERVELET ACESSA API >> METODO >> " + metodo + "REDIRECIONA >> " + redireciona + "PAGINA RETORNO >> " + paginaRetorno);
+        this.paginaRetorno = null;
+        this.paginaRetorno = request.getParameter("paginaRetorno");
 
         if (metodo.equals(enmMethods.AddApplication.toString())) {
             this.addApplication(request, response);
@@ -79,7 +78,7 @@ public class ServletAcessaAPI extends HttpServlet {
         } else if (metodo.equals(enmMethods.GetUser.toString())) {
             this.getUser(request, response);
         } else if (metodo.equals(enmMethods.GetUserInfo.toString())) {
-            this.getUserInfo(request, response, paginaRetorno);
+            this.getUserInfo(request, response);
         } else if (metodo.equals(enmMethods.GetUserRegisters.toString())) {
             this.getUserRegisters(request, response);
         } else if (metodo.equals(enmMethods.InactivateTag.toString())) {
@@ -94,7 +93,7 @@ public class ServletAcessaAPI extends HttpServlet {
             this.removeTag(request, response);
         } else if (metodo.equals("realizarLogin")) {
             String retorno = request.getParameter("retorno");
-            
+
             if (retorno == null || retorno.equals("")) {
                 this.pegarToken(request, response, retornoServer + "&paginaRetorno=" + paginaRetorno + "&redireciona=sim");
                 this.fazerLogin(request, response, tokenAcessarAPI);
@@ -104,18 +103,9 @@ public class ServletAcessaAPI extends HttpServlet {
         }
 
         if (redireciona != null && redireciona.equals("sim")) {
-            User user = (User) request.getSession().getAttribute("usuario");
-            if(metodo.equals("realizarLogin") && user == null){
-                paginaRetorno = "home.jsp";
-            }/*else if(user != null){
-                System.out.println("EHH O TESTE");
-                response.sendRedirect("http://localhost:8080/TagIT/indexLogado.jsp");
-            }*/ else{
-                System.out.println("VAI MANDAR P PAGINA " + paginaRetorno);
-                RequestDispatcher req = request.getRequestDispatcher(paginaRetorno);
-                req.forward(request, response);
-            }
-         }
+            RequestDispatcher req = request.getRequestDispatcher(this.paginaRetorno);
+            req.forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -155,13 +145,22 @@ public class ServletAcessaAPI extends HttpServlet {
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="Funcoes Auxiliares da Servlet">
-    public aaTagOAuth inicialiarOAuth() {
-        String paginaRetorno = "http://localhost:8080/TagIT/index.jsp";
+    public aaTagOAuth inicialiarOAuth(HttpServletRequest request, HttpServletResponse response) {
+        String leitura = request.getParameter("leitura"); //Atributo que indica se veio do site web ou do middleware
+        String token = null, verifier = null;
+
+        if(leitura != null && leitura.equals("sim")){
+            token = (String) request.getParameter("token");
+            verifier = (String) request.getParameter("verifier");
+        }else{
+            token = (String) request.getSession().getAttribute("token");
+            verifier = (String) request.getSession().getAttribute("verifier");
+        }
 
         aaTagOAuth objOAtuh = new aaTagOAuth();
-        objOAtuh.getOauth().setToken(tokenAcessoByteCode);
-        objOAtuh.getOauth().setVerifier(verifierAcessoByteCode);
-        objOAtuh.getOauth().setCallback(paginaRetorno);
+        objOAtuh.getOauth().setToken(token);
+        objOAtuh.getOauth().setVerifier(verifier);
+        objOAtuh.getOauth().setCallback(this.paginaRetorno);
 
         try {
             objOAtuh.getOauth().setSignature(objOAtuh.getSignature(consumerSecret, new Uri("http://api.aatag.com")));
@@ -210,23 +209,7 @@ public class ServletAcessaAPI extends HttpServlet {
             if (leitura != null && leitura.equals("sim")) {
                 out.write(user.getEmail());
             } else {
-                out.write(user.getNome() + "\n"
-                        + user.getFantasia() + "\n"
-                        + user.getCPF() + "\n"
-                        + user.getRG() + "\n"
-                        + user.getCNPJ() + "\n"
-                        + user.getIE() + "\n"
-                        + user.getIM() + "\n"
-                        + user.getLogradouro() + "\n"
-                        + user.getNrEnd() + "\n"
-                        + user.getComplemento() + "\n"
-                        + user.getBairro() + "\n"
-                        + user.getCidade() + "\n"
-                        + user.getEstado() + "\n"
-                        + user.getPais() + "\n"
-                        + user.getCEP() + "\n"
-                        + user.getEmail() + "\n"
-                        + user.getFoto());
+                out.write(user.getNome() + "\n" + user.getFantasia() + "\n" + user.getCPF() + "\n" + user.getRG() + "\n" + user.getCNPJ() + "\n" + user.getIE() + "\n" + user.getIM() + "\n" + user.getLogradouro() + "\n" + user.getNrEnd() + "\n" + user.getComplemento() + "\n" + user.getBairro() + "\n" + user.getCidade() + "\n" + user.getEstado() + "\n" + user.getPais() + "\n" + user.getCEP() + "\n" + user.getEmail() + "\n" + user.getFoto());
             }
         } else if (obj.getClass() == Event.class) {
             Event event = (Event) obj;
@@ -296,7 +279,7 @@ public class ServletAcessaAPI extends HttpServlet {
         }
 
         aaTagRequest req = new aaTagRequest(server);
-        
+
         try {
             objOAuht.setJSON(req.getAcessToken(objOAuht));
         } catch (UnsupportedEncodingException ex) {
@@ -306,11 +289,13 @@ public class ServletAcessaAPI extends HttpServlet {
         }
 
         if (objOAuht.getOauth().getCallback_confirmed()) {
-            this.tokenAcesso = objOAuht.getOauth().getToken();
-            this.verifierAcesso = objOAuht.getOauth().getVerifier();
+            String tokenAcesso = objOAuht.getOauth().getToken();
+            String verifierAcesso = objOAuht.getOauth().getVerifier();
 
             request.getSession().setAttribute("token", tokenAcesso);
             request.getSession().setAttribute("verifier", verifierAcesso);
+
+            System.out.println("TOKEN PEGO NA API: " + token + " VERIFIER " + verifierAcesso);
 
             try {
                 RequestDispatcher requestDis = request.getRequestDispatcher(callback);
@@ -330,45 +315,37 @@ public class ServletAcessaAPI extends HttpServlet {
         String WebSite = request.getParameter("website");
 
         Application aplicacao = new Application(Name, Description, Organization, WebSite, enmAccessType.ReadAndWrite);
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.AddApplication(objOAuth, aplicacao);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
 
     private void addEvent(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("DENTRO DO ADICIONA EVENTOOOOOOOOOOOOOOOOOOOOO");
-
         String nomeEvento = request.getParameter("nomeEvento");
         String descricaoEvento = request.getParameter("descricaoEvento");
 
-        System.out.println("CHEGUUUUUUUUUUUUUUUUUUUUUUUUUUEI >> NOME DO EVENTO >> " + nomeEvento + " DESCRIÇÃO DO EVENTO >> " + descricaoEvento);
-
         Event evento = new Event(nomeEvento, descricaoEvento);
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.AddEvent(objOAuth, evento);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
-
-
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
 
     //É necessario passar o codigo grande da tag
@@ -376,19 +353,18 @@ public class ServletAcessaAPI extends HttpServlet {
         String nomeEvento = request.getParameter("nomeEvento");
         String codTag = request.getParameter("codTag");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.AddRegister(objOAuth, nomeEvento, codTag);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
 
     }
 
@@ -398,19 +374,18 @@ public class ServletAcessaAPI extends HttpServlet {
         int Visibility = Integer.parseInt(request.getParameter("visibility"));
 
         Tag tag = new Tag(PublicCode, AccessLevel, Visibility);
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.AddTag(objOAuth, tag);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
 
     }
 
@@ -420,57 +395,54 @@ public class ServletAcessaAPI extends HttpServlet {
         String descricaoNovoEvento = request.getParameter("descricaoNovoEvento");
 
         Event evento = new Event(nomeNovoEvento, descricaoNovoEvento);
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.AlterEvent(objOAuth, evento, nomeEventoAntigo);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
 
     }
 
     private void alterUser(HttpServletRequest request, HttpServletResponse response) {
         User usuario = (User) request.getSession().getAttribute("usuario");
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
 
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.AlterUser(objOAuth, usuario);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
         request.getSession().setAttribute("usuario", usuario);
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso);
 
     }
 
     private void getApplication(HttpServletRequest request, HttpServletResponse response) {
         String nomeAplicacao = request.getParameter("nomeAplicacao");
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.GetApplication(objOAuth, nomeAplicacao);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        if (ret.getSuccess()) {
+        if (sucesso) {
             Application aplicacao = (Application) ret.getReturn();
             request.getSession().setAttribute("aplicacao", aplicacao);
         }
@@ -478,63 +450,57 @@ public class ServletAcessaAPI extends HttpServlet {
 
     private void getEvent(HttpServletRequest request, HttpServletResponse response) {
         String nomeEvento = request.getParameter("nomeEvento");
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
 
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.GetEvent(objOAuth, nomeEvento);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        if (ret.getSuccess()) {
+        if (sucesso) {
             Event evento = (Event) ret.getReturn();
             request.getSession().setAttribute("evento", evento);
         }
     }
 
     private void getEvents(HttpServletRequest request, HttpServletResponse response) {
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
 
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.GetEvents(objOAuth);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        if (ret.getSuccess()) {
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
+        if (sucesso) {
             ArrayList arrayListEventos = (ArrayList) ret.getReturn();
             request.getSession().setAttribute("arrayListEventos", arrayListEventos);
-            // Valter: apenas para saber se deu certo ou não a operação
-            request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
         }
     }
 
     private void getTag(HttpServletRequest request, HttpServletResponse response) {
         String codPublicoTAG = request.getParameter("codPublicoTAG");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.GetTag(objOAuth, codPublicoTAG);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        if (ret.getSuccess()) {
+        if (sucesso) {
             Tag tag = (Tag) ret.getReturn();
             request.getSession().setAttribute("tag", tag);
         }
@@ -543,39 +509,38 @@ public class ServletAcessaAPI extends HttpServlet {
     private void getTagInfo(HttpServletRequest request, HttpServletResponse response) {
         String codTag = request.getParameter("codTag");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.GetTagInfo(objOAuth, codTag);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
-
-        if (ret.getSuccess()) {
+        
+        if (sucesso) {
             Tag tag = (Tag) ret.getReturn();
             request.getSession().setAttribute("tag", tag);
         }
     }
 
     private void getTags(HttpServletRequest request, HttpServletResponse response) {
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.GetTags(objOAuth);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        if (ret.getSuccess()) {
+        if (sucesso) {
             ArrayList arrayListTag = (ArrayList) ret.getReturn();
+            request.getSession().setAttribute("arrayListTag", arrayListTag);
         }
     }
 
@@ -583,49 +548,61 @@ public class ServletAcessaAPI extends HttpServlet {
     public void getUser(HttpServletRequest request, HttpServletResponse response) {
         String codTag = request.getParameter("codTag");
         String leitura = request.getParameter("leitura");
- 
-        aaTagOAuth objOAuth = objOAuth = this.inicialiarOAuth();;
+
+        aaTagOAuth objOAuth = objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             if (codTag == null || codTag.equals("")) {
                 ret = req.GetUser(objOAuth);
             } else {
                 ret = req.GetUser(objOAuth, codTag);
             }
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        if (ret.getSuccess()) {
+        if (sucesso) {
             User user = (User) ret.getReturn();
             request.getSession().setAttribute("usuario", user);
             this.imprimir(request, response, user, leitura);
         }
     }
 
-    private void getUserInfo(HttpServletRequest request, HttpServletResponse response, String paginaRetornoUsuario) throws ServletException, IOException {
+    private void getUserInfo(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String tokenAcessoUsuario = request.getParameter("tokenAcesso");
         String verifierAcessoUsuario = request.getParameter("verifierAcesso");
-        
-        aaTagOAuth objOAuth = this.inicialiarOAuth(tokenAcessoUsuario, verifierAcessoUsuario, paginaRetornoUsuario);
+
+        aaTagOAuth objOAuth = this.inicialiarOAuth(tokenAcessoUsuario, verifierAcessoUsuario, this.paginaRetorno);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             ret = req.GetUserInfo(objOAuth);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
-
-        if (ret.getSuccess()) {
+        
+        if (sucesso) {
             User user = (User) ret.getReturn();
             request.getSession().setAttribute("usuario", user);
+            String cpf = (String) request.getSession().getAttribute("cpf");
+
+            if (cpf != null) {
+                user.setCPF(cpf);
+                request.getSession().removeAttribute("cpf");
+            }
+
+            ConexaoBD conexao;
+            try {
+                conexao = ConexaoBD.getInstance();
+                conexao.insereParticipante(user);
+            } catch (TagITDAOException ex) {
+                request.getSession().setAttribute("sucesso", Boolean.FALSE.toString());
+            }
         }
     }
 
@@ -638,7 +615,7 @@ public class ServletAcessaAPI extends HttpServlet {
 //        user.setNome(nomeUser);
 //        user.setEmail(emailUser);
 //
-//        aaTagOAuth objOAuth = this.inicialiarOAuth();
+//        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
 //        aaTagMethods req = new aaTagMethods(server);
 //        aaTagReturn ret = null;
 //
@@ -667,96 +644,91 @@ public class ServletAcessaAPI extends HttpServlet {
 
     private void inactivateTag(HttpServletRequest request, HttpServletResponse response) {
         String codPublicoTag = request.getParameter("codPublicoTag");
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.InactivateTag(objOAuth, codPublicoTag);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            sucesso = false;
         }
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
 
     private void postTwitter(HttpServletRequest request, HttpServletResponse response) {
         String mensagem = request.getParameter("mensagem");
         String codTag = request.getParameter("codTag");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
-
+        Boolean sucesso = true;
+        
         try {
             if (codTag == null || codTag.equals("")) {
                 ret = req.PostTwitter(objOAuth, mensagem);
             } else {
                 ret = req.PostTwitter(objOAuth, mensagem, codTag);
             }
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
 
     private void removeEvent(HttpServletRequest request, HttpServletResponse response) {
         String nomeEvento = request.getParameter("nomeEvento");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.RemoveEvent(objOAuth, nomeEvento);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
 
     private void removeTag(HttpServletRequest request, HttpServletResponse response) {
         String codTag = request.getParameter("codTag");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.RemoveTag(objOAuth, codTag);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
 
     private void postFacebook(HttpServletRequest request, HttpServletResponse response) {
         String mensagem = request.getParameter("mensagem");
 
-        aaTagOAuth objOAuth = this.inicialiarOAuth();
+        aaTagOAuth objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
         aaTagReturn ret = null;
+        Boolean sucesso = true;
 
         try {
             ret = req.PostFacebook(objOAuth, mensagem);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServletAcessaAPI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } catch (Exception ex) {
+            sucesso = false;
+        } 
 
-        request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+        request.getSession().setAttribute("sucesso", sucesso.toString());
     }
     //</editor-fold>
 }

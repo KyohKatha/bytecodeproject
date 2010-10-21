@@ -11,11 +11,7 @@
 <%@page import="aaTag.User" %>
 
 <%
-
             User usuarioLogado = (User) request.getSession().getAttribute("usuario");
-            //Para teste
-            //usuarioLogado = new User();
-
 %>
 <html>
     <head>
@@ -75,6 +71,8 @@
                     <div class="erros" id="erros">
                         <fieldset class="information" onclick="fecharCaixaMensagem()">
                             <legend>Informação</legend>
+                            <p>VC SERA ENCAMINHADO PARA PAG DA AATAG!!!</p>
+                            <p>EM SEGUIDa EH NECESSARIO LOGAR-SE NA API!</p>
                             <p>- Todos os campos com (*) são obrigatórios.</p>
                             <p>- Clique na caixa para fechá-la.</p>
                         </fieldset>
