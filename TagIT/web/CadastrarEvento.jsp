@@ -81,6 +81,8 @@
                     <form action="ManutencaoEventos" class="formEvento" id="formEvento" method="post" onsubmit="return validaEvento()">
                         <table>
                             <tr>
+                                <td><label>Seja bem-vindo :</label> <% out.println(usuarioLogado.getNome()); %> </td>
+                            </tr><tr>
                                 <td><label>(*)Nome:</label></td>
                                 <td><input type="text" name="nomeEvento" id="nome" /></td>
                             </tr><tr>

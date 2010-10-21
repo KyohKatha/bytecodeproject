@@ -48,6 +48,8 @@ public class ServletAcessaAPI extends HttpServlet {
         String redireciona = request.getParameter("redireciona");
         String paginaRetorno = request.getParameter("paginaRetorno");
 
+        System.out.println("DENTRO DA SERVELET ACESSA API >> METODO >> " + metodo + "REDIRECIONA >> " + redireciona + "PAGINA RETORNO >> " + paginaRetorno);
+
         if (metodo.equals(enmMethods.AddApplication.toString())) {
             this.addApplication(request, response);
         } else if (metodo.equals(enmMethods.AddEvent.toString())) {
@@ -344,8 +346,12 @@ public class ServletAcessaAPI extends HttpServlet {
     }
 
     private void addEvent(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println("DENTRO DO ADICIONA EVENTOOOOOOOOOOOOOOOOOOOOO");
+
         String nomeEvento = request.getParameter("nomeEvento");
         String descricaoEvento = request.getParameter("descricaoEvento");
+
+        System.out.println("CHEGUUUUUUUUUUUUUUUUUUUUUUUUUUEI >> NOME DO EVENTO >> " + nomeEvento + " DESCRIÇÃO DO EVENTO >> " + descricaoEvento);
 
         Event evento = new Event(nomeEvento, descricaoEvento);
         aaTagOAuth objOAuth = this.inicialiarOAuth();
@@ -361,6 +367,8 @@ public class ServletAcessaAPI extends HttpServlet {
         }
 
         request.getSession().setAttribute("sucesso", ret.getSuccess().toString());
+
+
     }
 
     //É necessario passar o codigo grande da tag
