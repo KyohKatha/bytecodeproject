@@ -5,7 +5,6 @@
 package Servlet;
 
 import PkgTagIT.ConexaoBD;
-import PkgTagIT.Participante;
 import PkgTagIT.Evento;
 import PkgTagIT.TagITDAOException;
 import aaTag.User;
@@ -15,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +50,7 @@ public class ManutencaoUsuarios extends HttpServlet {
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
+            System.out.println(tipo);
 
             switch (tipo) {
                 case 0:
@@ -218,6 +217,7 @@ public class ManutencaoUsuarios extends HttpServlet {
     private void buscarEventosParticipante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User participante = (User) request.getSession().getAttribute("usuario");
 
+        System.out.println("buscarEventosParticipante");
         ArrayList<Evento> eventos = null;
         String[] erros = null;
         try {

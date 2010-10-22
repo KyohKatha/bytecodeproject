@@ -35,26 +35,34 @@
             <div class="logo"></div>
             <div class="login">
 
-                <form id="eLogin" action="Login.jsp" >
 <table>
-                        <%if (usuarioLogado != null) {%>
-                        <tr>
-                            <td><label> Bem-vindo <%= usuarioLogado.getNome()%> </label></td>
-                        </tr>
+                    <%if (usuarioLogado != null) {%>
+                    <tr>
+                        <td><label> Bem-vindo <%= usuarioLogado.getNome()%> </label></td>
+                    </tr>
 
-                        <tr><td><a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','body')">Minhas inscrições</a></td></tr>
-                            <tr><td><a href="ExibirMeusEventos.jsp" onclick="callServlet('','body')">Meus Eventos</a></td></tr>
-                            <tr><td><a href="index.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=4','body')" >Logoff</a></td></tr>
-                        <%} else {%>
-                        <tr>
-                        <td><p align="center">
-                                <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
-                            </p>
+                    <form action="" method="POST" id="formLogado">
+                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoUsuarios', 3)" value="Minhas Inscrições" /></td></tr>
+                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoEventos', 7)" value="Meus Eventos" /></td></tr>
+                        <tr><td><a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp">Acesse o Facebook</a></td></tr>
+                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoUsuarios', 4)" value="Logoff" /></td></tr>
+
+                        <input type="hidden" id="tipo" name="tipo" value=""/>
+                    </form>
+
+                    <%} else {%>
+                    <tr>
+
+                        <td>
+                            <form id="eLogin" action="Login.jsp" >
+                                <p align="center">
+                                    <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
+                                </p>
+                            </form>
                         </td>
-                        </tr>
-                        <%}%>
-                    </table>
-                </form>
+                    </tr>
+                    <%}%>
+                </table>
             </div>
         </div>
         <div class="menuTopo">
@@ -89,16 +97,21 @@
                     </form>
                     <p style="margin-left: -600px">Resultados para <strong><%=parametro%></strong>:</p>
                     <table class="tabelaEventos">
-                    <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getAttribute("eventos");
-                                
-                                request.getSession().setAttribute("eventos", eventos);
+                    <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
 
                                 if (eventos == null) {
                                     out.println("<tr><td>Nenhum resultado encontrado para <strong>" + parametro + "</strong></td></tr>");
                             } else {
                                 int i = 0;
                                 while (i < eventos.size()) {%>
-                                <tr><td><a href="IncricaoEvento.jsp" onclick="callServlet('ManutencaoEventos?tipo=5&insc=1&i=' + <%=i%> + '','body')"><strong><%= eventos.get(i).getNome()%></strong> </a>(<%=eventos.get(i).getDataEvento()%>)</td></tr>
+                                <tr><td>
+                                <form id="formEventos" action="" method="POST">
+                                    <input type="button" value="<%= eventos.get(i).getNome()%> (<%=eventos.get(i).getDataEvento()%>)" onclick="selecionaEvento(<%=i%>)" />
+                                    <input type="hidden" name="tipo" value="5" />
+                                    <input type="hidden" name="insc" value="1" />
+                                    <input type="hidden" name="i" id="i" value="" />
+                                </form>
+                            </td></tr>
                     <% i++;
                                     }
                                 }
