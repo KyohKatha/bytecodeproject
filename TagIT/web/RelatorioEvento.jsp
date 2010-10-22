@@ -45,10 +45,12 @@
                     </tr>
 
                     <form action="" method="POST" id="formLogado">
-                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoUsuarios', 3)" value="Minhas Inscrições" /></td></tr>
-                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoEventos', 7)" value="Meus Eventos" /></td></tr>
+
+                        <tr><td><input type="button" class="link" onclick="selecao('formLogado', 'ManutencaoUsuarios', 'tipo', 3)" value="Minhas Inscrições" /></td></tr>
+                        <tr><td><input type="button" class="link" onclick="selecao('formLogado', 'ManutencaoEventos', 'tipo', 7)" value="Meus Eventos" /></td></tr>
                         <tr><td><a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp">Acesse o Facebook</a></td></tr>
-                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoUsuarios', 4)" value="Logoff" /></td></tr>
+                        <tr><td><a href="http://localhost:8080/TagIT/CadastrarEvento.jsp">Cadastrar Eventos</a></td></tr>
+                        <tr><td><input type="button" class="link" onclick="selecao('formLogado', 'ManutencaoUsuarios', 'tipo', 4)" value="Logoff" /></td></tr>
 
                         <input type="hidden" id="tipo" name="tipo" value=""/>
                     </form>
