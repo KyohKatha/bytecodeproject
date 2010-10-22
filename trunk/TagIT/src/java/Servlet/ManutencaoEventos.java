@@ -268,8 +268,6 @@ public class ManutencaoEventos extends HttpServlet {
         } else
             statusMessage(request, erros);
 
-
-        request.getSession().removeAttribute("ins");
         request.getSession().removeAttribute("evento");
         RequestDispatcher rd = null;
 

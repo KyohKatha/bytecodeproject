@@ -421,13 +421,13 @@ function getXMLHTTPRequest(){
 }
 
 
-function selecao(destino, sel){
+function selecao(form_envio, servlet, campo_hidden, valor){
 
-    var element = document.getElementById("tipo");
-    element.value = sel;
+    var element = document.getElementById(campo_hidden);
+    element.value = valor;
 
-    var form = document.getElementById("formLogado");
-    form.action = destino;
+    var form = document.getElementById(form_envio);
+    form.action = servlet;
     form.submit();
 }
 
