@@ -26,7 +26,7 @@
             //Para teste
             //usuarioLogado = new User();
 
-            String insc = (String) request.getSession().getAttribute("ins");
+            String insc = (String) request.getAttribute("ins");
             
 
 %>
@@ -43,28 +43,35 @@
         <div class="topo">
             <div class="logo"></div>
             <div class="login">
+            <table>
+                    <%if (usuarioLogado != null) {%>
+                    <tr>
+                        <td><label> Bem-vindo <%= usuarioLogado.getNome()%> </label></td>
+                    </tr>
 
-                <form id="eLogin" action="Login.jsp" >
-                    <table>
-                        <%if (usuarioLogado != null) {%>
-                        <tr>
-                            <td><label> Bem-vindo <%= usuarioLogado.getNome()%> </label></td>
-                        </tr>
+                    <form action="" method="POST" id="formLogado">
+                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoUsuarios', 3)" value="Minhas Inscrições" /></td></tr>
+                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoEventos', 7)" value="Meus Eventos" /></td></tr>
+                        <tr><td><a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp">Acesse o Facebook</a></td></tr>
+                        <tr><td><input type="submit" class="link" onclick="selecao('ManutencaoUsuarios', 4)" value="Logoff" /></td></tr>
 
-                        <tr><td><a href="ExibirEventosParticipante.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=3','body')">Minhas inscrições</a></td></tr>
-                        <tr><td><a href="ExibirMeusEventos.jsp" onclick="callServlet('','body')">Meus Eventos</a></td></tr>
-                        <tr><td><a href="index.jsp" onclick="callServlet('ManutencaoUsuarios?tipo=4','body')" >Logoff</a></td></tr>
-                        <%} else {%>
-                        <tr>
-                            <td><p align="center">
+                        <input type="hidden" id="tipo" name="tipo" value=""/>
+                    </form>
+
+                    <%} else {%>
+                    <tr>
+
+                        <td>
+                            <form id="eLogin" action="Login.jsp" >
+                                <p align="center">
                                     <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
                                 </p>
-                            </td>
-                        </tr>
-                        <%}%>
-                    </table>
+                            </form>
+                        </td>
+                    </tr>
+                    <%}%>
+                </table>
 
-                </form>
             </div>
         </div>
         <div class="menuTopo">
@@ -98,12 +105,15 @@
                     <div class="erros" id="erros">
                         <%
                                     Evento evento = (Evento) request.getSession().getAttribute("evento");
-                                    /*if (evento == null) {
+
+
+
+                                    if (insc == null) {
                                         out.println("<fieldset class=\"critical\" >");
                                         out.println("<legend>Erro</legend>");
                                         out.println("<p>- Falha ao carregar evento. Por favor, tente novamente.</p>");
                                         out.println("</fieldset>");
-                                    } else {*/
+                                    } else {
 
                                         String message, type;
                                         message = (String) session.getAttribute("message");
@@ -142,7 +152,7 @@
                                             out.println("<p>- Clique na caixa para fechá-la.</p>");
                                             out.println("</fieldset>");
                                         }
-                                   // }
+                                    }
                         %>
 
                     </div>

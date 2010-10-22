@@ -55,6 +55,7 @@ public class ManutencaoEventos extends HttpServlet {
 
         try {
             tipo = Integer.parseInt(request.getParameter("tipo"));
+            System.out.println(tipo);
 
             switch (tipo) {
                 case 0:
@@ -102,6 +103,7 @@ public class ManutencaoEventos extends HttpServlet {
                     }
                     break;
                 case 7:
+                    System.out.println("TESTEEEE =DD");
                     try{
                         buscarTodosEventosOrganizador(request, response);
                     }catch(Exception e){
@@ -247,7 +249,7 @@ public class ManutencaoEventos extends HttpServlet {
         String[] erros = null;
 
         eventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscarEventos(parametro);
-        request.setAttribute("eventos", eventos);
+        request.getSession().setAttribute("eventos", eventos);
 
         request.setAttribute("parametro", parametro);
         RequestDispatcher rd = null;
@@ -266,9 +268,9 @@ public class ManutencaoEventos extends HttpServlet {
         } else
             statusMessage(request, erros);
 
+
         request.getSession().removeAttribute("ins");
         request.getSession().removeAttribute("evento");
-
         RequestDispatcher rd = null;
 
         rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
@@ -281,9 +283,7 @@ public class ManutencaoEventos extends HttpServlet {
         String ins = request.getParameter("insc");
 
         request.getSession().setAttribute("evento", eventos.get(i));
-        request.getSession().setAttribute("ins", ins);
-
-        request.getSession().removeAttribute("eventos");
+        request.setAttribute("ins", ins);
 
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("/IncricaoEvento.jsp");

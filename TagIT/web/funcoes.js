@@ -419,3 +419,25 @@ function getXMLHTTPRequest(){
     }
     return xmlhttp;
 }
+
+
+function selecao(destino, sel){
+
+    var element = document.getElementById("tipo");
+    element.value = sel;
+
+    var form = document.getElementById("formLogado");
+    form.action = destino;
+    form.submit();
+}
+
+
+function selecionaEvento(i){
+    var element = document.getElementById("i");
+    element.value = i;
+
+    var form = document.getElementById("formEventos");
+    form.action = "ManutencaoEventos";
+    form.submit();
+    
+}
