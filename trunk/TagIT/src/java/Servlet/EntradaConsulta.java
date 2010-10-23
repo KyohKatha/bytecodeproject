@@ -7,6 +7,7 @@ package Servlet;
 
 import PkgTagIT.ConexaoBD;
 import PkgTagIT.TagITDAOException;
+import aaTag.Event;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -38,8 +39,10 @@ public class EntradaConsulta extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String tag;
-        String token;
-        String verififer;
+        String token = null;
+        String verifier = null;
+        String tokenVerifier;
+        String[] listaToken;
         try {
 
             /*
@@ -49,9 +52,15 @@ public class EntradaConsulta extends HttpServlet {
              * 3 - Retorno Login
              * 4 - Retorna Token
              * 5 - Retorno Entrada no Evento
+             * 6 - Pegar eventos
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
+            tag = request.getParameter("tag");
+            //pega o token na hash
+
+
+
             switch(tipo) {
                 case 1:
                     try {
@@ -73,9 +82,9 @@ public class EntradaConsulta extends HttpServlet {
                 case 3:
                     tag = (String) request.getSession().getAttribute("numeroTag");
                     token = (String) request.getSession().getAttribute("token");
-                    verififer = (String) request.getSession().getAttribute("verifier");
+                    verifier = (String) request.getSession().getAttribute("verifier");
                     try {
-                        ConexaoBD.getInstance().guardaToken(tag, token, verififer);
+                        ConexaoBD.getInstance().guardaToken(tag, token, verifier);
                         out.println("Login feito com sucesso.");
                     } catch (Exception e) {
                         //nao usa
@@ -83,19 +92,35 @@ public class EntradaConsulta extends HttpServlet {
 
                     break;
                 case 4:
-                    tag = request.getParameter("tag");
                     try {
-                        String tokenVerifier = ConexaoBD.getInstance().retornaToken(tag);
-                        System.out.println(tokenVerifier);
-                        String lista[] = tokenVerifier.split(";");
-                        out.println(lista[0]);
-                        out.println(lista[1]);
-                    } catch (Exception e) {
-                        //nada
-                    }
+                        tokenVerifier = ConexaoBD.getInstance().retornaToken(tag);
+                        if(tokenVerifier != null) {
+                            listaToken = tokenVerifier.split(";");
+                            token = listaToken[0];
+                            verifier = listaToken[1];
+                        }
+                    } catch (Exception e) {}
+                    out.println(token);
+                    out.println(verifier);
                     break;
                 case 5:
                     out.println((String) request.getSession().getAttribute("sucesso"));
+                    break;
+                case 6:
+                    token = request.getParameter("token");
+                    verifier = request.getParameter("verifier");
+                    String urlApi = "http://localhost:8080/TagIT/ServletAcessaAPI?metodo=GetEvents&leitura=sim&token=" + token + "&verifier=" + verifier + "&redireciona=sim&paginaRetorno=EntradaConsulta?tipo=7";
+                    System.out.println(urlApi);
+                    response.sendRedirect(urlApi);
+                    break;
+                case 7:
+                    Event evento;
+                    ArrayList arrayListEvents = (ArrayList) request.getSession().getAttribute("arrayListEventos");
+                    out.println(arrayListEvents.size());
+                    for(int i = 0; i < arrayListEvents.size(); i++) {
+                        evento = (Event) arrayListEvents.get(i);
+                        out.println(evento.getName());
+                    }
                     break;
 
 

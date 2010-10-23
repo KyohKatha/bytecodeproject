@@ -464,7 +464,7 @@ public class ServletAcessaAPI extends HttpServlet {
 
         if (sucesso) {
             Event evento = (Event) ret.getReturn();
-            request.getSession().setAttribute("evento", evento);
+            request.getSession().setAttribute("eventoAPI", evento);
         }
     }
 
