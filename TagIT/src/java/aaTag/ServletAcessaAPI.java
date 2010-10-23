@@ -194,7 +194,7 @@ public class ServletAcessaAPI extends HttpServlet {
         return objOAtuh;
     }
 
-    public void imprimir(HttpServletRequest request, HttpServletResponse response, Object obj, String leitura) {
+    public void imprimir(HttpServletRequest request, HttpServletResponse response, Object obj, String email) {
 
         PrintWriter out = null;
         try {
@@ -206,7 +206,7 @@ public class ServletAcessaAPI extends HttpServlet {
         if (obj.getClass() == User.class) {
             User user = (User) obj;
 
-            if (leitura != null && leitura.equals("sim")) {
+            if (email != null && email.equals("sim")) {
                 out.write(user.getEmail());
             } else {
                 out.write(user.getNome() + "\n" + user.getFantasia() + "\n" + user.getCPF() + "\n" + user.getRG() + "\n" + user.getCNPJ() + "\n" + user.getIE() + "\n" + user.getIM() + "\n" + user.getLogradouro() + "\n" + user.getNrEnd() + "\n" + user.getComplemento() + "\n" + user.getBairro() + "\n" + user.getCidade() + "\n" + user.getEstado() + "\n" + user.getPais() + "\n" + user.getCEP() + "\n" + user.getEmail() + "\n" + user.getFoto());
@@ -547,7 +547,7 @@ public class ServletAcessaAPI extends HttpServlet {
     //SE NAo PASSAR O CODPUBLICTAG, retorna do usuario logado na api!
     public void getUser(HttpServletRequest request, HttpServletResponse response) {
         String codTag = request.getParameter("codTag");
-        String leitura = request.getParameter("leitura");
+        String email = request.getParameter("email");
 
         aaTagOAuth objOAuth = objOAuth = this.inicialiarOAuth(request, response);
         aaTagMethods req = new aaTagMethods(server);
@@ -567,7 +567,7 @@ public class ServletAcessaAPI extends HttpServlet {
         if (sucesso) {
             User user = (User) ret.getReturn();
             request.getSession().setAttribute("usuario", user);
-            this.imprimir(request, response, user, leitura);
+            this.imprimir(request, response, user, email);
         }
     }
 

@@ -120,9 +120,9 @@ public class EntradaConsulta extends HttpServlet {
 
         String tag = request.getParameter("tag");
         String evento = request.getParameter("evento");
-        ArrayList<String> dadosTag = pegaDadosTag(tag);
         String token = request.getParameter("token");
         String verifier = request.getParameter("verifier");
+        ArrayList<String> dadosTag = pegaDadosTag(tag, token, verifier);
         String email = dadosTag.get(15);
         String nome = dadosTag.get(0);
 
@@ -143,7 +143,6 @@ public class EntradaConsulta extends HttpServlet {
         conexao.setRequestProperty("Request-Method", "POST");
         conexao.setDoInput(true);
         conexao.setDoOutput(true);
-        conexao.getInputStream();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
         if(in.readLine().compareTo("true") != 0) {
@@ -156,28 +155,34 @@ public class EntradaConsulta extends HttpServlet {
 
     }
 
-    private ArrayList<String> pegaDadosTag(String tag)
+    private ArrayList<String> pegaDadosTag(String tag, String token, String verifier)
             throws ServletException, IOException, TagITDAOException {
 
         StringBuilder sbUrl;
         URL url;
         HttpURLConnection conexao;
-        BufferedReader in = null;
+        //BufferedReader in = null;
         String entrada;
         ArrayList<String> lstEntrada = new ArrayList<String>();
 
         sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?metodo=GetUser&codTag=");
         sbUrl.append(tag);
         sbUrl.append("&redireciona=nao");
+        sbUrl.append("&leitura=sim");
+        sbUrl.append("&token=");
+        sbUrl.append(token);
+        sbUrl.append("&verifier=");
+        sbUrl.append(verifier);
         System.out.println(sbUrl.toString());
-        url = new URL(sbUrl.toString());
+        url = new URL(sbUrl.toString().trim());
         conexao = (HttpURLConnection) url.openConnection();
         conexao.setRequestProperty("Request-Method", "POST");
         conexao.setDoInput(true);
         conexao.setDoOutput(true);
-        in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
 
-        while((entrada = in.readLine()) != null) {
+        while(null != (entrada = in.readLine())) {
+            //entrada = in.readLine();
             System.out.println(entrada);
             lstEntrada.add(entrada);
         }
