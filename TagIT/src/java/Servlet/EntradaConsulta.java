@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,20 +37,25 @@ public class EntradaConsulta extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        String tag;
+        String token;
+        String verififer;
         try {
 
             /*
              * Tipos
              * 1 - Entrada no evento
-             * 2 - Consulta de usuarios no evento
-             *
+             * 2 - Login
+             * 3 - Retorno Login
+             * 4 - Retorna Token
+             * 5 - Retorno Entrada no Evento
              */
 
             int tipo = Integer.parseInt(request.getParameter("tipo"));
             switch(tipo) {
                 case 1:
                     try {
-                        EntradaEvento(request, response);
+                        entradaEvento(request, response);
                     } catch(TagITDAOException e) {
                         out.println(e.getMessage());
                     } /*catch (Exception e) {
@@ -57,7 +63,42 @@ public class EntradaConsulta extends HttpServlet {
                     }*/
                     break;
                 case 2:
+                    tag = request.getParameter("tag");
+                    request.getSession().setAttribute("numeroTag", tag);
+                    String urlRetorno = "EntradaConsulta?tipo=3";
+                    String servlet = "ServletAcessaAPI?metodo=realizarLogin&paginaRetorno=" + urlRetorno;
+                    RequestDispatcher rd = request.getRequestDispatcher(servlet);
+                    rd.forward(request, response);
                     break;
+                case 3:
+                    tag = (String) request.getSession().getAttribute("numeroTag");
+                    token = (String) request.getSession().getAttribute("token");
+                    verififer = (String) request.getSession().getAttribute("verifier");
+                    try {
+                        ConexaoBD.getInstance().guardaToken(tag, token, verififer);
+                        out.println("Login feito com sucesso.");
+                    } catch (Exception e) {
+                        //nao usa
+                    }
+
+                    break;
+                case 4:
+                    tag = request.getParameter("tag");
+                    try {
+                        String tokenVerifier = ConexaoBD.getInstance().retornaToken(tag);
+                        System.out.println(tokenVerifier);
+                        String lista[] = tokenVerifier.split(";");
+                        out.println(lista[0]);
+                        out.println(lista[1]);
+                    } catch (Exception e) {
+                        //nada
+                    }
+                    break;
+                case 5:
+                    out.println((String) request.getSession().getAttribute("sucesso"));
+                    break;
+
+
             }
             /* TODO output your page here
             out.println("<html>");
@@ -74,30 +115,59 @@ public class EntradaConsulta extends HttpServlet {
         }
     }
 
-    private void EntradaEvento(HttpServletRequest request, HttpServletResponse response)
+    private void entradaEvento(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, TagITDAOException {
 
         String tag = request.getParameter("tag");
         String evento = request.getParameter("evento");
-        String email = pegaEmail(tag);
+        ArrayList<String> dadosTag = pegaDadosTag(tag);
+        String token = request.getParameter("token");
+        String verifier = request.getParameter("verifier");
+        String email = dadosTag.get(15);
+        String nome = dadosTag.get(0);
+
+        String acessoAPI = "http://localhost:8080/TagIT/ServletAcessaAPI?"
+                + "metodo=AddRegister"
+                + "&nomeEvento=" + evento
+                + "&codTag=" + tag
+                + "&leitura=sim"
+                + "&token=" + token
+                + "&verifier=" + verifier
+                + "&redireciona=sim"
+                + "&paginaRetorno=EntradaConsulta?tipo=5";
 
 
-        ConexaoBD.getInstance().entradaEvento(email, evento);
-        response.getWriter().println("O participante da Tag: " + tag + " acabou de entrar");
+        URL url = new URL(acessoAPI);
+        System.out.println(acessoAPI);
+        HttpURLConnection conexao = (HttpURLConnection) url.openConnection();
+        conexao.setRequestProperty("Request-Method", "POST");
+        conexao.setDoInput(true);
+        conexao.setDoOutput(true);
+        conexao.getInputStream();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
+        if(in.readLine().compareTo("true") != 0) {
+            response.getWriter().println("Erro ao registrar entrada na API");
+        } else {
+            System.out.println("Email: " + email + " Evento: " + evento);
+            ConexaoBD.getInstance().entradaEvento(email, evento);
+            response.getWriter().println("O participante : " + nome + " acabou de entrar");
+        }
 
     }
 
-    private String pegaEmail(String tag)
+    private ArrayList<String> pegaDadosTag(String tag)
             throws ServletException, IOException, TagITDAOException {
 
         StringBuilder sbUrl;
         URL url;
         HttpURLConnection conexao;
         BufferedReader in = null;
+        String entrada;
+        ArrayList<String> lstEntrada = new ArrayList<String>();
 
         sbUrl = new StringBuilder("http://localhost:8080/TagIT/ServletAcessaAPI?metodo=GetUser&codTag=");
         sbUrl.append(tag);
-        sbUrl.append("&leitura=sim");
         sbUrl.append("&redireciona=nao");
         System.out.println(sbUrl.toString());
         url = new URL(sbUrl.toString());
@@ -107,7 +177,12 @@ public class EntradaConsulta extends HttpServlet {
         conexao.setDoOutput(true);
         in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
 
-        return in.readLine();
+        while((entrada = in.readLine()) != null) {
+            System.out.println(entrada);
+            lstEntrada.add(entrada);
+        }
+
+        return lstEntrada;
 
     }
 
