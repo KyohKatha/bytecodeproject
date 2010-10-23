@@ -441,3 +441,7 @@ function selecionaEvento(i){
     form.submit();
     
 }
+
+function carregarUltimosEventos(){
+    callServlet('ManutencaoEventos?tipo=8', 'body');
+}
