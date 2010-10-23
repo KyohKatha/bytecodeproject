@@ -1,6 +1,14 @@
 body{
     font-family:Arial;
-    font-size:16px;
+    font-size:14px;
+    height: 100%;
+    width: 100%;
+    top: -10px;
+    left: 50%;
+    right: 50%;
+    position: relative;
+    margin-left:-600px;
+
 }
 
 hr{
@@ -92,49 +100,61 @@ fieldset.warning {
 
 /* div que contem o topo do site */
 .topo{
-    height:178px;
-    width:1000px;
-    left:50%; margin:0 0 0 -520px;
-    position:absolute;
+    background:url(images/header.png) no-repeat;
+    width:1195px;
+    height: 182px;
+    position:relative;
+    border: 1px solid transparent;
 }
 
 
 
 .logo{
-    text-align:left;
-    background:url(images/logoTop.png) no-repeat;
-    height:178px;
-    width:755px;
+    /*background:url(images/logo.png) no-repeat;*/
+    height:109px;
+    width:590px;
     float:left;
-    margin-top:61px;
-
+    position:relative;
+    top:22px;
+    left: 184px;
 }
 
 #titles{
-    font-size:22px;
+    font-size:18px;
+    font-weight: bold;
 }
 
+em{
+    color:#FF5F00;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.link{
+    background: none;
+    text-decoration: underline;
+    border: none;
+    color:blue;
+}
+
+
+
 .login{
-    padding: 100px 0 0 0;
-    left:50%; margin:-50px 0 0 280px; position:absolute;
+    margin-top: 20px;
+    left:350px;
+    position:relative;
 }
 
 .menuTopo{
-    background:url(images/barraMenuPrincipal.png) repeat-x;
-    position:absolute;
-    top: 237px;
-    left:-1px;
-    width:100%;
-    height:100%;
+    /*background:url(images/barraMenuPrincipal.png) repeat-x;*/
 }
-
+/*
 .menu{
     text-align:center;
-    position:absolute;
-    top: -10px;
-    left:350px;
-}
-
+    position: relative;
+    /*left:40px;
+}*/
+/*
 .menuTopo ul{
     list-style-type:none;
     width:auto;
@@ -145,6 +165,7 @@ fieldset.warning {
     float:left;
     display:block;
     margin-left:20px;
+    position: relative;
 }
 
 .menuTopo li a{
@@ -156,16 +177,16 @@ fieldset.warning {
 
 .menuTopo li a:hover {
     text-decoration:underline;
-}
+}*/
 
 .conteudo{
-    left:525px;
-    margin:0 0 0 -450px;
-    position:absolute;
+    
+    /*margin:0 0 0 -450px;*/
+    position:relative;
     background:url(images/fundoConteudo.png) repeat-y;
     width: 1200px;
-    height:auto;
-    top: 268px;
+    height:100%;
+    border: 2px solid transparent;
 }
 
 
@@ -174,7 +195,6 @@ fieldset.warning {
     padding-left:0px;
     height: 214px;
     width: 400px;
-
 }
 
 .publicidade{
@@ -212,7 +232,7 @@ fieldset.warning {
 }
 
 .twitter{
-    background:url(images/teste.png) no-repeat;
+    /*background:url(images/teste.png) no-repeat;*/
     height: 350px;
     width:300px;
 }
@@ -271,10 +291,10 @@ fieldset.warning {
     text-align:center;
     color:#D6D6D6;
     position:relative;
-    width: 902px;
+    width: 1200px;
     height: 130px;
     bottom: 0;
-    left:153px;
+    margin-top: -2px;
 }
 
 .rodape a{
@@ -419,9 +439,8 @@ fieldset.warning {
     background:url(images/barraFaq.png) no-repeat;
     height:54px;
     width: 922px;
-    text-align:center;
     padding-top: 80px;
-    padding-left: 300px;
+    text-align: justify;
 
 }
 
@@ -429,9 +448,8 @@ fieldset.warning {
     background:url(images/barraSobre.png) no-repeat;
     height:54px;
     width: 922px;
-    text-align:center;
+    text-align:justify;
     padding-top: 80px;
-    padding-left: 300px;
 
 }
 

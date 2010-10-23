@@ -21,56 +21,54 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>TagiT! - Cadastro de Usuário</title>
         <link rel="stylesheet" type="text/css" href="style.css" />
+        <link rel="stylesheet" href="menu/menu_style.css" type="text/css" />
     </head>
     <body>
         <div class="topo">
             <div class="logo"></div>
-            <div class="login">
-<table>
-                    <%if (usuarioLogado != null) {%>
-                    <tr>
-                        <td><label> Bem-vindo <%= usuarioLogado.getNome()%> </label></td>
-                    </tr>
+            <table class="login">
+                <%if (usuarioLogado != null) {%>
+                <tr>
+                    <td><label> Bem-vindo <%= usuarioLogado.getNome()%> </label></td>
+                </tr>
 
-                    <form action="" method="POST" id="formLogado">
+                <form action="" method="POST" id="formLogado">
+                    <tr><td><a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp">Acesse o Facebook</a></td></tr>
+                    <tr><td><a href="ManutencaoUsuarios?tipo=4">Logoff</a></td></tr>
 
-                        <tr><td><input type="button" class="link" onclick="selecao('formLogado', 'ManutencaoUsuarios', 'tipo', 3)" value="Minhas Inscrições" /></td></tr>
-                        <tr><td><input type="button" class="link" onclick="selecao('formLogado', 'ManutencaoEventos', 'tipo', 7)" value="Meus Eventos" /></td></tr>
-                        <tr><td><a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp">Acesse o Facebook</a></td></tr>
-                        <tr><td><a href="http://localhost:8080/TagIT/CadastrarEvento.jsp">Cadastrar Eventos</a></td></tr>
-                        <tr><td><input type="button" class="link" onclick="selecao('formLogado', 'ManutencaoUsuarios', 'tipo', 4)" value="Logoff" /></td></tr>
+                    <input type="hidden" id="tipo" name="tipo" value=""/>
+                </form>
 
-                        <input type="hidden" id="tipo" name="tipo" value=""/>
-                    </form>
+                <%} else {%>
+                <tr>
 
-                    <%} else {%>
-                    <tr>
-
-                        <td>
-                            <form id="eLogin" action="Login.jsp" >
-                                <p align="center">
-                                    <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
-                                </p>
-                            </form>
-                        </td>
-                    </tr>
-                    <%}%>
-                </table>
-            </div>
+                    <td>
+                        <form id="eLogin" action="Login.jsp" >
+                            <p align="center">
+                                <input class="botao" type="submit" value="Logar-se" id="efetuarLogin" name="efetuarLogin"/>
+                            </p>
+                        </form>
+                    </td>
+                </tr>
+                <%}%>
+            </table>
         </div>
-        <div class="menuTopo">
-            <div class="menu">
-                <ul>
-                    <li> <a href="index.jsp"> Principal </a><li>
-                    <li> <a href="http://www.bytecodeufscar.blogspot.com" target="_blank"> Blog </a><li>
-                        <%if (usuarioLogado == null) {%>
-                    <li> <a href="CadastrarUsuario.jsp"> Registrar-se </a></li>
-                    <%}%>
-                    <li> <a href="Faq.jsp"> Faq </a></li>
-                    <li> <a href="Sobre.jsp"> Sobre </a></li>
-                </ul>
-            </div></div>
+        <div style="margin-top:-44px; position: relative;">
+            <ul id="menu">
+                <li style="margin-left:150px"><a href="index.jsp" target="_self" title="Principal">Principal</a></li>
+                <%if (usuarioLogado != null) {%>
+                <li><a href="ManutencaoUsuarios?tipo=3" target="_self" title="Minhas Inscrições">Minhas Inscrições</a></li>
+                <li><a href="ManutencaoEventos?tipo=7" target="_self" title="Meus Eventos">Meus Eventos</a></li>
+                <li><a href="http://localhost:8080/TagIT/CadastrarEvento.jsp" target="_self" title="Cadastrar Evento">Cadastrar Evento</a></li>
 
+                <%} else {%>
+                <li><a href="CadastrarUsuario.jsp" target="_self" title="Registre-se" class="current">Registre-se</a></li>
+                <%}%>
+                <li><a href="http://www.bytecodeufscar.blogspot.com" target="_blank" title="Blog">Blog</a></li>
+                <li><a href="Faq.jsp" target="_self" title="FAQ">FAQ</a></li>
+                <li><a href="Sobre.jsp" target="_self" title="Sobre">Sobre</a></li>
+            </ul>
+        </div>
         <!-- INICIO CONTEUDO -->
         <div class="conteudo">
 
@@ -78,18 +76,53 @@
                 <div class = "cadParticipante">
                     <%if(usuarioLogado == null){%>
                     <div class="erros" id="erros">
+                        <%
+                             String message, type;
+                             message = (String) session.getAttribute("message");
+                             type = (String) session.getAttribute("type");
+                             session.removeAttribute("message");
+                             session.removeAttribute("type");
+
+                             if (message != null) {
+                                 out.println("<fieldset class=\"" + type + "\" onclick=\"fecharCaixaMensagem()\">");
+                                 String legend = "Undefined";
+                                 if (type == "information") {
+                                     legend = "Information";
+                                 } else if (type == "critical") {
+                                     legend = "Error";
+                                 } else if (type == "success") {
+                                     legend = "Success";
+                                 } else if (type == "warning") {
+                                     legend = "Warning";
+                                 }
+
+                                 out.println("<legend>" + legend + "</legend>");
+                                 out.println(message);
+                                 out.println("</fieldset>");
+                             } else {
+
+                                 out.println("<fieldset class=\"information\" onclick=\"fecharCaixaMensagem()\">");
+                                 out.println("<legend>Informação</legend>");
+                                 out.println("<p>- Todos os campos com (*) são obrigatórios.</p>");
+                                 out.println("<p>- Clique no botão Acessar aaTag. Você será redirecionado para a página da aaTag.</p>");
+                                 out.println("<p>- Faça seu Login na aaTag e então você será redirecionado de volta a TagiT!</p>");
+                                 out.println("<p>- Clique na caixa para fechá-la.</p>");
+                                 out.println("</fieldset>");
+
+                             }
+                        %>
                         <fieldset class="information" onclick="fecharCaixaMensagem()">
-                            <legend>Informação</legend>
-                            <p>VC SERA ENCAMINHADO PARA PAG DA AATAG!!!</p>
-                            <p>EM SEGUIDa EH NECESSARIO LOGAR-SE NA API!</p>
+                            <legend>Informação</legend>                            
                             <p>- Todos os campos com (*) são obrigatórios.</p>
+                            <p>- Clique no botão Acessar aaTag. Você será redirecionado para a página da aaTag.</p>
+                            <p>- Faça seu Login na aaTag e então você será redirecionado de volta a TagiT!</p>
                             <p>- Clique na caixa para fechá-la.</p>
                         </fieldset>
                     </div>
                         <form class="formParticipante" action="ManutencaoUsuarios" onsubmit="return validarCadastroUsuario()">
                             <table>
                                 <tr>
-                                    <td><label>(*)CPF: </label></td>
+                                    <td><label>CPF<em>*</em></label></td>
                                     <td><input type ="text" name="cpf" id="cpf" maxlength="11"/></td>
                                 <tr>
                                     <td><input class="botao" type="submit" value="Acessar aaTag"/></td>
@@ -112,13 +145,14 @@
                 </div>
                 <!-- Fim DIV MEIOCONTAINER -->
             
-            <div class="rodape"><BR /><br />
-                ByteCode - Ajuda - Tecnologia RFID - Contato
-                <br />
-                <hr />
-                Todos os direitos reservados<br />
-			Desenvolvidos por <a href="www.bytecodeufscar.blogspot.com">ByteCode</a></div>
             <!-- Fim DIV CONTEUDO -->
         </div>
+        <div class="rodape"><BR /><br />
+            <a href="http://bytecodeufscar.blogspot.com/"> ByteCode</a> - <a href="http://www.aatag.com/aatag/">aaTag</a> - <a href="http://bytecodeufscar.blogspot.com/p/fale-conosco.html">Contato</a>
+            <br />
+            <hr />
+            Todos os direitos reservados<br />Desenvolvido por <a href="http://www.bytecodeufscar.blogspot.com">ByteCode</a>
+        </div>
+
     </body>
 </html>

@@ -463,4 +463,32 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
             throw new TagITDAOException();
         }
     }
+
+    public ArrayList<Evento> buscarUltimosEventos()throws TagITDAOException {
+        CallableStatement cstm = null;
+
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+         try {
+
+             System.out.println("aaaaaaaaaa");
+             int num = 2;
+            cstm = con.prepareCall("{call sp_retornar_topEventos(?)}");
+            cstm.setInt(1, num);
+
+            System.out.println("aaaaaaaaaa");
+
+            ResultSet rs = cstm.executeQuery();
+            while (rs.next()) {
+                Evento aux = new Evento(rs.getString("nome"), rs.getDouble("vagasPrincipal"), rs.getDate("inscInicio").toString(), rs.getDate("inscTermino").toString(), rs.getString("rua"), rs.getString("cidade"), rs.getDate("dataEvento").toString(), rs.getString("contato"));
+                System.out.println(aux.getNome());
+                eventos.add(aux);
+            }
+            cstm.close();
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+        return eventos;
+    }
 }
