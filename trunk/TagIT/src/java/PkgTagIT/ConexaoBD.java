@@ -8,6 +8,7 @@ import aaTag.User;
 import java.sql.*;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /*
  * @author Gustavo
@@ -391,6 +392,8 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
 
     }
 
+    /* Entrada no evento - Início */
+
     public void entradaEvento(String email, String evento) throws TagITDAOException {
         String stored = "{call sp_registrar_participanteEvento(?, ?, ?)}";
         String retorno = null;
@@ -413,9 +416,28 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
 
 
         } catch (SQLException e) {
-            throw new TagITDAOException("BUNDA");
+            throw new TagITDAOException();
         }
     }
+
+
+    private HashMap<String, String> tokens = new HashMap<String, String>();
+
+    public void guardaToken(String tag, String token, String verififer) {
+        String tokenVerifier = token + ";" + verififer;
+
+        if(tokens.containsKey(tag.trim())) tokens.remove(tag.trim());
+
+        tokens.put(tag.trim(), tokenVerifier);
+    }
+
+    public String retornaToken(String tag) {
+        System.out.println("Entrei aqui: " + tag.trim());
+        if(tokens.containsKey(tag.trim())) return tokens.get(tag);
+        return null;
+    }
+
+    /* Entrada no evento - fim */
 
     public void insereListaInteresseParticipante(ArrayList<Interesse> lInteresse, String email) throws TagITDAOException {
 
