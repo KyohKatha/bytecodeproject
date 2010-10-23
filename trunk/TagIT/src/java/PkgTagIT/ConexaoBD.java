@@ -416,7 +416,7 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
 
 
         } catch (SQLException e) {
-            throw new TagITDAOException();
+            throw new TagITDAOException("ARAIRAIRAIRIARIAIRAIR");
         }
     }
 
@@ -432,7 +432,7 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
     }
 
     public String retornaToken(String tag) {
-        System.out.println("Entrei aqui: " + tag.trim());
+        
         if(tokens.containsKey(tag.trim())) return tokens.get(tag);
         return null;
     }
