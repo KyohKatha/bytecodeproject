@@ -15,13 +15,14 @@
 <%
 
             User usuarioLogado = (User) request.getSession().getAttribute("usuario");
-            Evento evento = (Evento) request.getSession().getAttribute("evento");
+            Evento evento = (Evento) request.getSession().getAttribute("eventoOrganizador");
             //Para teste
             //usuarioLogado = new User();
-            evento = new Evento("a",1,"a","a","a","a","a","a");
+
+            /*evento = new Evento("a",1,"a","a","a","a","a","a");
             ArrayList a = new ArrayList();
             a.add("Música");
-            evento.setCategoria(a);
+            evento.setCategoria(a);*/
 
 %>
 <html>
@@ -85,22 +86,56 @@
 
             <div class="meioContainer">
                 <div class="relatorio">
-                <%if(evento != null){%>
-                <table>
-                    <tr>
-                        <%int i = 0;
-                          while(i < evento.getCategoria().size()){%>
-                        <td>
-                            <label> Categoria: </label> <%= evento.getCategoria().get(i) %>
-                        </td><tr>
-                        <td>
-                            Aqui vai o item de maior ocorrencia!
-                        </td>
-                        <%i++;}%>
-                    </tr>
-                </table>
+                    <fieldset style="text-align: left; ">
+                        <legend align="center">Dados do evento</legend>
+                        <table style="margin-left: 270px; font-size: 12px; text-transform:none;">
+                            <tr>
+                                <td><label>Nome:</label></td><td> <%=evento.getNome()%></td>
+                            </tr>
+                            <tr>
+                                <td><label>Número de vagas:</label></td><td> <%=(int) evento.getVagasPrincipal()%></td>
+                            </tr><tr>
+                                <td><label>Data de início de inscrição:</label></td><td> <%=evento.getInscInicio().replace("-", "/")%></td>
+                            </tr><tr>
+                                <td><label>Data de término de inscrição:</label> </td><td><%=evento.getInscTermino().replace("-", "/")%></td>
+                            </tr><tr>
+                                <td><label>Rua:</label></td><td> <%=evento.getRua()%></td>
+                            </tr><tr>
+                                <td><label>Cidade:</label> </td><td><%=evento.getCidade()%></td>
+                            </tr><tr>
+                                <td><label>Data do evento:</label> </td><td><%=evento.getDataEvento().replace("-", "/")%></td>
+                            </tr><tr>
+                                <td><label>Contato: </label> </td><td><%=evento.getContato()%></td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </fieldset>
+
+                    <%if (evento != null && evento.getCategoria() != null) {%>
+                    <table>
+                        <tr>
+                            <%int i = 0;
+                            while (i < evento.getCategoria().size()) {%>
+                            <td>
+                                <label> Categoria: </label> <%= evento.getCategoria().get(i)%>
+                            </td><tr>
+                            <td>
+                                Aqui vai o item de maior ocorrencia!
+                            </td>
+                            <%i++;
+                            }%>
+                        </tr>
+                    </table>
+                    <%}
+                                if (evento.getCategoria() == null) {%>
+                    <p style="margin-left: -600px">Você não cadastrou nenhuma categoria para esse evento! Não há relatórios a serem gerados!</p>
                     <%}%>
-                    </div>
+                </div>
                 <!-- Fim DIV MEIOCONTAINER -->
             </div>
             <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>

@@ -5,6 +5,8 @@
 --%>
 
 
+<%@page import="java.util.Calendar"%>
+<%@page import="java.util.Date"%>
 <%@page import="aaTag.Event"%>
 <%@page import="PkgTagIT.Evento"%>
 <%@page import="java.util.ArrayList"%>
@@ -84,7 +86,7 @@
                 <div class="erros" id="erros">
                 </div>
                 <p style="margin-left: -600px">
-                    <% ArrayList<Event> eventos = (ArrayList<Event>) request.getSession().getAttribute("arrayListEventos");
+                    <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosOrganizador");
                                 if (eventos.isEmpty()) {
                                     out.println("Você não tem nenhum evento.</p>");
                                     }else{
@@ -95,7 +97,15 @@
                                 int i = 0;
                                 while (i < eventos.size()) {%>
                                 <tr><td>
-                                    <a href="#" > <%= eventos.get(i).getName()%> </a>
+                                        <a href="ManutencaoEventos?tipo=9&i=<%=i%>" > <%= eventos.get(i).getNome()%> </a>(<%= eventos.get(i).getDataEvento().replace("-", "/") %>)
+                                        <% /*Date dataEvento = new Date(Integer.parseInt(eventos.get(i).getDataEvento().substring(0,3)),Integer.parseInt(eventos.get(i).getDataEvento().substring(5,6)),
+                                                Integer.parseInt(eventos.get(i).getDataEvento().substring(8,9)), Integer.parseInt(eventos.get(i).getHora().substring(0, 1)), Integer.parseInt(eventos.get(i).getHora().substring(3, 4)));
+                                           Date dataAtual = new Date(Integer.parseInt(eventos.get(i).getDataEvento().substring(0,3)),Integer.parseInt(eventos.get(i).getDataEvento().substring(5,6)),
+                                                Integer.parseInt(eventos.get(i).getDataEvento().substring(8,9)), Integer.parseInt(eventos.get(i).getHora().substring(0, 1)), Integer.parseInt(eventos.get(i).getHora().substring(3, 4)));
+                                           if(dataAtual.compareTo(dataEvento) == 0){*/%>
+                                             <!--   COMEÇOU O EVENTO! -->
+                                           <%//}
+                                           %>
                             </td></tr>
                     <% i++;
                                     }
