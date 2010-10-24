@@ -333,9 +333,12 @@ public class ManutencaoEventos extends HttpServlet {
             statusMessage(request, erros);
         }
 
+        request.setAttribute("modo", "busca");
+        request.setAttribute("ins", "0");
+
         RequestDispatcher rd = null;
 
-        rd = request.getRequestDispatcher("/index.jsp");
+        rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
         rd.forward(request, response);
     }
 

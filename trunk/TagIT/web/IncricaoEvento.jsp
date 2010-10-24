@@ -113,7 +113,7 @@
                                     } else {
                                         evento = (Evento) request.getSession().getAttribute("eventoInscrito");
                                     }
-
+            
                                     if (evento == null) {
                                         out.println("<fieldset class=\"critical\" >");
                                         out.println("<legend>Erro</legend>");
@@ -171,7 +171,8 @@
                                 <td><label>Nome:</label></td><td> <%=evento.getNome()%></td>
                             </tr>
                             <tr>
-                                <% if(!eventoApi.getDescription().isEmpty()){%>
+                                <%
+                                if(!eventoApi.getDescription().isEmpty()){%>
                                 <td><label>Descrição:</label></td><td> <%=eventoApi.getDescription()%></td>
                                 <%}%>
                             </tr>
@@ -198,7 +199,9 @@
 
                         </table>
                             </fieldset>
-                            <%if (usuarioLogado != null && insc.compareTo("0") != 0) {%>
+                            <%
+                                        System.out.println(insc);
+                            if (usuarioLogado != null && insc.compareTo("0") != 0) {%>
                             <input style="left:-280px; position: relative;" class="botao" type="submit" value="Inscreva-se!"/>
                             <%}%>
                         <input type="hidden" value="6" name ="tipo" size="0" />
