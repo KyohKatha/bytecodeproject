@@ -11,6 +11,7 @@ import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import aaTag.*;
+import java.util.List;
 
 /**
  *
@@ -35,9 +37,11 @@ public class ManutencaoEventos extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, ParseException, Exception {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+
+        System.out.println("DENTROOOOOOOOOOOOOOOOOOOO DO MANUTENÇÃO EVENTOS");
 
         /*
          * 0 : cadastrar
@@ -50,6 +54,7 @@ public class ManutencaoEventos extends HttpServlet {
          * 7 : buscar todos eventos do organizador
          * 8 : buscar ultimos eventos
          * 9 : selecionar evento para exibir o relatorio das categorias
+         * 9 : retornar todas as categorias do sistema
          */
 
         int tipo;
@@ -127,6 +132,13 @@ public class ManutencaoEventos extends HttpServlet {
                         e.printStackTrace();
                     }
                     break;
+                case 10:
+                    try {
+                        retornarTodasCategorias(request, response);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
             }
         } finally {
             out.close();
@@ -142,7 +154,7 @@ public class ManutencaoEventos extends HttpServlet {
      * @throws TagITDAOException
      */
     private void cadastraEvento(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException, TagITDAOException {
+            throws ServletException, IOException, TagITDAOException, ParseException, Exception {
 
         String nome = request.getParameter("nomeEvento");
         String descricao = request.getParameter("descricaoEvento");
@@ -166,6 +178,7 @@ public class ManutencaoEventos extends HttpServlet {
         if (categoria != null) {
             for (int i = 0; i < categoria.length; i++) {
                 lstCategoria.add(new Categoria(categoria[i]));
+                System.out.println("CATEGORIA SELECIONADA NO EVENTO >>  " + categoria[i]);
             }
         }
 
@@ -174,14 +187,18 @@ public class ManutencaoEventos extends HttpServlet {
 
         boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
         if (retornou) {
+            if (categoria != null) {
+                for (int i = 0; i < categoria.length; i++) {
+                    conexaoBD.insereCategoriaNoEvento(lstCategoria.get(i), evento);
+                }
+            }
+            request.getSession().setAttribute("type", "success");
+            request.getSession().setAttribute("message", "<p> - Operação realizada com <strong>sucesso</strong>.</p><p> Clique na caixa para fechá-lá</p>");
 
-            String urlServidor = "ServletAcessaAPI?nomeEvento=" + nome + "&descricaoEvento=" + descricao
-                    + "&metodo=AddEvent&redireciona=sim&paginaRetorno=index.jsp";
-
+            String urlServidor = "ServletAcessaAPI?nomeEvento=" + nome + "&descricaoEvento=" + descricao + "&metodo=AddEvent&redireciona=sim&paginaRetorno=ManutencaoEventos?tipo=10";
             rd = request.getRequestDispatcher(urlServidor);
             rd.forward(request, response);
 
-            String retorna = retorna = request.getSession().getAttribute("sucesso").toString();
         } else {
             System.out.println("Retornará o erro >> " + request.getSession().getAttribute("message").toString());
             rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
@@ -356,6 +373,18 @@ public class ManutencaoEventos extends HttpServlet {
         rd.forward(request, response);*/
     }
 
+    private void retornarTodasCategorias(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
+        System.out.println("DENTRO DO RETORNA CATEGORIAAAAAAAAAAAAAAAAAAAAS");
+        ConexaoBD conexao = ConexaoBD.getInstance();
+        List categorias = conexao.retornarTodasCategorias();
+
+        request.setAttribute("categorias", categorias);
+        RequestDispatcher rd = null;
+        rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
+        rd.forward(request, response);
+        
+    }
+
     private void buscarUltimosEventos(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
         ArrayList<Evento> ultimosEventos = ConexaoBD.getInstance().buscarUltimosEventos();
 
@@ -397,7 +426,13 @@ public class ManutencaoEventos extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(ManutencaoEventos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ManutencaoEventos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 
@@ -410,7 +445,13 @@ public class ManutencaoEventos extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try {
+            processRequest(request, response);
+        } catch (ParseException ex) {
+            Logger.getLogger(ManutencaoEventos.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ManutencaoEventos.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /** 

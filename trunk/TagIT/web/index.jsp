@@ -16,7 +16,7 @@
 
             User usuarioLogado = (User) request.getSession().getAttribute("usuario");
             ArrayList<Evento> ultimosEventos = (ArrayList<Evento>) request.getSession().getAttribute("ultimosEventos");
-            request.getSession().setAttribute("eventosBusca", ultimosEventos);
+            request.getSession().setAttribute("eventos", ultimosEventos);
             //Para teste
             //usuarioLogado = new User();
 
@@ -78,10 +78,9 @@
                 <%if (usuarioLogado != null) {%>
                 <li><a href="ManutencaoUsuarios?tipo=3" target="_self" title="Minhas Inscrições">Minhas Inscrições</a></li>
                 <li><a href="ManutencaoEventos?tipo=7" target="_self" title="Meus Eventos">Meus Eventos</a></li>
-                <li><a href="http://localhost:8080/TagIT/CadastrarEvento.jsp" target="_self" title="Cadastrar Evento">Cadastrar Evento</a></li>
-
+                <li><a href="ManutencaoEventos?tipo=10" title="Cadastrar Evento">Cadastrar Evento</a></li>
                 <%} else {%>
-                <li><a href="CadastrarUsuario.jsp" target="_self" title="Registre-se">Registre-se</a></li>
+                <li><a href="CadastrarUsuario.jsp" title="Registre-se">Registre-se</a></li>
                 <%}%>
                 <li><a href="http://www.bytecodeufscar.blogspot.com" target="_blank" title="Blog">Blog</a></li>
                 <li><a href="Faq.jsp" target="_self" title="FAQ">FAQ</a></li>
@@ -173,7 +172,6 @@
                                 <input type="submit" id="participar" value="Participe!" />
                                 <input type="hidden" name="tipo" value="5" />
                                 <input type="hidden" name="insc" value="1" />
-                                <input type="hidden" name="modo" value="busca" />
                                 <input type="hidden" name="i" value="0" />
                             </form>
                         </td>
@@ -185,7 +183,6 @@
                                 <input class="botao" type="submit" id="participar" value="Participe!" />
                                 <input type="hidden" name="tipo" value="5" />
                                 <input type="hidden" name="insc" value="1" />
-                                <input type="hidden" name="modo" value="busca" />
                                 <input type="hidden" name="i" value="1" />
                             </form>
                         </td>

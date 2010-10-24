@@ -5,6 +5,9 @@
 --%>
 
 
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.List"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
     "http://www.w3.org/TR/html4/loose.dtd">
@@ -82,10 +85,23 @@
 
             <div class="meioContainer">
                 <div class = "cadEvento">
-                    <% if (usuarioLogado != null) {%>
+                    <% if (usuarioLogado != null) {
+                            String type = (String) session.getAttribute("type");
+                            String message = (String) session.getAttribute("message");
+
+                            if (type != null && message != null){
+                                    session.removeAttribute("type");
+                                    session.removeAttribute("message");
+            %>
+                            <div class="erros" id="erros">
+                                <fieldset class="<%=type%>" onclick="fecharCaixaMensagem()">
+                                <legend>Informação</legend>
+                                <%=message%>                                
+                                </fieldset>
+                            </div>
+                                <% }else {%>
                     <div class="erros" id="erros">
                         <%
-                             String message, type;
                              message = (String) session.getAttribute("message");
                              type = (String) session.getAttribute("type");
                              session.removeAttribute("message");
@@ -118,47 +134,54 @@
                              }
                         %>
                     </div>
-                    <form action="ManutencaoEventos" class="formEvento" id="formEvento" method="post" onsubmit="return validaEvento()">
+                        <% } %>
+                    <form onload="carregarCategorias" action="ManutencaoEventos" class="formEvento" id="formEvento" method="post" onsubmit="return validaEvento()">
                         <table>
                             <tr>
                                 <td><label>Nome<em>*</em></label></td>
-                                <td><input type="text" name="nomeEvento" id="nome" /></td>
+                                <td><input title="Informe o seu nome complet Ex: José Antonio da Silva" type="text" name="nomeEvento" id="nome" /></td>
                             </tr><tr>
                                 <td><label>Descrição do evento<em>*</em></label></td>
-                                <td><input type="text" name="descricaoEvento" id="descricao" /></td>
+                                <td><input title="Informe algo sobre o evento Ex: Uma festa a fantasia" type="text" name="descricaoEvento" id="descricao" /></td>
                             </tr><tr>
                                 <td><label>Número de vagas<em>*</em></label></td>
-                                <td><input type="text" name="vagasPrincipal" id="vagasPrincipal" /></td>
+                                <td><input title="Informe o limite máximo de inscrições para o seu evento" type="text" name="vagasPrincipal" id="vagasPrincipal" /></td>
                             </tr><tr>
-                                <td><label>Data de início de inscrição<em>*</em></label></td>
-                                <td><input id="datepicker" type="text" name="inscInicio" id="inscInicio" /> Ex: dd/mm/aaaa</td>
+                                <td><label>(*)Data de início de inscrição:</label></td>
+                                <td><input title="Informe a data de inicio para receber inscrições para seu evento Ex : 01/01/2001" type="text" name="inscInicio" id="inscInicio" /></td>
                             </tr><tr>
                                 <td><label>Data de término de inscrição<em>*</em></label></td>
-                                <td><input type="text" name="inscTermino" id="inscTermino" /></td>
+                                <td><input title="Informe a data final para receber inscrições para seu evento Ex : 01/02/2001" type="text" name="inscTermino" id="inscTermino" /></td>
                             </tr><tr>
                                 <td><label>Rua<em>*</em></label></td>
-                                <td><input type="text" name="rua" id="rua" /></td>
+                                <td><input title="Informe o endereço para o evento" type="text" name="rua" id="rua" /></td>
                             </tr><tr>
                                 <td><label>Número<em>*</em></label></td>
-                                <td><input type="text" name="numeroRua" id="numeroRua" /></td>
+                                <td><input title="Informe o número do local na rua citada acima" type="text" name="numeroRua" id="numeroRua" /></td>
                             </tr><tr>
                                 <td><label>Cidade<em>*</em></label></td>
-                                <td><input type="text" name="cidade" id="cidade" /></td>
+                                <td><input title="Informe em qual cidade será realizada o evento" type="text" name="cidade" id="cidade" /></td>
                             </tr><tr>
                                 <td><label>Data do evento<em>*</em></label></td>
-                                <td><input type="text" name="dataEvento" id="dataEvento" /></td>
+                                <td><input title="Informe em qual data será realizada o evento Ex : 01/01/2001" type="text" name="dataEvento" id="dataEvento" /></td>
                             </tr><tr>
                                 <td><label>Hora do evento<em>*</em></label></td>
-                                <td><input type="text" name="hora" id="hora" /></td>
+                                <td><input title="Informe qual horas dará inicio ao o evento" type="text" name="hora" id="hora" /></td>
                             </tr><tr>
                                 <td><label>Contato<em>*</em></label></td>
-                                <td><input type="text" name="contato" id="contato" /></td>
+                                <td><input title="Informe um telefone ou email para que as pessoas possam entrar em contato com você" type="text" name="contato" id="contato" /></td>
                             </tr><tr>
                                 <td><label>Categoria</label></td>
-                                <td><select name="selectCategoria" id="selectCategoria">
-                                        <% //aqui vai ser preenchido conforme as categorias já cadastradas no bd %>
-                                        <option value="1">Musica</option>
-                                        <option value="2">Sexo</option>
+                                <td><select name = "selectCategoria" id="selectCategoria"  size="1" >
+                                        <%Iterator itr;%>
+                                        <% List data = (List) request.getAttribute("categorias");
+                                            int i = 1;
+                                            if(data != null){
+                                            for (itr = data.iterator(); itr.hasNext();) {
+                                                 String s = itr.next().toString();
+                                        %>
+                                        <option value = "<%=i%>" >  <%=s%> </option>
+                                        <%i++; }}%>
                                     </select></td>
                                 <td><input class="botao" type="button" value="Selecionar" onclick="adicionaCategoria()" /></td>
                             </tr><tr>
@@ -187,6 +210,7 @@
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
                 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
                 <!-- Fim DIV MEIOCONTAINER -->
             </div>
             <!-- Fim DIV CONTEUDO -->

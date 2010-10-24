@@ -230,62 +230,69 @@ function validaEvento() {
     var dataEvento = trim(document.getElementById("dataEvento").value);
     var contato = trim(document.getElementById("contato").value);
     var hora = trim(document.getElementById("hora").value);
-    var erro = true;
-    
+    var contato = trim(document.getElementById("contato").value);
+
+    var message = "";
+
     if (validaNome(nome) != ""){
-        erro = false;
         document.getElementById("nome").focus();
+        message += "<p> - Informe um nome válido</p>";
     }
     
     if (validaNumero(vagasPrincipal) != ""){
-        erro = false;
-
         document.getElementById("vagasPrincipal").focus();
+        message += "<p> - Informe um número de vagas para o evento</p>";
     }
 
     if (validaData(inscInicio) != ""){
-        erro = false;
-
         document.getElementById("inscInicio").focus();
+        message += "<p> - Informe uma data de início de inscrições do evento</p>";
+
     }
 
     if (validaData(inscTermino) != ""){
-        erro = false;
-
         document.getElementById("inscTermino").focus();
+        message += "<p> - Informe uma data para o nício do evento</p>";
     }
     
     if (validaRua(rua) != ""){
-        erro = false;
-
         document.getElementById("rua").focus();
+        message += "<p> - Informe uma data para o início do evento</p>";
+
     }
     
     if (validaNumero(numeroRua) != ""){
-        erro = false;
-
         document.getElementById("numeroRua").focus();
+        message += "<p> - Informe o nome da rua aonde ocorrerá o evento</p>";
     }
     
     if (validaCidade(cidade) != ""){
-        erro = false;
-
         document.getElementById("cidade").focus();
+        message += "<p> - Informe uma cidade em que ocorrerá o evento </p>";
     }
     
     if (validaData(dataEvento) != ""){
-        erro = false;
-
         document.getElementById("dataEvento").focus();
+        message += "<p> - Informe uma data em que ocorrerá  evento</p>";
     }
 
     if (validaHora(hora) != ""){
-        erro = false;
-
         document.getElementById("hora").focus();
+        message += "<p> - Informe uma hora em que ocorrerá  evento</p>";
     }
 
-    return erro;
+    if (contato == ""){
+        document.getElementById("hora").focus();
+        message += "<p> - Informe um contato</p>";
+    }
+
+    if(message != ""){
+        message += "<p>- Clique na caixa para fechá-la.</p>";
+        mostrarMenssagem('critical', message);
+        return false;
+    }
+
+    return true;
 }
 
 function adicionaCategoria() {
@@ -439,7 +446,11 @@ function selecionaEvento(i){
     var form = document.getElementById("formEventos");
     form.action = "ManutencaoEventos";
     form.submit();
-    
+}
+
+function carregarCategorias(){
+    var form = document.getElementById("formEvento");
+    form.submit();
 }
 
 function carregarUltimosEventos(){
