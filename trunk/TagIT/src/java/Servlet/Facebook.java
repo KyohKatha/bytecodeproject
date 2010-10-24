@@ -5,6 +5,7 @@
 package Servlet;
 
 import PkgTagIT.ConexaoBD;
+import PkgTagIT.ContaCategoriaFacebook;
 import PkgTagIT.Interesse;
 import PkgTagIT.TagITDAOException;
 import aaTag.User;
@@ -71,6 +72,8 @@ public class Facebook extends HttpServlet {
 
                 in2.close();
                 ArrayList<Interesse> lInteresse;
+                ArrayList<ContaCategoriaFacebook> lContaCateg;
+                lContaCateg = new ArrayList<ContaCategoriaFacebook>();
                 lInteresse = new ArrayList<Interesse>();
                 String jsonInteresse = texto;
                 jsonInteresse = jsonInteresse.substring(8, jsonInteresse.length() - 1);
@@ -82,21 +85,37 @@ public class Facebook extends HttpServlet {
                     l.setCategoria(obj2.get("category").toString());
                     l.setNome(obj2.get("name").toString());
                     lInteresse.add(l);
-                    System.out.println("recuperando dados do facebook: " + l.getNome());
+                    int contador = 0;
+                    for (int j = 0; j < lContaCateg.size(); j++) {
+                        if (lContaCateg.get(j).getCategoria().equals(l.getCategoria())) {
+                            lContaCateg.get(j).setContador(lContaCateg.get(j).getContador() + 1);
+                        } else {
+                            contador++;
+                        }
+                    }
+                    if (contador == lContaCateg.size()) {
+                        ContaCategoriaFacebook c;
+                        c = new ContaCategoriaFacebook();
+                        c.setCategoria(l.getCategoria());
+                        c.setContador(1);
+                        lContaCateg.add(c);
+                    }
                 }
+
                 User u = (User) request.getSession().getAttribute("usuario");
                 ConexaoBD conexaoBD = ConexaoBD.getInstance();
-                conexaoBD.insereListaInteresseParticipante(lInteresse, u.getEmail());
+                conexaoBD.insereListaInteresseParticipante(lInteresse, u.getEmail(), lContaCateg);
                 request.getSession().setAttribute("lInteresses", lInteresse);
             }
-            /* Está redirecionando para uma página somente para exibir os dados recuperados */
-            response.sendRedirect("Interesses.jsp");
+            request.getSession().setAttribute("type", "success");
+            request.getSession().setAttribute("message", "<p>- Informações recuperadas com sucesso .</p><p>- Clique na caixa para fechar.</p>");
+            response.sendRedirect("index.jsp");
         } finally {
             out.close();
         }
     }
 
-        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -109,9 +128,14 @@ public class Facebook extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
+
+
+
         } catch (TagITDAOException ex) {
             Logger.getLogger(Facebook.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }
 
     /**
@@ -126,9 +150,14 @@ public class Facebook extends HttpServlet {
             throws ServletException, IOException {
         try {
             processRequest(request, response);
+
+
+
         } catch (TagITDAOException ex) {
             Logger.getLogger(Facebook.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }
 
     /**
@@ -138,6 +167,6 @@ public class Facebook extends HttpServlet {
     @Override
     public String getServletInfo() {
         return "Short description";
+
     }// </editor-fold>
 }
-

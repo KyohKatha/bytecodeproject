@@ -439,11 +439,17 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
 
     /* Entrada no evento - fim */
 
-    public void insereListaInteresseParticipante(ArrayList<Interesse> lInteresse, String email) throws TagITDAOException {
-
-
+    public void insereListaInteresseParticipante(ArrayList<Interesse> lInteresse, String email, ArrayList<ContaCategoriaFacebook> lContaCateg) throws TagITDAOException {
+        ArrayList<ContaCategoriaFacebook> lAuxCategoria;
+        lAuxCategoria = new ArrayList<ContaCategoriaFacebook>();
+        for (int i=0; i < lContaCateg.size(); i++){
+            ContaCategoriaFacebook c;
+            c = new ContaCategoriaFacebook();
+            c.setCategoria(lContaCateg.get(i).getCategoria());
+            c.setContador(lContaCateg.get(i).getContador());
+            lAuxCategoria.add(c);
+        }
         try {
-            double peso = 1.0 / lInteresse.size();
 
             for (int i = 0; i < lInteresse.size(); i++) {
                 CallableStatement cstm = null;
@@ -451,7 +457,15 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
                 cstm.setString(1, email);
                 cstm.setString(2, lInteresse.get(i).getCategoria());
                 cstm.setString(3, lInteresse.get(i).getNome());
-                cstm.setDouble(4, (peso * (i+1)));
+                int k = 0;
+                for (; k < lAuxCategoria.size(); k++){
+                    if(lInteresse.get(i).getCategoria().equals(lAuxCategoria.get(k).getCategoria())){
+                        break;
+                    }
+                }
+                cstm.setDouble(4, (double)((1.0/lContaCateg.get(k).getContador()) * lAuxCategoria.get(k).getContador() ));
+                lAuxCategoria.get(k).setContador(lAuxCategoria.get(k).getContador() - 1);
+                
                 cstm.registerOutParameter(5, java.sql.Types.VARCHAR);
                 cstm.execute();
                 String retorno = cstm.getString(5);
