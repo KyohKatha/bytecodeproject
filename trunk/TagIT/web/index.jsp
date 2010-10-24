@@ -16,7 +16,7 @@
 
             User usuarioLogado = (User) request.getSession().getAttribute("usuario");
             ArrayList<Evento> ultimosEventos = (ArrayList<Evento>) request.getSession().getAttribute("ultimosEventos");
-            request.getSession().setAttribute("eventos", ultimosEventos);
+            request.getSession().setAttribute("eventosBusca", ultimosEventos);
             //Para teste
             //usuarioLogado = new User();
 
@@ -173,6 +173,7 @@
                                 <input type="submit" id="participar" value="Participe!" />
                                 <input type="hidden" name="tipo" value="5" />
                                 <input type="hidden" name="insc" value="1" />
+                                <input type="hidden" name="modo" value="busca" />
                                 <input type="hidden" name="i" value="0" />
                             </form>
                         </td>
@@ -184,6 +185,7 @@
                                 <input class="botao" type="submit" id="participar" value="Participe!" />
                                 <input type="hidden" name="tipo" value="5" />
                                 <input type="hidden" name="insc" value="1" />
+                                <input type="hidden" name="modo" value="busca" />
                                 <input type="hidden" name="i" value="1" />
                             </form>
                         </td>

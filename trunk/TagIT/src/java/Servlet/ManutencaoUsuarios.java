@@ -223,7 +223,7 @@ public class ManutencaoUsuarios extends HttpServlet {
         try {
 
             eventos = ConexaoBD.getInstance().buscarEventosParticipante(participante);
-            request.getSession().setAttribute("eventos", eventos);
+            request.getSession().setAttribute("eventosInscrito", eventos);
 
         } catch (TagITDAOException ex) {
             Logger.getLogger(ManutencaoUsuarios.class.getName()).log(Level.SEVERE, null, ex);

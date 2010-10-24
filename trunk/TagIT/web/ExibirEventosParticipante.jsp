@@ -94,7 +94,7 @@
                     </div>
                     <p style="margin-left: -600px">
                     <%
-                                    ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
+                                    ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosInscrito");
 
 
                                     if (eventos == null || eventos.isEmpty()) {
@@ -109,7 +109,7 @@
                                         int i = 0;
                                         while (i < eventos.size()) {%>
                         <tr><td>
-                                <a href="ManutencaoEventos?tipo=5&insc=0&i=<%=i%>" > <%= eventos.get(i).getNome()%> </a>(<%=eventos.get(i).getDataEvento()%>)
+                                <a href="ManutencaoEventos?tipo=5&insc=0&modo=exibicao&i=<%=i%>" > <%= eventos.get(i).getNome()%> </a>(<%=eventos.get(i).getDataEvento()%>)
                             </td></tr>
                             <% i++;
                                             }
