@@ -267,7 +267,7 @@ public class ManutencaoEventos extends HttpServlet {
         String[] erros = null;
 
         eventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscarEventos(parametro);
-        request.getSession().setAttribute("eventos", eventos);
+        request.getSession().setAttribute("eventosBusca", eventos);
 
         request.setAttribute("parametro", parametro);
         RequestDispatcher rd = null;
@@ -277,7 +277,7 @@ public class ManutencaoEventos extends HttpServlet {
 
     private void inscreverParticipanteEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
         User participante = (User) request.getSession().getAttribute("usuario");
-        Evento evento = (Evento) request.getSession().getAttribute("evento");
+        Evento evento = (Evento) request.getSession().getAttribute("eventoBusca");
 
         String[] erros = ConexaoBD.getInstance().inscreverParticipanteEvento(evento, participante);
         if (erros[0].equals("2")) {
@@ -287,19 +287,30 @@ public class ManutencaoEventos extends HttpServlet {
             statusMessage(request, erros);
         }
 
-        request.getSession().removeAttribute("evento");
         RequestDispatcher rd = null;
 
-        rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
+        rd = request.getRequestDispatcher("/index.jsp");
         rd.forward(request, response);
     }
 
     private void selecionarEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
-        ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
+        
         int i = Integer.parseInt(request.getParameter("i"));
         String ins = request.getParameter("insc");
+        ArrayList<Evento> eventos = null;
 
-        request.getSession().setAttribute("evento", eventos.get(i));
+        String modo = request.getParameter("modo");
+
+        if (modo.compareTo("busca") == 0){
+            eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosBusca");
+            request.getSession().setAttribute("eventoBusca", eventos.get(i));
+        } else {
+            eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosInscrito");
+            request.getSession().setAttribute("eventoInscrito", eventos.get(i));
+        }
+
+        request.setAttribute("modo", modo);
+
         request.setAttribute("ins", ins);
         System.out.println("Evento: " + eventos.get(i).getNome() + "ins: " + ins);
 
@@ -310,7 +321,7 @@ public class ManutencaoEventos extends HttpServlet {
         rd = request.getRequestDispatcher(urlServidor);
         rd.forward(request, response);
 
-        String retorna = request.getSession().getAttribute("sucesso").toString();
+        //String retorna = request.getSession().getAttribute("sucesso").toString();
 
         /*rd = request.getRequestDispatcher("/IncricaoEvento.jsp");
         rd.forward(request, response);*/

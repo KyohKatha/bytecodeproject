@@ -103,9 +103,16 @@
                     </form>
                     <div class="erros" id="erros">
                         <%
-                                    Evento evento = (Evento) request.getSession().getAttribute("evento");
                                     Event eventoApi = (Event) request.getSession().getAttribute("eventoAPI");
+                                    Evento evento = null;
 
+                                    String modo = (String) request.getAttribute("modo");
+
+                                    if ( modo.compareTo("busca") == 0 ){
+                                        evento = (Evento) request.getSession().getAttribute("eventoBusca");
+                                    } else {
+                                        evento = (Evento) request.getSession().getAttribute("eventoInscrito");
+                                    }
 
                                     if (evento == null) {
                                         out.println("<fieldset class=\"critical\" >");

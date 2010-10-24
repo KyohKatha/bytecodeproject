@@ -102,7 +102,7 @@
                         </table>
                     </form>
                     <p style="margin-left: -600px">
-                    <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventos");
+                    <% ArrayList<Evento> eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosBusca");
                                 if (eventos.isEmpty()) {
                                     out.println("Nenhum resultado encontrado para <strong>" + parametro + "</strong></p>");
                                     }else{
@@ -116,7 +116,7 @@
                                         <%if(usuarioLogado == null){%>
                                         <%= eventos.get(i).getNome()%>(<%=eventos.get(i).getDataEvento()%>)
                                         <%}else{%>
-                                    <a href="ManutencaoEventos?tipo=5&insc=1&i=<%=i%>" > <%= eventos.get(i).getNome()%> </a>(<%=eventos.get(i).getDataEvento()%>)
+                                    <a href="ManutencaoEventos?tipo=5&insc=1&modo=busca&i=<%=i%>" > <%= eventos.get(i).getNome()%> </a>(<%=eventos.get(i).getDataEvento()%>)
                                     <%}%>
                             </td></tr>
                     <% i++;
