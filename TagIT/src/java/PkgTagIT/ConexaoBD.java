@@ -7,8 +7,12 @@ package PkgTagIT;
 import aaTag.User;
 import java.sql.*;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /*
  * @author Gustavo
@@ -62,67 +66,6 @@ public class ConexaoBD {
         return instance;
     }
 
-    public String[] insereEvento(Evento evento) throws TagITDAOException {
-        CallableStatement cstm = null;
-        String[] sRetorno = null;
-
-        try {
-            cstm = con.prepareCall("{call sp_inserir_evento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-
-            cstm.setString(1, evento.getNome());
-            cstm.setDouble(2, evento.getVagasPrincipal());
-            cstm.setDate(3, converterData(evento.getInscInicio()));
-            cstm.setDate(4, converterData(evento.getInscTermino()));
-            cstm.setString(5, evento.getRua());
-            cstm.setString(6, evento.getCidade());
-            cstm.setDate(7,  converterData(evento.getDataEvento() + " " + evento.getHora()));
-            cstm.setString(8, evento.getContato());
-            cstm.registerOutParameter(9, Types.VARCHAR);
-
-            cstm.execute();
-            sRetorno = cstm.getString(9).split(";");
-
-            cstm.close();
-
-        } catch (SQLException e) {
-            throw new TagITDAOException();
-        }
-
-        return sRetorno;
-    }
-
-    public Date converterData(String data) {
-        String sDia = data.substring(0, 2);
-        String sMes = data.substring(3, 5);
-        String sAno = data.substring(6, 10);
-
-        Date date = new Date(Integer.parseInt(sAno) - 1900, Integer.parseInt(sMes) - 1, Integer.parseInt(sDia));
-
-        return date;
-    }
-
-    public String[] insereCategoriaNoEvento(Categoria categoria, Evento evento) throws TagITDAOException {
-        CallableStatement cstm = null;
-        String[] i = null;
-
-        try {
-            cstm = con.prepareCall("{call sp_inserir_eventoCategoria(?, ?, ?)}");
-            cstm.setString(1, evento.getNome());
-            cstm.setString(2, categoria.getNome());
-            cstm.registerOutParameter(3, java.sql.Types.VARCHAR);
-            cstm.execute();
-            cstm.close();
-
-            i = cstm.getString(3).split(";");
-            cstm.close();
-
-        } catch (SQLException e) {
-            throw new TagITDAOException();
-        }
-
-        return i;
-
-    }
 
     /*public Participante validarLogin(String email, String senha) throws TagITDAOException {
     CallableStatement cstm = null;
@@ -476,6 +419,122 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
+    }
+
+       public String[] insereEvento(Evento evento) throws TagITDAOException, ParseException,
+Exception {
+        CallableStatement cstm = null;
+        String[] sRetorno = null;
+
+        String data = evento.getDataEvento();
+        String dia = data.substring(0, 2);
+        String mes = data.substring(3, 5);
+        String ano = data.substring(6, 10);
+        String horaEvento = evento.getHora();
+        String hora = horaEvento.substring(0, 2);
+        String minuto = horaEvento.substring(3, 5);
+
+        java.sql.Timestamp dataEvento = java.sql.Timestamp.valueOf(ano + "-" + mes + "-" +
+dia + " " + hora + ":" + minuto + ":00");
+
+        try {
+            cstm = con.prepareCall("{call sp_inserir_evento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+
+            cstm.setString(1, evento.getNome());
+            cstm.setDouble(2, evento.getVagasPrincipal());
+            cstm.setDate(3, converterData(evento.getInscInicio()));
+            cstm.setDate(4, converterData(evento.getInscTermino()));
+            cstm.setString(5, evento.getRua());
+            cstm.setString(6, evento.getCidade());
+            cstm.setTimestamp(7,   dataEvento);
+            cstm.setString(8, evento.getContato());
+            cstm.registerOutParameter(9, Types.VARCHAR);
+
+            cstm.execute();
+            sRetorno = cstm.getString(9).split(";");
+
+            cstm.close();
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+        return sRetorno;
+    }
+
+    public String[] insereCategoriaNoEvento(Categoria categoria, Evento evento) throws TagITDAOException {
+        CallableStatement cstm = null;
+        String[] i = null;
+
+        System.out.println("EVENTOOOOOOOOOO >> " + evento.getNome());
+        System.out.println("EVENTOOOOOOOOOO >> " + categoria.getNome());
+
+        try {
+            cstm = con.prepareCall("{call sp_inserir_eventoCategoria(?, ?, ?)}");
+            cstm.setString(1, evento.getNome());
+            cstm.setString(2, categoria.getNome());
+            cstm.registerOutParameter(3, java.sql.Types.VARCHAR);
+            cstm.execute();
+
+            i = cstm.getString(3).split(";");
+
+            cstm.close();
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+        return i;
+
+    }
+
+
+   	/**
+ 	 * Converte uma String para um objeto Date. Caso a String seja vazia ou nula,
+ 	 * retorna null - para facilitar em casos onde formulários podem ter campos
+ 	 * de datas vazios.
+ 	 * @param data String no formato dd/MM/yyyy a ser formatada
+ 	 * @return Date Objeto Date ou null caso receba uma String vazia ou nula
+ 	 * @throws Exception Caso a String esteja no formato errado
+ 	 */
+    public static java.sql.Date converterData(String data) throws Exception {
+        if (data == null || data.equals("")) {
+            return null;
+        }
+
+        java.sql.Date date = null;
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            date = new java.sql.Date(((java.util.Date) formatter.parse(data)).getTime());
+        } catch (ParseException e) {
+            throw e;
+        }
+        return date;
+    }
+
+    public List<String> retornarTodasCategorias() {
+        CallableStatement cstm = null;
+        List<String> retorno = new ArrayList();
+
+        ResultSet rs = null;
+        int i = 0;
+
+        try {
+            cstm = con.prepareCall("{call sp_retornar_todas_categorias}");
+            rs = cstm.executeQuery();
+
+            while (rs.next()) {
+                System.out.println(rs.getString(2));
+                retorno.add(rs.getString(2));
+            }
+
+            cstm.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return retorno;
+
     }
 
     public ArrayList<Evento> buscarUltimosEventos()throws TagITDAOException {
