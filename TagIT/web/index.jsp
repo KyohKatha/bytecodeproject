@@ -16,7 +16,13 @@
 
             User usuarioLogado = (User) request.getSession().getAttribute("usuario");
             ArrayList<Evento> ultimosEventos = (ArrayList<Evento>) request.getSession().getAttribute("ultimosEventos");
-            request.getSession().setAttribute("eventos", ultimosEventos);
+            
+            // favor nao alterar o nome do atributo 'eventosBusca' para 'eventos', pois da conflito com outras coisas. obrigada.
+            // ah, se for realmente preciso alterar, por favor, modifique na pagina buscarEvento e
+            // na servlet ManutencaoEvento (acho que eh so ai...) . Eu tambem preciso dos atributos de nomes
+            // "modo" e "insc" pro controle dos eventos que sao exibidos, e pra ver se o botao "Inscrever-se" deve ou nao
+            // aparecer. se puder manter, agradeço também. Kaori.
+            request.getSession().setAttribute("eventosBusca", ultimosEventos);
             //Para teste
             //usuarioLogado = new User();
 
@@ -173,6 +179,7 @@
                                 <input type="hidden" name="tipo" value="5" />
                                 <input type="hidden" name="insc" value="1" />
                                 <input type="hidden" name="i" value="0" />
+                                <input type="hidden" name="modo" value="busca" />
                             </form>
                         </td>
                         <td class="eventoP2" align="center">
@@ -184,6 +191,7 @@
                                 <input type="hidden" name="tipo" value="5" />
                                 <input type="hidden" name="insc" value="1" />
                                 <input type="hidden" name="i" value="1" />
+                                <input type="hidden" name="modo" value="busca" />
                             </form>
                         </td>
                     </tr>
