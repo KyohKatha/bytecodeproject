@@ -187,7 +187,7 @@ public class ConexaoBD {
             cstm.execute();
             i = cstm.getString(4).split(";");
             cstm.close();
-            
+
         } catch (SQLException e) {
             throw new TagITDAOException();
         }
@@ -240,8 +240,8 @@ public class ConexaoBD {
                 String email = rs.getString(1);
                 String nome = rs.getString(2);
 
-                p = new User( email, nome );
-                
+                p = new User(email, nome);
+
             }
 
             i = cstm.getString(2).split(";");
@@ -307,19 +307,19 @@ public class ConexaoBD {
 
     }
 
-public ArrayList<Evento> buscarEventosParticipante(User participante) throws TagITDAOException{
+    public ArrayList<Evento> buscarEventosParticipante(User participante) throws TagITDAOException {
         CallableStatement cstm = null;
 
         ArrayList<Evento> eventos = new ArrayList<Evento>();
-         try {
+        try {
 
-             System.out.println("aaaaaaaaaa");
-             
+            System.out.println("aaaaaaaaaa");
+
             cstm = con.prepareCall("{call sp_retornar_eventosParticipante(?)}");
             cstm.setString(1, participante.getEmail());
 
             System.out.println("aaaaaaaaaa");
-            
+
             ResultSet rs = cstm.executeQuery();
             while (rs.next()) {
                 Evento aux = new Evento(rs.getString("nome"), rs.getDouble("vagasPrincipal"), rs.getDate("inscInicio").toString(), rs.getDate("inscTermino").toString(), rs.getString("rua"), rs.getString("cidade"), rs.getDate("dataEvento").toString(), rs.getString("contato"));
@@ -336,7 +336,6 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
     }
 
     /* Entrada no evento - Início */
-
     public void entradaEvento(String email, String evento) throws TagITDAOException {
         String stored = "{call sp_registrar_participanteEvento(?, ?, ?)}";
         String retorno = null;
@@ -362,30 +361,31 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
             throw new TagITDAOException("ARAIRAIRAIRIARIAIRAIR");
         }
     }
-
-
     private HashMap<String, String> tokens = new HashMap<String, String>();
 
     public void guardaToken(String tag, String token, String verififer) {
         String tokenVerifier = token + ";" + verififer;
 
-        if(tokens.containsKey(tag.trim())) tokens.remove(tag.trim());
+        if (tokens.containsKey(tag.trim())) {
+            tokens.remove(tag.trim());
+        }
 
         tokens.put(tag.trim(), tokenVerifier);
     }
 
     public String retornaToken(String tag) {
-        
-        if(tokens.containsKey(tag.trim())) return tokens.get(tag);
+
+        if (tokens.containsKey(tag.trim())) {
+            return tokens.get(tag);
+        }
         return null;
     }
 
     /* Entrada no evento - fim */
-
     public void insereListaInteresseParticipante(ArrayList<Interesse> lInteresse, String email, ArrayList<ContaCategoriaFacebook> lContaCateg) throws TagITDAOException {
         ArrayList<ContaCategoriaFacebook> lAuxCategoria;
         lAuxCategoria = new ArrayList<ContaCategoriaFacebook>();
-        for (int i=0; i < lContaCateg.size(); i++){
+        for (int i = 0; i < lContaCateg.size(); i++) {
             ContaCategoriaFacebook c;
             c = new ContaCategoriaFacebook();
             c.setCategoria(lContaCateg.get(i).getCategoria());
@@ -401,19 +401,20 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
                 cstm.setString(2, lInteresse.get(i).getCategoria());
                 cstm.setString(3, lInteresse.get(i).getNome());
                 int k = 0;
-                for (; k < lAuxCategoria.size(); k++){
-                    if(lInteresse.get(i).getCategoria().equals(lAuxCategoria.get(k).getCategoria())){
+                for (; k < lAuxCategoria.size(); k++) {
+                    if (lInteresse.get(i).getCategoria().equals(lAuxCategoria.get(k).getCategoria())) {
                         break;
                     }
                 }
-                cstm.setDouble(4, (double)((1.0/lContaCateg.get(k).getContador()) * lAuxCategoria.get(k).getContador() ));
+                cstm.setDouble(4, (double) ((1.0 / lContaCateg.get(k).getContador()) * lAuxCategoria.get(k).getContador()));
                 lAuxCategoria.get(k).setContador(lAuxCategoria.get(k).getContador() - 1);
-                
+
                 cstm.registerOutParameter(5, java.sql.Types.VARCHAR);
                 cstm.execute();
                 String retorno = cstm.getString(5);
-                if (retorno.trim().compareTo("0") == 0)
+                if (retorno.trim().compareTo("0") == 0) {
                     throw new TagITDAOException("Os interesses não puderam ser recuperados");
+                }
                 cstm.close();
             }
         } catch (SQLException e) {
@@ -421,8 +422,8 @@ public ArrayList<Evento> buscarEventosParticipante(User participante) throws Tag
         }
     }
 
-       public String[] insereEvento(Evento evento) throws TagITDAOException, ParseException,
-Exception {
+    public String[] insereEvento(Evento evento) throws TagITDAOException, ParseException,
+            Exception {
         CallableStatement cstm = null;
         String[] sRetorno = null;
 
@@ -434,8 +435,8 @@ Exception {
         String hora = horaEvento.substring(0, 2);
         String minuto = horaEvento.substring(3, 5);
 
-        java.sql.Timestamp dataEvento = java.sql.Timestamp.valueOf(ano + "-" + mes + "-" +
-dia + " " + hora + ":" + minuto + ":00");
+        java.sql.Timestamp dataEvento = java.sql.Timestamp.valueOf(ano + "-" + mes + "-"
+                + dia + " " + hora + ":" + minuto + ":00");
 
         try {
             cstm = con.prepareCall("{call sp_inserir_evento(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
@@ -446,7 +447,7 @@ dia + " " + hora + ":" + minuto + ":00");
             cstm.setDate(4, converterData(evento.getInscTermino()));
             cstm.setString(5, evento.getRua());
             cstm.setString(6, evento.getCidade());
-            cstm.setTimestamp(7,   dataEvento);
+            cstm.setTimestamp(7, dataEvento);
             cstm.setString(8, evento.getContato());
             cstm.registerOutParameter(9, Types.VARCHAR);
 
@@ -488,15 +489,14 @@ dia + " " + hora + ":" + minuto + ":00");
 
     }
 
-
-   	/**
- 	 * Converte uma String para um objeto Date. Caso a String seja vazia ou nula,
- 	 * retorna null - para facilitar em casos onde formulários podem ter campos
- 	 * de datas vazios.
- 	 * @param data String no formato dd/MM/yyyy a ser formatada
- 	 * @return Date Objeto Date ou null caso receba uma String vazia ou nula
- 	 * @throws Exception Caso a String esteja no formato errado
- 	 */
+    /**
+     * Converte uma String para um objeto Date. Caso a String seja vazia ou nula,
+     * retorna null - para facilitar em casos onde formulários podem ter campos
+     * de datas vazios.
+     * @param data String no formato dd/MM/yyyy a ser formatada
+     * @return Date Objeto Date ou null caso receba uma String vazia ou nula
+     * @throws Exception Caso a String esteja no formato errado
+     */
     public static java.sql.Date converterData(String data) throws Exception {
         if (data == null || data.equals("")) {
             return null;
@@ -537,14 +537,14 @@ dia + " " + hora + ":" + minuto + ":00");
 
     }
 
-    public ArrayList<Evento> buscarUltimosEventos()throws TagITDAOException {
+    public ArrayList<Evento> buscarUltimosEventos() throws TagITDAOException {
         CallableStatement cstm = null;
 
         ArrayList<Evento> eventos = new ArrayList<Evento>();
-         try {
+        try {
 
-             System.out.println("aaaaaaaaaa");
-             int num = 2;
+            System.out.println("aaaaaaaaaa");
+            int num = 2;
             cstm = con.prepareCall("{call sp_retornar_topEventos(?)}");
             cstm.setInt(1, num);
 
@@ -563,5 +563,29 @@ dia + " " + hora + ":" + minuto + ":00");
         }
 
         return eventos;
+    }
+
+    public ArrayList buscarCategoriasRanqueadas(String evento, String categoria) throws TagITDAOException {
+        CallableStatement cstm = null;
+
+        ArrayList categorias = new ArrayList();
+        try {
+            
+                cstm = con.prepareCall("{call sp_retornar_categorias(?,?)}");
+                cstm.setString(1, evento);
+                cstm.setString(1, evento);
+                ResultSet rs = cstm.executeQuery();
+                while (rs.next()) {
+                    String aux = rs.getString(1);
+                    categorias.add(aux);
+                }
+
+                cstm.close();
+
+        } catch (SQLException e) {
+            throw new TagITDAOException();
+        }
+
+        return categorias;
     }
 }

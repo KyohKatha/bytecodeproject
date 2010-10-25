@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="java.util.Date"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="PkgTagIT.Evento"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -115,7 +116,12 @@
 
                         </table>
                     </fieldset>
-
+                    <% Date dataAtual = new Date();
+                       Date dataEvento = new Date(Integer.parseInt(evento.getDataEvento().substring(0, 3)), Integer.parseInt(evento.getDataEvento().substring(5, 6)), Integer.parseInt(evento.getDataEvento().substring(8, 9)));
+                       if(dataAtual.getTime() >= dataEvento.getTime()){
+                           out.println("<p style=\"margin-left: -600px\">Seu evento ainda não começou</p>");
+                       }else{
+                    %>
                     <%if (evento != null && evento.getCategoria() != null) {%>
                     <table>
                         <tr>
@@ -125,7 +131,16 @@
                                 <label> Categoria: </label> <%= evento.getCategoria().get(i)%>
                             </td><tr>
                             <td>
-                                Aqui vai o item de maior ocorrencia!
+                                <% ArrayList categorias = (ArrayList) request.getSession().getAttribute("categorias");
+                                   if(categorias != null){
+                                       int id = (int) evento.getCategoria().get(i).getId();
+                                       ArrayList aux = (ArrayList) categorias.get(id);
+                                       for(int k = 0; k < aux.size(); k++){
+                                            out.println(aux.get(k));
+                                       }
+                                       
+                                   }
+                                %>
                             </td>
                             <%i++;
                             }%>
@@ -134,7 +149,9 @@
                     <%}
                                 if (evento.getCategoria() == null) {%>
                     <p style="margin-left: -600px">Você não cadastrou nenhuma categoria para esse evento! Não há relatórios a serem gerados!</p>
-                    <%}%>
+                    <%}
+                    }%>
+
                 </div>
                 <!-- Fim DIV MEIOCONTAINER -->
             </div>
