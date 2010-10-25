@@ -13,12 +13,26 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * @author Gustavo
  */
 public class ConexaoBD {
 
+    public class Item {
+
+        public String termo;
+        public int cont;
+        public String categoria;
+        public float semantica;
+
+        public Item() {
+            cont = 1;
+            semantica = 0;
+        }
+    }
     private static ConexaoBD instance = null;
     private Connection con;
     private Statement stm;
@@ -580,22 +594,162 @@ public class ConexaoBD {
         return eventos;
     }
 
-    public ArrayList buscarCategoriasRanqueadas(String evento, String categoria) throws TagITDAOException {
+    private String removerEspaco(String sARow) {
+        String padrao = "\\s{2,}";
+        Pattern regPat = Pattern.compile(padrao);
+        Matcher matcher = regPat.matcher(sARow);
+        String res = matcher.replaceAll(" ").trim();
+        return res;
+    }
+
+    public ArrayList buscarCategoriasRanqueadas(String evento) throws TagITDAOException {
         CallableStatement cstm = null;
 
         ArrayList categorias = new ArrayList();
         try {
-            
-                cstm = con.prepareCall("{call sp_retornar_categorias(?,?)}");
-                cstm.setString(1, evento);
-                cstm.setString(1, evento);
-                ResultSet rs = cstm.executeQuery();
-                while (rs.next()) {
-                    String aux = rs.getString(1);
-                    categorias.add(aux);
+            ResultSet r = stm.executeQuery("select * from tagit.fc_retornaInteressesParticipantesEvento('" + evento + "');");
+
+            HashMap<String, Item> hm = new HashMap<String, Item>();
+            ArrayList<Item> lista = new ArrayList<Item>();
+
+            while (r.next()) {
+                String s = removerEspaco(r.getString(1).toUpperCase());
+                String cat = r.getString(2);
+                Float peso = r.getFloat(3);
+                
+                System.out.println("> " + s);
+
+                String[] palavras = s.split("[\\;]");
+
+                for (int i = 0; i < palavras.length; i++) {
+                    palavras[i] = palavras[i].replace(".", "");
                 }
 
-                cstm.close();
+                if (palavras.length > 0) {
+                    for (int j = 0; j < palavras.length; j++) {
+                        palavras[j] = palavras[j].trim();
+                        Item item = hm.get(palavras[j].trim());
+                        if (item == null) {
+                            item = new Item();
+                            item.termo = palavras[j].trim();
+                            item.categoria = cat;
+                            item.semantica += peso;
+
+                            System.out.println("Inserindo |" + item.termo + "|");
+                            hm.put(item.termo, item);
+                            lista.add(item);
+                        } else {
+                            item.cont++;
+                        }
+                    }
+                } /*else {
+
+
+                String[] termos = palavras[0].split("\\s");
+
+                if (termos.length > 1) {
+                for (int i = 0; i < termos.length; i++) {
+                System.out.print(termos[i] + " ");
+                }
+
+                // Armazenando cadeias obtidas
+                int menor = termos.length, maior = -1;
+
+                for (int i = 0; i < termos.length; i++) {
+                for (int f = termos.length; f > i; f--) {
+                int j;
+                String termo = "";
+                for (j = i; j < f; j++) {
+                termo += termos[j] + " ";
+                }
+                j--;
+
+                termo = termo.trim();
+                System.out.println("Termo do " + i + " ao " + j + " : " + termo);
+
+                Item item = hm.get(termo);
+                if (item != null) {
+                System.out.println("Achei!");
+                item.cont++;
+                item.semantica = 2;
+
+                if (i < menor) {
+                menor = i;
+                }
+                if (j > maior) {
+                maior = j;
+                }
+
+                i = j;
+                }
+                }
+                }
+
+                System.out.println("Menor " + menor + "Maior " + maior);
+
+
+                String termo = "";
+
+                // Inserindo o que esta antes do menor
+                for (int i = 0; i < menor; i++) {
+                termo += termos[i] + " ";
+                }
+                termo = termo.trim();
+                Item item = hm.get(termo);
+                if (item == null && !termo.equals("")) {
+                item = new Item();
+                item.termo = termo;
+                item.semantica = 1;
+                System.out.println("Inserindo 1 |" + item.termo + "|");
+                hm.put(item.termo, item);
+                lista.add(item);
+                }
+
+                // Inserindo o que esta depois do maior
+                for (int i = maior + 1; i < termos.length; i++) {
+                termo += termos[i] + " ";
+                }
+                termo = termo.trim();
+                Item item2 = hm.get(termo);
+                if (item == null && !termo.equals("")) {
+                item2 = new Item();
+                item2.termo = termo;
+                item2.semantica = 1;
+                System.out.println("Inserindo 2 |" + item2.termo + "|");
+                hm.put(item2.termo, item2);
+                lista.add(item2);
+                }
+
+                } else {
+                String termo = termos[0];
+                termo = termo.trim();
+                Item item = hm.get(termo);
+                if (item == null && !termo.equals("")) {
+                item = new Item();
+                item.termo = termo;
+                item.semantica = 1;
+                System.out.println("Inserindo 3 |" + item.termo + "|");
+                hm.put(item.termo, item);
+                lista.add(item);
+                }
+                }
+                }*/
+            }
+
+            for (int i = 0; i < lista.size(); i++) {
+                /*cstm = con.prepareCall("{call sp_inserir_gostoComum(?, ?, ?, ?, ?)}");
+                cstm.setString(1, evento);
+                cstm.setString(2, lista.get(i).categoria);
+                cstm.setString(3, lista.get(i).termo);
+                cstm.setInt(4, lista.get(i).cont);
+
+                cstm.execute();*/
+                String s = "Categoria " + lista.get(i).categoria + " - " + lista.get(i).termo + " - " + lista.get(i).cont;
+                System.out.println(s);
+                categorias.add(s);
+            }
+
+            //cstm.close();
 
         } catch (SQLException e) {
             throw new TagITDAOException();

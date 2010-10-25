@@ -124,30 +124,30 @@
                        }else{
                     %>
                     <%if (evento != null && evento.getCategoria() != null) {%>
-                    <table>
+                    <table style="margin-left: -200px">
                         <tr>
                             <%int i = 0; %>
                             <td>
                                 <label> Categoria: </label>
                             </td>
-                            <% while (i < evento.getCategoria().size()) { Categoria c = evento.getCategoria().get(i); %>
+                            <% while (i < 1) { Categoria c = evento.getCategoria().get(i); %>
                             <td><center> <%= c.getNome() %></center></td></tr>
-                        <tr>
-                            <td>
+                        
+                            
                                 <% ArrayList categorias = (ArrayList) request.getSession().getAttribute("categorias");
                                    if(categorias != null){
-                                       int id = (int) evento.getCategoria().get(i).getId();
-                                       ArrayList aux = (ArrayList) categorias.get(id);
-                                       for(int k = 0; k < aux.size(); k++){
-                                            out.println(aux.get(k));
-                                       }
+                                       for(int k = 0; k < categorias.size(); k++){%>
+                                       <tr><td>
+                                            <% out.println(categorias.get(k).toString()); %>
+                                            </td></tr>
+                                       <%}
                                        
                                    }
                                 %>
-                            </td>
+                            
                             <%i++;
                             }%>
-                        </tr>
+                        
                     </table>
                     <%}
                                 if (evento.getCategoria() == null) {%>

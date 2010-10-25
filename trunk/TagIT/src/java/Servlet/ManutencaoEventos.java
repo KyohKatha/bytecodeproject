@@ -406,8 +406,8 @@ public class ManutencaoEventos extends HttpServlet {
         eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosOrganizador");
         request.getSession().setAttribute("eventoOrganizador", eventos.get(i));
         ArrayList categorias = null;
-        ArrayList categoria = null;
         //DESCOMENTAR QUANDO ARRUMAR A PROCEDURE!!!!!
+        categorias = ConexaoBD.getInstance().buscarCategoriasRanqueadas(eventos.get(i).getNome());
         /*for(int j = 0; j < eventos.get(i).getCategoria().size(); j++){
             categoria = ConexaoBD.getInstance().buscarCategoriasRanqueadas(eventos.get(i).getNome(), eventos.get(i).getCategoria().get(j).getNome());
             int id = (int) eventos.get(i).getCategoria().get(j).getId();
