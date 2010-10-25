@@ -5,6 +5,7 @@
 --%>
 
 
+<%@page import="PkgTagIT.Categoria"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="PkgTagIT.Evento"%>
@@ -125,11 +126,13 @@
                     <%if (evento != null && evento.getCategoria() != null) {%>
                     <table>
                         <tr>
-                            <%int i = 0;
-                            while (i < evento.getCategoria().size()) {%>
+                            <%int i = 0; %>
                             <td>
-                                <label> Categoria: </label> <%= evento.getCategoria().get(i)%>
-                            </td><tr>
+                                <label> Categoria: </label>
+                            </td>
+                            <% while (i < evento.getCategoria().size()) { Categoria c = evento.getCategoria().get(i); %>
+                            <td><center> <%= c.getNome() %></center></td></tr>
+                        <tr>
                             <td>
                                 <% ArrayList categorias = (ArrayList) request.getSession().getAttribute("categorias");
                                    if(categorias != null){
