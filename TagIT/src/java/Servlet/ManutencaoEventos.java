@@ -402,16 +402,19 @@ public class ManutencaoEventos extends HttpServlet {
     private void selecionarEventoRelatorio(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
         int i = Integer.parseInt(request.getParameter("i"));
         ArrayList<Evento> eventos = null;
-
-        String modo = request.getParameter("modo");
-
         
         eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosOrganizador");
         request.getSession().setAttribute("eventoOrganizador", eventos.get(i));
+        ArrayList categorias = null;
+        ArrayList categoria = null;
+        //DESCOMENTAR QUANDO ARRUMAR A PROCEDURE!!!!!
+        /*for(int j = 0; j < eventos.get(i).getCategoria().size(); j++){
+            categoria = ConexaoBD.getInstance().buscarCategoriasRanqueadas(eventos.get(i).getNome(), eventos.get(i).getCategoria().get(j).getNome());
+            int id = (int) eventos.get(i).getCategoria().get(j).getId();
+            categorias.set(id, categoria);
+        }*/
 
-        
-        System.out.println("Evento: " + eventos.get(i).getNome());
-
+        request.getSession().setAttribute("categorias", categorias);
         RequestDispatcher rd = null;
 
         rd = request.getRequestDispatcher("/RelatorioEvento.jsp");
