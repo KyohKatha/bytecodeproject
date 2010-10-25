@@ -286,6 +286,7 @@ public class ConexaoBD {
         CallableStatement cstm = null;
 
         ArrayList<Evento> eventos = new ArrayList<Evento>();
+        ArrayList<Categoria> lstCat = null;
         try {
 
             cstm = con.prepareCall("{call sp_retornar_evento(?)}");
@@ -298,7 +299,21 @@ public class ConexaoBD {
             }
             cstm.close();
 
+            for(int i = 0; i < eventos.size(); i++) {
+                cstm = con.prepareCall("{call sp_retornar_categorias_do_evento(?)}");
+                cstm.setString(1, eventos.get(i).getNome());
+                rs = cstm.executeQuery();
+                lstCat = new ArrayList<Categoria>();
+                while(rs.next()) {
+                    Categoria cat = new Categoria(rs.getDouble("id"), rs.getString("nome"));
+                    lstCat.add(cat);
+                }
+                cstm.close();
+                eventos.get(i).setCategoria(lstCat);
+            }
+
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new TagITDAOException();
         }
 
