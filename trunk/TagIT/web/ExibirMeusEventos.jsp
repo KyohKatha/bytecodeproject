@@ -98,14 +98,7 @@
                                 while (i < eventos.size()) {%>
                                 <tr><td>
                                         <a href="ManutencaoEventos?tipo=9&i=<%=i%>" > <%= eventos.get(i).getNome()%> </a>(<%= eventos.get(i).getDataEvento().replace("-", "/") %>)
-                                        <% /*Date dataEvento = new Date(Integer.parseInt(eventos.get(i).getDataEvento().substring(0,3)),Integer.parseInt(eventos.get(i).getDataEvento().substring(5,6)),
-                                                Integer.parseInt(eventos.get(i).getDataEvento().substring(8,9)), Integer.parseInt(eventos.get(i).getHora().substring(0, 1)), Integer.parseInt(eventos.get(i).getHora().substring(3, 4)));
-                                           Date dataAtual = new Date(Integer.parseInt(eventos.get(i).getDataEvento().substring(0,3)),Integer.parseInt(eventos.get(i).getDataEvento().substring(5,6)),
-                                                Integer.parseInt(eventos.get(i).getDataEvento().substring(8,9)), Integer.parseInt(eventos.get(i).getHora().substring(0, 1)), Integer.parseInt(eventos.get(i).getHora().substring(3, 4)));
-                                           if(dataAtual.compareTo(dataEvento) == 0){*/%>
-                                             <!--   COMEÇOU O EVENTO! -->
-                                           <%//}
-                                           %>
+                                        <a href="Sortear?tipo=0&i=<%=i%>">Sortear!</a>
                             </td></tr>
                     <% i++;
                                     }
