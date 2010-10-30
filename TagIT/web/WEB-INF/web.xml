@@ -24,6 +24,10 @@
         <servlet-name>Facebook</servlet-name>
         <servlet-class>Servlet.Facebook</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Sortear</servlet-name>
+        <servlet-class>Servlet.Sortear</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ManutencaoUsuarios</servlet-name>
         <url-pattern>/ManutencaoUsuarios</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>Facebook</servlet-name>
         <url-pattern>/Facebook</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Sortear</servlet-name>
+        <url-pattern>/Sortear</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
