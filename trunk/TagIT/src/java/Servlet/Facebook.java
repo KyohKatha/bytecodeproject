@@ -7,6 +7,7 @@ package Servlet;
 import PkgTagIT.ConexaoBD;
 import PkgTagIT.ContaCategoriaFacebook;
 import PkgTagIT.Interesse;
+import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
 import aaTag.User;
 import java.io.BufferedReader;
@@ -43,6 +44,7 @@ public class Facebook extends HttpServlet {
             throws ServletException, IOException, TagITDAOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        System.out.println("Servlet do facebook");
         try {
             if (request.getSession().getAttribute("codigo") != null) {
                 /* Pega o código de autorização e pede o token do usuário*/
@@ -50,67 +52,56 @@ public class Facebook extends HttpServlet {
                         + "client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp&"
                         + "client_secret=0a45f0bdb1682cde85fc8ee210b5b919&" + request.getSession().getAttribute("codigo");
                 URL url = new URL(link);
+                
+                System.out.println(link);
+
                 URLConnection urlConnection = (URLConnection) url.openConnection();
                 BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String linha = null;
-                String texto = "";
+                String access_token = "";
                 while ((linha = in.readLine()) != null) {
-                    texto = texto + linha;
+                    access_token = access_token + linha;
                 }
-                in.close();
-
-                /* A partir do token, pegamos do facebook os interesses do usuário */
-                URL url2 = new URL("https://graph.facebook.com/me/likes?" + texto);
-                URLConnection urlConnection2 = (URLConnection) url2.openConnection();
-                BufferedReader in2 = new BufferedReader(new InputStreamReader(urlConnection2.getInputStream()));
-
-                linha = null;
-                texto = "";
-                while ((linha = in2.readLine()) != null) {
-                    texto = texto + linha;
-                }
-
-                in2.close();
-                ArrayList<Interesse> lInteresse;
-                ArrayList<ContaCategoriaFacebook> lContaCateg;
-                lContaCateg = new ArrayList<ContaCategoriaFacebook>();
-                lInteresse = new ArrayList<Interesse>();
-                String jsonInteresse = texto;
-                jsonInteresse = jsonInteresse.substring(8, jsonInteresse.length() - 1);
-                Object obj = JSONValue.parse(jsonInteresse);
-                JSONArray array = (JSONArray) obj;
-                for (int i = 0; i < array.size(); i++) {
-                    JSONObject obj2 = (JSONObject) array.get(i);
-                    Interesse l = new Interesse();
-                    l.setCategoria(obj2.get("category").toString());
-                    l.setNome(obj2.get("name").toString());
-                    lInteresse.add(l);
-                    int contador = 0;
-                    for (int j = 0; j < lContaCateg.size(); j++) {
-                        if (lContaCateg.get(j).getCategoria().equals(l.getCategoria())) {
-                            lContaCateg.get(j).setContador(lContaCateg.get(j).getContador() + 1);
-                        } else {
-                            contador++;
-                        }
-                    }
-                    if (contador == lContaCateg.size()) {
-                        ContaCategoriaFacebook c;
-                        c = new ContaCategoriaFacebook();
-                        c.setCategoria(l.getCategoria());
-                        c.setContador(1);
-                        lContaCateg.add(c);
+                System.out.println(access_token);
+                //in.close();
+                aaTag.User u = (aaTag.User) request.getSession().getAttribute("usuario");
+                System.out.println(u.getNome());
+                access_token = access_token.substring(13);
+                System.out.println("access_token: " + access_token);
+                String id = "";
+                boolean traco = false;
+                for (int k = 16; k < access_token.length(); k++) {
+                    if (access_token.charAt(k) == '-') {
+                        traco = true;
+                    } else if (access_token.charAt(k) == '|') {
+                        break;
+                    } else if (traco) {
+                        id += access_token.charAt(k);
                     }
                 }
 
-                User u = (User) request.getSession().getAttribute("usuario");
-                ConexaoBD conexaoBD = ConexaoBD.getInstance();
-                conexaoBD.insereListaInteresseParticipante(lInteresse, u.getEmail(), lContaCateg);
-                request.getSession().setAttribute("lInteresses", lInteresse);
+                PkgTagIT.Facebook fb = new PkgTagIT.Facebook(0, access_token, id);
+                System.out.println(fb.pegarLinkFoto());
+                System.out.println(fb.pegarSexoUsuario());
+                u = fb.atualizaLocalizacaoAtual(u);
+                System.out.println(u.getCidade());
+                System.out.println(u.getPais());
+                //u.addRedeSocial(fb);
+                if (fb.salvarInteresses(u.getEmail())) {
+                    request.getSession().setAttribute("usuario", u);
+                    request.getSession().setAttribute("type", "success");
+                    request.getSession().setAttribute("message", "<p>- Informações recuperadas com sucesso .</p><p>- Clique na caixa para fechar.</p>");
+                } else {
+                    request.getSession().setAttribute("type", "critical");
+                    request.getSession().setAttribute("message", "<p>-<strong>Erro:</strong> As informações não puderam ser recuperadas. Tente novamente mais tarde.</p><p>- Clique na caixa para fechar.</p>");
+                }
             }
-            request.getSession().setAttribute("type", "success");
-            request.getSession().setAttribute("message", "<p>- Informações recuperadas com sucesso .</p><p>- Clique na caixa para fechar.</p>");
-            response.sendRedirect("index.jsp");
+        } catch (Exception e) {
+            request.getSession().setAttribute("type", "critical");
+            request.getSession().setAttribute("message", "<p>-<strong>Erro:</strong> As informações não puderam ser recuperadas. Tente novamente mais tarde.</p><p>- Clique na caixa para fechar.</p>");
+            
         } finally {
+            response.sendRedirect("index.jsp");
             out.close();
         }
     }
