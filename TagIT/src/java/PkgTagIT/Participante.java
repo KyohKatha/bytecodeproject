@@ -42,5 +42,7 @@ public class Participante extends User {
         this.redeSocial = redeSocial;
     }
 
-
+    public void addRedeSocial(RedeSocial rs){
+        this.redeSocial.add(rs);
+    }
 }

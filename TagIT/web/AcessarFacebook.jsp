@@ -24,6 +24,6 @@
     </head>
     <body>
         <h1></h1>
-        <a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp">Acesse o Facebook</a>
+        <a href="https://graph.facebook.com/oauth/authorize?client_id=153940577969437&redirect_uri=http://localhost:8080/TagIT/PegaTokenAcesso.jsp&scope=publish_stream,create_event,rsvp_event,sms,offline_access,user_location,+email,user_about_me,user_birthday,user_education_history,user_groups,user_interests,user_likes,user_photo_video_tags,user_photos,user_religion_politics,user_work_history,friends_about_me,friends_activities,friends_birthday,friends_education_history,friends_groups,friends_interests,friends_likes,friends_photo_video_tags,friends_photos,friends_relationships,friends_religion_politics,friends_work_history,friends_location,friends_hometown">Acesse o Facebook</a>
     </body>
 </html>
