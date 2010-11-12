@@ -30,5 +30,12 @@
         <% if (l != null) {%>
             <%= l%>
         <% }%> </p>
+
+        <form action="Sortear" method="POST">
+            <p><input type="text" name="link" />
+                <input type="submit" value="Sortear"/>
+                <input type="hidden" value="2" name="tipo" id="tipo"/></p>
+        </form>
+
     </body>
 </html>
