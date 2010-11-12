@@ -9,9 +9,13 @@ import PkgTagIT.TagITDAOException;
 import com.rosaloves.bitlyj.Url;
 import com.rosaloves.bitlyj.UrlClicks;
 import static com.rosaloves.bitlyj.Bitly.*;
+import java.io.BufferedReader;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -41,6 +45,7 @@ public class Sortear extends HttpServlet {
             /*
          * 0 : selecionar Evento
          * 1 : Criar Link
+         * 2 : Sorteio
          */
 
         int tipo;
@@ -67,6 +72,13 @@ public class Sortear extends HttpServlet {
                         e.printStackTrace();
                     }
                     break;
+                case 2:
+                    try{
+                        sortear(request, response);
+                    } catch (TagITDAOException e) {
+                        out.println("Erro ao sortear");
+                        e.printStackTrace();
+                    }
             }
         } finally {
             out.close();
@@ -145,6 +157,87 @@ public class Sortear extends HttpServlet {
             RequestDispatcher rd = null;
             rd = request.getRequestDispatcher("/Sorteio.jsp");
             rd.forward(request, response);
+
+    }
+
+    private void sortear(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
+
+        Evento eventoSorteio = (Evento) request.getSession().getAttribute("eventoSorteio");
+
+        /*
+         * Pegar do bd as pessoas que estiveram no eventoSorteio (so as hashcodes? ou usar pair?)
+         */
+
+        ArrayList<String> hashPart = new ArrayList<String>();
+
+        // para testes.
+        hashPart.add("9eKH3W");
+        hashPart.add("aYH0AA");
+        hashPart.add("bxjCcW");
+        hashPart.add("anWUQD");
+
+        ArrayList<String> hashPartRandom = new ArrayList<String>();
+
+        Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
+
+        System.out.println("\n\nHASHCODES:");
+        // verificar quantos cliques cada link recebeu
+        int size = hashPart.size();
+        for ( int i=0; i<size; i++ ){
+            String hashcode = hashPart.get(i);
+            System.out.println(hashcode);
+
+            UrlClicks clicks = p.call(clicks(hashcode));
+            long qntdClicks = clicks.getUserClicks();
+
+            // inserir as hashcodes no vetor, de acordo com a quantidade de cliques
+            for ( int j=0; j<qntdClicks; j++ ){
+                System.out.println(hashcode);
+                hashPart.add(hashcode);
+            }
+
+        }
+
+
+        // embaralhar os indices utilizando o random.org
+        int max = hashPart.size() - 1;
+        String urlEmbaralhar = "http://www.random.org/sequences/?min=0&max=" + max +
+                "&col=1&format=plain&rnd=new";
+        URL url = new URL(urlEmbaralhar);
+
+        URLConnection urlConnection = (URLConnection) url.openConnection();
+        BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        String linha = null;
+
+        System.out.println("RANDOM LIST\n\n");
+        while ((linha = in.readLine()) != null) {
+            int i = Integer.parseInt(linha);
+            System.out.println(i);
+            hashPartRandom.add(hashPart.get(i));
+        }
+
+
+        // sortear um participante utilizando o random.org
+        String urlSorteio = "http://www.random.org/integers/?num=1&min=0&max=" + max +
+                "&col=1&base=10&format=plain&rnd=new";
+        url = new URL(urlSorteio);
+
+        urlConnection = (URLConnection) url.openConnection();
+        in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+        linha = null;
+        if ((linha = in.readLine()) != null) {
+            int i = Integer.parseInt(linha);
+            System.out.println("\n\nSORTEADO: " + hashPartRandom.get(i));
+
+            /*
+             * Pegar no bd quem eh o dono da hashcode? ou entao usar o pair lah em cima
+             * request.getSession.setAttribute("partSorteado", -usuario-);
+             */
+        }
+
+        RequestDispatcher rd = null;
+        rd = request.getRequestDispatcher("/Sorteio.jsp");
+        rd.forward(request, response);
 
     }
 }
