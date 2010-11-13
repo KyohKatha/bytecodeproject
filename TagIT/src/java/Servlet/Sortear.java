@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Katha
  */
-@WebServlet(name="BitLy", urlPatterns={"/BitLy"})
+@WebServlet(name = "BitLy", urlPatterns = {"/BitLy"})
 public class Sortear extends HttpServlet {
 
     /** 
@@ -42,7 +42,7 @@ public class Sortear extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-            /*
+        /*
          * 0 : selecionar Evento
          * 1 : Criar Link
          * 2 : Sorteio
@@ -73,7 +73,7 @@ public class Sortear extends HttpServlet {
                     }
                     break;
                 case 2:
-                    try{
+                    try {
                         sortear(request, response);
                     } catch (TagITDAOException e) {
                         out.println("Erro ao sortear");
@@ -145,18 +145,18 @@ public class Sortear extends HttpServlet {
 
     private void criarLink(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
 
-            String s = request.getParameter("link");
+        String s = request.getParameter("link");
 
-            Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
-            Url url = p.call(shorten(s));
-            UrlClicks clicks = p.call(clicks(url.getShortUrl()));
+        Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
+        Url url = p.call(shorten(s));
+        UrlClicks clicks = p.call(clicks(url.getShortUrl()));
 
-            request.setAttribute("shortenLink", url.getShortUrl());
-            request.setAttribute("clicks", clicks.getUserClicks());
+        request.setAttribute("shortenLink", url.getShortUrl());
+        request.setAttribute("clicks", clicks.getUserClicks());
 
-            RequestDispatcher rd = null;
-            rd = request.getRequestDispatcher("/Sorteio.jsp");
-            rd.forward(request, response);
+        RequestDispatcher rd = null;
+        rd = request.getRequestDispatcher("/Sorteio.jsp");
+        rd.forward(request, response);
 
     }
 
@@ -165,44 +165,49 @@ public class Sortear extends HttpServlet {
         Evento eventoSorteio = (Evento) request.getSession().getAttribute("eventoSorteio");
 
         /*
-         * Pegar do bd as pessoas que estiveram no eventoSorteio (so as hashcodes? ou usar pair?)
+         * Pegar do bd o email das pessoas que estiveram no eventoSorteio
+         * Pegar tambem a quantidade de ganhadores
          */
 
-        ArrayList<String> hashPart = new ArrayList<String>();
+        ArrayList<String> emailPart = new ArrayList<String>();
+        int ganhadores = 1;
 
         // para testes.
-        hashPart.add("9eKH3W");
-        hashPart.add("aYH0AA");
-        hashPart.add("bxjCcW");
-        hashPart.add("anWUQD");
+        emailPart.add("http://www.google.com");
+        emailPart.add("http://localhost:8080/TagIT/Sorteio.jsp");
 
-        ArrayList<String> hashPartRandom = new ArrayList<String>();
+        ArrayList<String> emailPartRandom = new ArrayList<String>();
+        ArrayList<String> sorteados = new ArrayList<String>();
 
         Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
 
-        System.out.println("\n\nHASHCODES:");
-        // verificar quantos cliques cada link recebeu
-        int size = hashPart.size();
-        for ( int i=0; i<size; i++ ){
-            String hashcode = hashPart.get(i);
-            System.out.println(hashcode);
 
-            UrlClicks clicks = p.call(clicks(hashcode));
+        System.out.println("\n\nEMAILS:");
+        // verificar quantos cliques cada link recebeu
+        int size = emailPart.size();
+        for (int i = 0; i < size; i++) {
+            String email = emailPart.get(i);
+            System.out.println(email);
+
+            /* String link = "http://localhost:8080/servlet?email=" + email; */
+
+            Url url = p.call(shorten(email));
+            UrlClicks clicks = p.call(clicks(url.getShortUrl()));
             long qntdClicks = clicks.getUserClicks();
 
             // inserir as hashcodes no vetor, de acordo com a quantidade de cliques
-            for ( int j=0; j<qntdClicks; j++ ){
-                System.out.println(hashcode);
-                hashPart.add(hashcode);
+            for (int j = 0; j < qntdClicks; j++) {
+                System.out.println(email);
+                emailPart.add(email);
             }
 
         }
 
 
         // embaralhar os indices utilizando o random.org
-        int max = hashPart.size() - 1;
-        String urlEmbaralhar = "http://www.random.org/sequences/?min=0&max=" + max +
-                "&col=1&format=plain&rnd=new";
+        int max = emailPart.size() - 1;
+        String urlEmbaralhar = "http://www.random.org/sequences/?min=0&max=" + max
+                + "&col=1&format=plain&rnd=new";
         URL url = new URL(urlEmbaralhar);
 
         URLConnection urlConnection = (URLConnection) url.openConnection();
@@ -213,27 +218,45 @@ public class Sortear extends HttpServlet {
         while ((linha = in.readLine()) != null) {
             int i = Integer.parseInt(linha);
             System.out.println(i);
-            hashPartRandom.add(hashPart.get(i));
+            emailPartRandom.add(emailPart.get(i));
         }
 
 
         // sortear um participante utilizando o random.org
-        String urlSorteio = "http://www.random.org/integers/?num=1&min=0&max=" + max +
-                "&col=1&base=10&format=plain&rnd=new";
+        String urlSorteio = "http://www.random.org/integers/?num=" + ganhadores + "&min=0&max=" + max
+                + "&col=1&base=10&format=plain&rnd=new";
         url = new URL(urlSorteio);
 
         urlConnection = (URLConnection) url.openConnection();
         in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         linha = null;
-        if ((linha = in.readLine()) != null) {
+        while (emailPartRandom != null && (linha = in.readLine()) != null) {
             int i = Integer.parseInt(linha);
-            System.out.println("\n\nSORTEADO: " + hashPartRandom.get(i));
-
+            String sorteado = emailPartRandom.get(i);
+            System.out.println("\n\nSORTEADO: " + sorteado);
             /*
-             * Pegar no bd quem eh o dono da hashcode? ou entao usar o pair lah em cima
-             * request.getSession.setAttribute("partSorteado", -usuario-);
+             * sorteados.add(sorteado);
              */
+
+            // tirar esse ganhador da lista
+            int cont = 0;
+            while ( !emailPartRandom.isEmpty() && cont < emailPartRandom.size() ){
+                if ( emailPartRandom.get(cont).compareTo(sorteado) == 0 ){
+                    System.out.println(emailPartRandom.get(cont));
+                    emailPartRandom.remove(cont);
+                    cont--;
+                }
+                cont++;
+            }
+
+            System.out.println("\n\n\nTESTEE");
+            for ( String email : emailPartRandom ){
+                System.out.println(email);
+            }
         }
+
+
+        /* request.getSession.setAttribute("partSorteados", sorteados); */
 
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("/Sorteio.jsp");
