@@ -107,19 +107,18 @@ public class Facebook extends RedeSocial {
         return server + "me/picture?access_token=" + fbToken + "&type=large";
     }
 
-    public aaTag.User atualizaLocalizacaoAtual(aaTag.User u) throws MalformedURLException, IOException {
+    public String localizacaoAtual() throws MalformedURLException, IOException {
         System.out.println("Metodo pegar cidade");
         String json = pegarCamposUsuario("current_location");
         System.out.println(json);
         Object obj = JSONValue.parse(json);
+        String cidade = "";
         try {
             JSONArray array = (JSONArray) obj;
             for (int i = 0; i < array.size(); i++) {
                 JSONObject obj2 = (JSONObject) array.get(i);
                 JSONObject obj3 = (JSONObject) obj2.get("current_location");
-                u.setEstado(obj3.get("state").toString());
-                u.setPais(obj3.get("country").toString());
-                u.setCidade(obj3.get("city").toString());
+                cidade = obj3.get("city").toString() + "," + obj3.get("state").toString();
             }
         } catch (Exception e) {
             json = pegarCamposUsuario("hometown_location");
@@ -129,14 +128,12 @@ public class Facebook extends RedeSocial {
                 for (int i = 0; i < array.size(); i++) {
                     JSONObject obj2 = (JSONObject) array.get(i);
                     JSONObject obj3 = (JSONObject) obj2.get("hometown_location");
-                    u.setEstado(obj3.get("state").toString());
-                    u.setPais(obj3.get("country").toString());
-                    u.setCidade(obj3.get("city").toString());
+                    cidade = obj3.get("city").toString() + ", " + obj3.get("state").toString();
                 }
             } catch (Exception e2) {
             }
         }
-        return u;
+        return cidade;
     }
 
     private String pegarCamposUsuario(String campo) throws MalformedURLException, IOException {

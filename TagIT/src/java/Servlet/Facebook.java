@@ -83,9 +83,7 @@ public class Facebook extends HttpServlet {
                 PkgTagIT.Facebook fb = new PkgTagIT.Facebook(0, access_token, id);
                 System.out.println(fb.pegarLinkFoto());
                 System.out.println(fb.pegarSexoUsuario());
-                u = fb.atualizaLocalizacaoAtual(u);
-                System.out.println(u.getCidade());
-                System.out.println(u.getPais());
+                System.out.println("Localização: " + fb.localizacaoAtual());
                 //u.addRedeSocial(fb);
                 if (fb.salvarInteresses(u.getEmail())) {
                     request.getSession().setAttribute("usuario", u);
