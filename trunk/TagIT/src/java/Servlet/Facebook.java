@@ -63,7 +63,7 @@ public class Facebook extends HttpServlet {
                     access_token = access_token + linha;
                 }
                 System.out.println(access_token);
-                //in.close();
+                in.close();
                 aaTag.User u = (aaTag.User) request.getSession().getAttribute("usuario");
                 System.out.println(u.getNome());
                 access_token = access_token.substring(13);
@@ -80,12 +80,15 @@ public class Facebook extends HttpServlet {
                     }
                 }
 
-                PkgTagIT.Facebook fb = new PkgTagIT.Facebook(0, access_token, id);
-                System.out.println(fb.pegarLinkFoto());
-                System.out.println(fb.pegarSexoUsuario());
-                System.out.println("Localização: " + fb.localizacaoAtual());
-                //u.addRedeSocial(fb);
-                if (fb.salvarInteresses(u.getEmail())) {
+                PkgTagIT.Facebook fb = new PkgTagIT.Facebook(access_token, id);
+                // Alguns exemplos de como chamar métodos do facebook
+                /*
+                fb.pegarLinkFoto();
+                fb.pegarSexoUsuario();
+                fb.localizacaoAtual();
+                 */
+                System.out.println("email:" + u.getEmail());
+                if (fb.salvarInteresses(u.getEmail()) && ConexaoBD.getInstance().atualizarFacebookUsuario(fb, u.getEmail()) ) {
                     request.getSession().setAttribute("usuario", u);
                     request.getSession().setAttribute("type", "success");
                     request.getSession().setAttribute("message", "<p>- Informações recuperadas com sucesso .</p><p>- Clique na caixa para fechar.</p>");

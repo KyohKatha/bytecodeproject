@@ -9,6 +9,7 @@ import PkgTagIT.ConexaoBD;
 import PkgTagIT.Evento;
 import PkgTagIT.Participante;
 import PkgTagIT.TagITDAOException;
+import PkgTagIT.Facebook;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -186,6 +187,14 @@ public class ManutencaoEventos extends HttpServlet {
         RequestDispatcher rd = null;
 
         boolean retornou = statusMessage(request, conexaoBD.insereEvento(evento));
+        /*
+         * Trecho para cadastrar um evento no facebook
+         * Acho que deve ser opcional
+         *
+        Facebook fb;
+        fb = conexaoBD.retornarFacebookUsuario(usuarioLogado.getEmail());
+        fb.cadastrarEvento(evento, descricao);
+         */
         if (retornou) {
             if (categoria != null) {
                 for (int i = 0; i < categoria.length; i++) {
@@ -271,10 +280,10 @@ public class ManutencaoEventos extends HttpServlet {
         ArrayList<Evento> eventos = null;
         ArrayList<Evento> meusEventos = new ArrayList<Evento>();
         ArrayList<Event> eventosAPI = (ArrayList<Event>) request.getSession().getAttribute("arrayListEventos");
-        for(int i = 0; i < eventosAPI.size(); i++){
+        for (int i = 0; i < eventosAPI.size(); i++) {
             eventos = (ArrayList<Evento>) ConexaoBD.getInstance().buscarEventos(eventosAPI.get(i).getName());
-            for(int j = 0; j < eventos.size(); j++){
-                if(eventos.get(j).getNome().compareTo(eventosAPI.get(i).getName()) == 0){
+            for (int j = 0; j < eventos.size(); j++) {
+                if (eventos.get(j).getNome().compareTo(eventosAPI.get(i).getName()) == 0) {
                     meusEventos.add(eventos.get(j));
                     break;
                 }
@@ -287,7 +296,7 @@ public class ManutencaoEventos extends HttpServlet {
         rd.include(request, response);
 
         //String retorna = request.getSession().getAttribute("sucesso").toString();
-        
+
         /*} else {
         System.out.println("Retornará o erro >> " + request.getSession().getAttribute("message").toString());
         rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
@@ -343,14 +352,14 @@ public class ManutencaoEventos extends HttpServlet {
     }
 
     private void selecionarEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
-        
+
         int i = Integer.parseInt(request.getParameter("i"));
         String ins = request.getParameter("insc");
         ArrayList<Evento> eventos = null;
 
         String modo = request.getParameter("modo");
 
-        if (modo.compareTo("busca") == 0){
+        if (modo.compareTo("busca") == 0) {
             eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosBusca");
             request.getSession().setAttribute("eventoBusca", eventos.get(i));
         } else {
@@ -385,16 +394,16 @@ public class ManutencaoEventos extends HttpServlet {
         RequestDispatcher rd = null;
         rd = request.getRequestDispatcher("/CadastrarEvento.jsp");
         rd.forward(request, response);
-        
+
     }
 
     private void buscarUltimosEventos(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
         ArrayList<Evento> ultimosEventos = ConexaoBD.getInstance().buscarUltimosEventos();
 
         request.getSession().setAttribute("ultimosEventos", ultimosEventos);
-        System.out.println("VOLTOU:"+ultimosEventos.get(0).getNome());
+        System.out.println("VOLTOU:" + ultimosEventos.get(0).getNome());
         RequestDispatcher rd = null;
-        
+
         rd = request.getRequestDispatcher("/index.jsp");
         rd.forward(request, response);
     }
@@ -402,16 +411,16 @@ public class ManutencaoEventos extends HttpServlet {
     private void selecionarEventoRelatorio(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
         int i = Integer.parseInt(request.getParameter("i"));
         ArrayList<Evento> eventos = null;
-        
+
         eventos = (ArrayList<Evento>) request.getSession().getAttribute("eventosOrganizador");
         request.getSession().setAttribute("eventoOrganizador", eventos.get(i));
         ArrayList categorias = null;
         //DESCOMENTAR QUANDO ARRUMAR A PROCEDURE!!!!!
         categorias = ConexaoBD.getInstance().buscarCategoriasRanqueadas(eventos.get(i).getNome());
         /*for(int j = 0; j < eventos.get(i).getCategoria().size(); j++){
-            categoria = ConexaoBD.getInstance().buscarCategoriasRanqueadas(eventos.get(i).getNome(), eventos.get(i).getCategoria().get(j).getNome());
-            int id = (int) eventos.get(i).getCategoria().get(j).getId();
-            categorias.set(id, categoria);
+        categoria = ConexaoBD.getInstance().buscarCategoriasRanqueadas(eventos.get(i).getNome(), eventos.get(i).getCategoria().get(j).getNome());
+        int id = (int) eventos.get(i).getCategoria().get(j).getId();
+        categorias.set(id, categoria);
         }*/
 
         request.getSession().setAttribute("categorias", categorias);
@@ -422,7 +431,8 @@ public class ManutencaoEventos extends HttpServlet {
 
     }
     // <editor-fold defaultstate="collapsed" desc="Métodos HttpServlet. Clique no sinal de + à esquerda para editar o código.">
-    /** 
+
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response

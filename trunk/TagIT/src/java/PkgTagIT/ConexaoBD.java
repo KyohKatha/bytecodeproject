@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import PkgTagIT.ConexaoBD;
 
 /*
  * @author Gustavo
@@ -447,6 +448,7 @@ public class ConexaoBD {
                 cstm.close();
             }
         } catch (SQLException e) {
+            System.out.println("Não consegui registrar o interesse");
             throw new TagITDAOException();
         }
     }
@@ -756,5 +758,72 @@ public class ConexaoBD {
         }
 
         return categorias;
+    }
+
+    public boolean atualizarFacebookUsuario(Facebook fb, String email){
+        CallableStatement cstm = null;
+        try {
+            cstm = con.prepareCall("{call sp_atualizar_facebook_usuario(?, ?, ?)}");
+            cstm.setString(1, fb.getFbId());
+            cstm.setString(2, fb.getToken());
+            cstm.setString(3, email);
+            cstm.execute();
+            cstm.close();
+        } catch (SQLException e) {
+            System.out.println("Retorna false do atualizar Facebook Usuario");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean atualizarFacebookEvento(String idEvento, String nomeEvento){
+        CallableStatement cstm = null;
+        try {
+            cstm = con.prepareCall("{call sp_atualizar_facebook_evento(?, ?)}");
+            cstm.setString(1, idEvento);
+            cstm.setString(2, nomeEvento);
+            cstm.execute();
+            cstm.close();
+        } catch (SQLException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public Facebook retornarFacebookUsuario(String email){
+        Facebook fb = null;
+        CallableStatement cstm = null;
+        try {
+            cstm = con.prepareCall("{call sp_retornar_facebook_usuario(?)}");
+            cstm.setString(1, email);
+            ResultSet rs = cstm.executeQuery();
+            if (rs.next()) {
+                String id = rs.getString(1);
+                String token = rs.getString(2);
+                System.out.println(id);
+                System.out.println(token);
+                fb = new Facebook(token, id);
+            }
+            cstm.close();
+        } catch (SQLException e) {
+            return null;
+        }
+        return fb;
+    }
+
+    public String retornarFacebookEvento(String nomeEvento){
+        CallableStatement cstm = null;
+        String idEvento;
+        try {
+            cstm = con.prepareCall("{call sp_retornar_facebook_evento(?, ?)}");
+            cstm.setString(1, nomeEvento);
+            cstm.registerOutParameter(2, java.sql.Types.VARCHAR);
+            cstm.execute();
+            idEvento = cstm.getString(2);
+            cstm.close();
+        } catch (SQLException e) {
+            return null;
+        }
+        return idEvento;
     }
 }
