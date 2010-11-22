@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import com.google.api.translate.Language;
+import com.google.api.translate.Translate;
 
 /**
  *
@@ -26,14 +28,14 @@ public class Facebook extends RedeSocial {
     final private String server = "https://graph.facebook.com/";
     final private String serverMetodo = "https://api.facebook.com/method/";
 
-    public Facebook(double id, String token, String fbId) {
-        super(id, "Facebook");
+    public Facebook(String token, String fbId) {
+        super(2, "Facebook");
         this.fbToken = token;
         this.fbId = fbId;
     }
 
-    public Facebook(double id, String fbId) {
-        super(id, "Facebook");
+    public Facebook(String fbId) {
+        super(2, "Facebook");
         this.fbId = fbId;
     }
 
@@ -45,6 +47,14 @@ public class Facebook extends RedeSocial {
         return fbId;
     }
 
+
+    /**
+     * @param para id do facebook para quem deseja mandar a mensagem. Se for postar no próprio mural, mandar uma string vazia
+     * @param u usuario logado
+     * @param postagem texto a ser postado
+     * @throws MalformedURLException
+     * @throws IOException
+     */
     public void publicarFacebook(String para, Participante u, String postagem) throws MalformedURLException, IOException {
         postagem = aaTag.aaTagFunctions.UrlEncode(postagem);
         URL url = new URL(serverMetodo + "stream.publish?message=" + postagem + "&target_id=" + para + "&uid=" + fbId + "&access_token=" + fbToken);
@@ -54,40 +64,56 @@ public class Facebook extends RedeSocial {
         in.close();
     }
 
+
+    /**
+     * @param e evento que deseja publicar no facebook
+     * @param descricao descrição do evento
+     * @throws IOException
+     * @throws TagITDAOException
+     */
     public void cadastrarEvento(Evento e, String descricao)
             throws IOException, TagITDAOException {
         System.out.println("Metodo cadastrar evento");
         String jsonEvento = "";
-        jsonEvento = "{\"name\":\"" + aaTag.aaTagFunctions.UrlEncode(e.getNome()) + "\",";
-        jsonEvento += "\"start_time\":\"" + aaTag.aaTagFunctions.UrlEncode(e.getDataEvento() + "T" + e.getHora() + "+08") + "\",";
-        jsonEvento += "\"description\":\"" + aaTag.aaTagFunctions.UrlEncode(descricao) + "\",";
-        jsonEvento += "\"street\":\"" + aaTag.aaTagFunctions.UrlEncode(e.getRua()) + "\",";
-        jsonEvento += "\"city\":\"" + aaTag.aaTagFunctions.UrlEncode(e.getCidade()) + "\",";
-
+        jsonEvento = "{\"name\":\"" + e.getNome() + "\",";
+        jsonEvento += "\"start_time\":\"" + e.getDataEvento() + "T" + e.getHora() + "+08\",";
+        jsonEvento += "\"description\":\"" + descricao + "\",";
+        jsonEvento += "\"street\":\"" + e.getRua() + "\",";
+        jsonEvento += "\"city\":\"" + e.getCidade() + "\",";
+        System.out.println("jsonEvento" + jsonEvento);
         String contato = e.getContato();
         if (contato.contains("@")) {
             jsonEvento += "\"email\":\"" + contato + "\"}";
         } else {
             jsonEvento += "\"phone\":\"" + contato + "\"}";
         }
-
-        URL url = new URL(serverMetodo + "events.create?event_info" + jsonEvento + "&uid=" + fbId + "&access_token=" + fbToken);
+        System.out.println("jsonEvento" + jsonEvento);
+        System.out.println(serverMetodo + "events.create?event_info=" + aaTag.aaTagFunctions.UrlEncode(jsonEvento)  + "&uid=" + fbId + "&access_token=" + fbToken + "&format=json");
+        URL url = new URL(serverMetodo + "events.create?event_info=" + aaTag.aaTagFunctions.UrlEncode(jsonEvento) + "&uid=" + fbId + "&access_token=" + fbToken +"&format=json");
         URLConnection urlConnection = (URLConnection) url.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
         String linha = null;
         String idEvento = "";
         while ((linha = in.readLine()) != null) {
             idEvento = idEvento + linha;
+            System.out.println(idEvento);
         }
+        System.out.println(e.getNome());
+        ConexaoBD.getInstance().atualizarFacebookEvento(idEvento, e.getNome());
         in.close();
-
-        /*
-        Deve se salvar o id do evento
-         */
     }
 
-    public boolean removerEvento(String idEvento) throws MalformedURLException, IOException {
-        URL url = new URL(serverMetodo + "events.cancel?eid=" + idEvento + "&access_token=" + fbToken);
+
+    /**
+     * @param idEvento id do envento cadastrado no facebook
+     * @param nomeEvento
+     * @return
+     * @throws MalformedURLException
+     * @throws IOException
+     * @throws TagITDAOException
+     */
+    public boolean removerEvento(String idEvento, String nomeEvento) throws MalformedURLException, IOException, TagITDAOException {
+        URL url = new URL(serverMetodo + "events.cancel?eid=" + idEvento + "&access_token=" + fbToken + "&format=json");
         System.out.println(url);
         URLConnection urlConnection = (URLConnection) url.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
@@ -95,9 +121,11 @@ public class Facebook extends RedeSocial {
         String texto = "";
         while ((linha = in.readLine()) != null) {
             texto = texto + linha;
+            System.out.println(texto);
         }
         in.close();
         if (texto.equals("true")) {
+            ConexaoBD.getInstance().atualizarFacebookEvento("", nomeEvento);
             return true;
         }
         return false;
@@ -107,8 +135,8 @@ public class Facebook extends RedeSocial {
         return server + "me/picture?access_token=" + fbToken + "&type=large";
     }
 
+    
     public String localizacaoAtual() throws MalformedURLException, IOException {
-        System.out.println("Metodo pegar cidade");
         String json = pegarCamposUsuario("current_location");
         System.out.println(json);
         Object obj = JSONValue.parse(json);
@@ -154,6 +182,7 @@ public class Facebook extends RedeSocial {
     public boolean salvarInteresses(String email)
             throws IOException, TagITDAOException {
         /* A partir do token, pegamos do facebook os interesses do usuário */
+        System.out.println("Salvar interesses do usuário");
         try {
             URL url2 = new URL(server + "me/likes?access_token=" + fbToken);
             URLConnection urlConnection2 = (URLConnection) url2.openConnection();
@@ -174,16 +203,20 @@ public class Facebook extends RedeSocial {
             jsonInteresse = jsonInteresse.substring(8, jsonInteresse.length() - 1);
             Object obj = JSONValue.parse(jsonInteresse);
             JSONArray array = (JSONArray) obj;
+            // cada objeto json da lista, coloco em uma outra lista de interesses
             for (int i = 0; i < array.size(); i++) {
                 JSONObject obj2 = (JSONObject) array.get(i);
                 Interesse l = new Interesse();
-                l.setCategoria(obj2.get("category").toString());
+                System.out.println(traduzirInglesParaPortugues(obj2.get("category").toString().replace('_', ' ')));
+                l.setCategoria(traduzirInglesParaPortugues(obj2.get("category").toString().replace('_', ' ')));
                 l.setNome(obj2.get("name").toString());
                 lInteresse.add(l);
                 int contador = 0;
+                // se a categoria do interesse já está na lista, aumento o seu contador
                 for (int j = 0; j < lContaCateg.size(); j++) {
                     if (lContaCateg.get(j).getCategoria().equals(l.getCategoria())) {
                         lContaCateg.get(j).setContador(lContaCateg.get(j).getContador() + 1);
+                        break;
                     } else {
                         contador++;
                     }
@@ -220,5 +253,9 @@ public class Facebook extends RedeSocial {
         } catch (Exception e) {
         }
         return sexo;
+    }
+
+    public String traduzirInglesParaPortugues(String texto) throws Exception{
+        return Translate.translate(texto, Language.ENGLISH, Language.PORTUGESE);
     }
 }
