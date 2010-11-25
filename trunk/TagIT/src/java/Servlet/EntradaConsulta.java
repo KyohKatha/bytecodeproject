@@ -6,6 +6,7 @@
 package Servlet;
 
 import PkgTagIT.ConexaoBD;
+import PkgTagIT.Facebook;
 import PkgTagIT.TagITDAOException;
 import aaTag.Event;
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -150,6 +152,7 @@ public class EntradaConsulta extends HttpServlet {
         ArrayList<String> dadosTag = pegaDadosTag(tag, token, verifier);
         String email = dadosTag.get(15);
         String nome = dadosTag.get(0);
+        Facebook fb = ConexaoBD.getInstance().retornarFacebookUsuario(email);
 
         String acessoAPI = "http://localhost:8080/TagIT/ServletAcessaAPI?"
                 + "metodo=AddRegister"
@@ -175,7 +178,16 @@ public class EntradaConsulta extends HttpServlet {
         } else {
             System.out.println("Email: " + email + " Evento: " + evento);
             ConexaoBD.getInstance().entradaEvento(email, evento);
-            response.getWriter().println("O participante : " + nome + " acabou de entrar");
+            response.getWriter().println(nome);
+
+            if(fb != null) {
+                response.getWriter().println(fb.pegarLinkFoto());
+
+                //postar o link do sorteio se tiver sorteio :D
+                fb.publicarFacebook("", null, "Teste de postagem!");
+            } else {
+                response.getWriter().println("null");
+            }
         }
 
     }

@@ -28,16 +28,20 @@ public class Facebook extends RedeSocial {
     final private String server = "https://graph.facebook.com/";
     final private String serverMetodo = "https://api.facebook.com/method/";
 
+    /* Utilizado pela API do translate como callback */
+    /* Substituir pelo novo endereço do site se mudar */
+    final private String referrer = "http://localhost:8080/TagIT/";
+
     public Facebook(String token, String fbId) {
         super(2, "Facebook");
         this.fbToken = token;
         this.fbId = fbId;
     }
 
-    public Facebook(String fbId) {
+    /*public Facebook(String fbId) {
         super(2, "Facebook");
         this.fbId = fbId;
-    }
+    }*/
 
     public String getToken() {
         return this.fbToken;
@@ -234,6 +238,8 @@ public class Facebook extends RedeSocial {
 
             return true;
         } catch (Exception e) {
+            System.out.println("DEU PAU AQUIIIIIIIIIIIIIIIIIIII");
+            e.printStackTrace();
             return false;
         }
     }
@@ -256,6 +262,7 @@ public class Facebook extends RedeSocial {
     }
 
     public String traduzirInglesParaPortugues(String texto) throws Exception{
-        return Translate.translate(texto, Language.ENGLISH, Language.PORTUGESE);
+        Translate.setHttpReferrer(referrer);
+        return Translate.translate(texto, Language.ENGLISH, Language.PORTUGUESE);
     }
 }
