@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Servlet;
 
 import PkgTagIT.ConexaoBD;
@@ -23,12 +22,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.ImageIcon;
 
+import com.rosaloves.bitlyj.Url;
+import com.rosaloves.bitlyj.UrlClicks;
+import static com.rosaloves.bitlyj.Bitly.*;
+
 /**
  *
  * @author Tiago
  */
 public class EntradaConsulta extends HttpServlet {
-   
+
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
@@ -37,7 +40,7 @@ public class EntradaConsulta extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String tag;
@@ -63,14 +66,14 @@ public class EntradaConsulta extends HttpServlet {
 
 
 
-            switch(tipo) {
+            switch (tipo) {
                 case 1:
                     try {
                         entradaEvento(request, response);
-                    } catch(TagITDAOException e) {
+                    } catch (TagITDAOException e) {
                         out.println(e.getMessage());
                     } /*catch (Exception e) {
-                        out.println("Ocorreu um erro");
+                    out.println("Ocorreu um erro");
                     }*/
                     break;
                 case 2:
@@ -96,12 +99,13 @@ public class EntradaConsulta extends HttpServlet {
                 case 4:
                     try {
                         tokenVerifier = ConexaoBD.getInstance().retornaToken(tag);
-                        if(tokenVerifier != null) {
+                        if (tokenVerifier != null) {
                             listaToken = tokenVerifier.split(";");
                             token = listaToken[0];
                             verifier = listaToken[1];
                         }
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                    }
                     out.println(token);
                     out.println(verifier);
                     break;
@@ -119,7 +123,7 @@ public class EntradaConsulta extends HttpServlet {
                     Event evento;
                     ArrayList arrayListEvents = (ArrayList) request.getSession().getAttribute("arrayListEventos");
                     out.println(arrayListEvents.size());
-                    for(int i = 0; i < arrayListEvents.size(); i++) {
+                    for (int i = 0; i < arrayListEvents.size(); i++) {
                         evento = (Event) arrayListEvents.get(i);
                         out.println(evento.getName());
                     }
@@ -136,8 +140,8 @@ public class EntradaConsulta extends HttpServlet {
             out.println("<h1>Servlet EntradaConsulta at " + request.getContextPath () + "</h1>");
             out.println("</body>");
             out.println("</html>");
-            */
-        } finally { 
+             */
+        } finally {
             out.close();
         }
     }
@@ -173,18 +177,26 @@ public class EntradaConsulta extends HttpServlet {
         conexao.setDoOutput(true);
 
         BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
-        if(in.readLine().compareTo("true") != 0) {
+        if (in.readLine().compareTo("true") != 0) {
             response.getWriter().println("Erro ao registrar entrada na API");
         } else {
             System.out.println("Email: " + email + " Evento: " + evento);
             ConexaoBD.getInstance().entradaEvento(email, evento);
             response.getWriter().println(nome);
 
-            if(fb != null) {
+            if (fb != null) {
                 response.getWriter().println(fb.pegarLinkFoto());
 
                 //postar o link do sorteio se tiver sorteio :D
-                fb.publicarFacebook("", null, "Teste de postagem!");
+                email = encodeURIcomponent(email);
+                evento = encodeURIcomponent(evento);
+
+                Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
+                Url urlBitLy = p.call(shorten("http://localhost:8080/TagIT/Sortear?email="
+                        + email + "&evento=" + evento + "&tipo=3"));
+
+                fb.publicarFacebook("", null, "Clique aqui para me ajudar no sorteio "
+                        + "do evento " + evento + "! " + urlBitLy.getShortUrl());
             } else {
                 response.getWriter().println("null");
             }
@@ -218,7 +230,7 @@ public class EntradaConsulta extends HttpServlet {
         conexao.setDoOutput(true);
         BufferedReader in = new BufferedReader(new InputStreamReader(conexao.getInputStream()));
 
-        while(null != (entrada = in.readLine())) {
+        while (null != (entrada = in.readLine())) {
             //entrada = in.readLine();
             System.out.println(entrada);
             lstEntrada.add(entrada);
@@ -226,6 +238,31 @@ public class EntradaConsulta extends HttpServlet {
 
         return lstEntrada;
 
+    }
+
+    private String encodeURIcomponent(String s) {
+        StringBuilder o = new StringBuilder();
+        for (char ch : s.toCharArray()) {
+            if (isUnsafe(ch)) {
+                o.append('%');
+                o.append(toHex(ch / 16));
+                o.append(toHex(ch % 16));
+            } else {
+                o.append(ch);
+            }
+        }
+        return o.toString();
+    }
+
+    private static char toHex(int ch) {
+        return (char) (ch < 10 ? '0' + ch : 'A' + ch - 10);
+    }
+
+    private static boolean isUnsafe(char ch) {
+        if (ch > 128 || ch < 0) {
+            return true;
+        }
+        return " %$&+,/:;=?@<>#%".indexOf(ch) >= 0;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -238,9 +275,9 @@ public class EntradaConsulta extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     /** 
      * Handles the HTTP <code>POST</code> method.
@@ -251,7 +288,7 @@ public class EntradaConsulta extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
@@ -263,5 +300,4 @@ public class EntradaConsulta extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

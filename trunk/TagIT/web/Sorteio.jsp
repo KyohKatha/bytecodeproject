@@ -1,41 +1,23 @@
 <%--
-    Document   : Sorteio
-    Created on : 28/10/2010, 21:20:56
-    Author     : Time Alfa
+    Document   : Confirmacao
+    Created on : 21/11/2010, 17:52:06
+    Author     : Kaori
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-    "http://www.w3.org/TR/html4/loose.dtd">
+   "http://www.w3.org/TR/html4/loose.dtd">
 
-<% String s = (String) request.getAttribute("shortenLink");
-   Long l = (Long) request.getAttribute("clicks");  %>
+<% String email = (String) request.getAttribute("email");
+   String evento = (String) request.getAttribute("evento"); %>
 
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Confirmação</title>
     </head>
     <body>
-        <form action="Sortear" method="POST">
-            <p><input type="text" name="link" />
-                <input type="submit" value="Gerar Link"/>
-                <input type="hidden" value="1" name="tipo" id="tipo"/></p>
-        </form>
-        <p>Link:
-        <% if (s != null) {%>
-            <%= s%>
-        <% }%> </p>
-        <p>Clicks para este link:
-        <% if (l != null) {%>
-            <%= l%>
-        <% }%> </p>
-
-        <form action="Sortear" method="POST">
-            <p><input type="text" name="link" />
-                <input type="submit" value="Sortear"/>
-                <input type="hidden" value="2" name="tipo" id="tipo"/></p>
-        </form>
-
+        <p>Obrigado por clicar no link de <%=email%>!</p>
+        <p>Agora seu amigo(a) tem mais chances de ganhar o sorteio do evento <%=evento%>!</p>
     </body>
 </html>
