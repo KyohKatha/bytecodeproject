@@ -4,6 +4,7 @@
  */
 package Servlet;
 
+import PkgTagIT.ConexaoBD;
 import PkgTagIT.Evento;
 import PkgTagIT.TagITDAOException;
 import com.rosaloves.bitlyj.Url;
@@ -65,7 +66,6 @@ public class Sortear extends HttpServlet {
                     break;
                 case 1:
                     try {
-                        //busca de evento
                         criarLink(request, response);
                     } catch (TagITDAOException e) {
                         out.println("Erro ao criar Link");
@@ -79,6 +79,15 @@ public class Sortear extends HttpServlet {
                         out.println("Erro ao sortear");
                         e.printStackTrace();
                     }
+                    break;
+                case 3:
+                    try{
+                        mostrarConfirmacao(request, response);
+                    }  catch (TagITDAOException e) {
+                        out.println("Erro ao sortear");
+                        e.printStackTrace();
+                    }
+                    break;
             }
         } finally {
             out.close();
@@ -122,6 +131,10 @@ public class Sortear extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    /*
+     * Metodo pra setar o atributo eventoSorteio na sessao. Utilizado apenas na
+     * hora em que o sorteio vai ser realizado
+     */
     private void selecionarEvento(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
 
         int i = Integer.parseInt(request.getParameter("i"));
@@ -263,4 +276,17 @@ public class Sortear extends HttpServlet {
         rd.forward(request, response);
 
     }
+
+    private void mostrarConfirmacao(HttpServletRequest request, HttpServletResponse response) throws TagITDAOException, ServletException, IOException {
+        String email = request.getParameter("email");
+        String evento = request.getParameter("evento");
+
+        request.setAttribute("email", email);
+        request.setAttribute("evento", evento);
+
+        RequestDispatcher rd = null;
+        rd = request.getRequestDispatcher("/Sorteio.jsp");
+        rd.forward(request, response);
+    }
+
 }
