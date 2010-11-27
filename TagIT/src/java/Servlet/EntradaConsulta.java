@@ -150,13 +150,14 @@ public class EntradaConsulta extends HttpServlet {
             throws ServletException, IOException, TagITDAOException {
 
         String tag = request.getParameter("tag");
-        String evento = request.getParameter("evento");
+        final String evento = request.getParameter("evento");
         String token = request.getParameter("token");
         String verifier = request.getParameter("verifier");
         ArrayList<String> dadosTag = pegaDadosTag(tag, token, verifier);
-        String email = dadosTag.get(15);
+        final String email = dadosTag.get(15);
         String nome = dadosTag.get(0);
-        Facebook fb = ConexaoBD.getInstance().retornarFacebookUsuario(email);
+        final Facebook fb = ConexaoBD.getInstance().retornarFacebookUsuario(email);
+        final String emailCodificado, eventoCodificado;
 
         String acessoAPI = "http://localhost:8080/TagIT/ServletAcessaAPI?"
                 + "metodo=AddRegister"
@@ -181,22 +182,55 @@ public class EntradaConsulta extends HttpServlet {
             response.getWriter().println("Erro ao registrar entrada na API");
         } else {
             System.out.println("Email: " + email + " Evento: " + evento);
-            ConexaoBD.getInstance().entradaEvento(email, evento);
+
+            /* joga o armazenamento no BD em um thread pra
+             (tentar) diminuir o tempo de etrada */
+            (new Thread() {
+
+                @Override
+                public void run() {
+                    try {
+                        ConexaoBD.getInstance().entradaEvento(email, evento);
+                    } catch (Exception e) {
+                        //nada
+                    }
+                }
+
+            }).start();
             response.getWriter().println(nome);
 
             if (fb != null) {
                 response.getWriter().println(fb.pegarLinkFoto());
 
                 //postar o link do sorteio se tiver sorteio :D
-                email = encodeURIcomponent(email);
-                evento = encodeURIcomponent(evento);
+                emailCodificado = encodeURIcomponent(email);
+                eventoCodificado = encodeURIcomponent(evento);
 
-                Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
-                Url urlBitLy = p.call(shorten("http://localhost:8080/TagIT/Sortear?email="
-                        + email + "&evento=" + evento + "&tipo=3"));
 
-                fb.publicarFacebook("", null, "Clique aqui para me ajudar no sorteio "
-                        + "do evento " + evento + "! " + urlBitLy.getShortUrl());
+                /* tambem coloca em uma thread */
+                (new Thread(){
+
+                    @Override
+                    public void run() {
+                        try {
+                            Provider p = as("bytecodeufscar", "R_31c53ca04d1f4a404bdbd0a4b048c46d");
+
+
+                            /* hospedei uma página num servidor que mostra
+                             * a confirmacao conforme o email e evento enviado
+                             * só pra nao ficar localhost
+                             */
+                            Url urlBitLy = p.call(shorten("http://tagit.orgfree.com/?email="
+                                    + email + "&evento=" + evento));
+
+                            fb.publicarFacebook("", null, "Clique aqui para me ajudar no sorteio "
+                                    + "do evento " + evento + "! " + urlBitLy.getShortUrl());
+                        } catch (Exception e) {
+                            //nao postou
+                        }
+                    }
+
+                }).start();
             } else {
                 response.getWriter().println("null");
             }
