@@ -182,12 +182,8 @@ public class Sortear extends HttpServlet {
          * Pegar tambem a quantidade de ganhadores
          */
 
-        ArrayList<String> emailPart = new ArrayList<String>();
+        ArrayList<String> emailPart = ConexaoBD.getInstance().retornarEntrada(eventoSorteio.getNome());
         int ganhadores = 1;
-
-        // para testes.
-        emailPart.add("http://www.google.com");
-        emailPart.add("http://localhost:8080/TagIT/Sorteio.jsp");
 
         ArrayList<String> emailPartRandom = new ArrayList<String>();
         ArrayList<String> sorteados = new ArrayList<String>();
@@ -202,9 +198,9 @@ public class Sortear extends HttpServlet {
             String email = emailPart.get(i);
             System.out.println(email);
 
-            /* String link = "http://localhost:8080/servlet?email=" + email; */
+            String link = "http://tagit.orgfree.com/?email=" + email + "&evento=" + eventoSorteio.getNome();
 
-            Url url = p.call(shorten(email));
+            Url url = p.call(shorten(link));
             UrlClicks clicks = p.call(clicks(url.getShortUrl()));
             long qntdClicks = clicks.getUserClicks();
 
@@ -272,7 +268,7 @@ public class Sortear extends HttpServlet {
         /* request.getSession.setAttribute("partSorteados", sorteados); */
 
         RequestDispatcher rd = null;
-        rd = request.getRequestDispatcher("/Sorteio.jsp");
+        rd = request.getRequestDispatcher("/index.jsp");
         rd.forward(request, response);
 
     }
