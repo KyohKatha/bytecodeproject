@@ -826,4 +826,25 @@ public class ConexaoBD {
         }
         return idEvento;
     }
+
+
+    public ArrayList<String> retornarEntrada(String evento) throws TagITDAOException {
+        try {
+            String chamadaProcedure = "{call sp_retornar_participante_evento(?)}";
+            CallableStatement cstm = con.prepareCall(chamadaProcedure);
+            cstm.setString(1, evento);
+            ResultSet rs = cstm.executeQuery();
+            ArrayList<String> lstRetorno = new ArrayList<String>();
+
+            while(rs.next()) {
+                lstRetorno.add(rs.getString(1));
+            }
+            return lstRetorno;
+
+        } catch (SQLException e) {
+            throw  new TagITDAOException();
+        }
+    }
+
+
 }
